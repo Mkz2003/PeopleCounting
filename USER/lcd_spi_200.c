@@ -80,7 +80,7 @@ void LCD_SPI_Transmit()
             }
             else    // 全部数据传输完毕
             {
-                break;
+                break;  // 退出传输循环
             }
         }
         else
