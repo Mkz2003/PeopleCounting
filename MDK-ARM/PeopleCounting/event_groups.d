@@ -1,0 +1,15 @@
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
+peoplecounting\event_groups.o: E:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdlib.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+peoplecounting\event_groups.o: E:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stddef.h
+peoplecounting\event_groups.o: E:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdint.h
+peoplecounting\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+peoplecounting\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h

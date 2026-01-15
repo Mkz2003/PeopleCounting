@@ -1,0 +1,15 @@
+peoplecounting\armlib_lock_glue.o: armlib_lock_glue.c
+peoplecounting\armlib_lock_glue.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+peoplecounting\armlib_lock_glue.o: E:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdint.h
+peoplecounting\armlib_lock_glue.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+peoplecounting\armlib_lock_glue.o: stm32_lock.h
+peoplecounting\armlib_lock_glue.o: E:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stddef.h
+peoplecounting\armlib_lock_glue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+peoplecounting\armlib_lock_glue.o: ../Core/Inc/FreeRTOSConfig.h
+peoplecounting\armlib_lock_glue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+peoplecounting\armlib_lock_glue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+peoplecounting\armlib_lock_glue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+peoplecounting\armlib_lock_glue.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+peoplecounting\armlib_lock_glue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+peoplecounting\armlib_lock_glue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+peoplecounting\armlib_lock_glue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
