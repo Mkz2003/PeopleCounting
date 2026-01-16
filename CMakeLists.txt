@@ -49,17 +49,81 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/USER/lcd_spi_200.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/dcmi_ov5640.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/sccb.c
+
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/apriltag.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/array.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/binary.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/blob.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/clahe.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/collections.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/draw_dewarp.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/draw.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/edge.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/filter.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/fmath.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/haar.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/hough.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/imlib.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/integral_mw.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/integral.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/jdata_conf.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/lab_tab.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/line.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/matd.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/mathop.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/mve_binary.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/mve_draw.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/mve_filter.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/mve_imlib.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/mve_resize.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/point.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/pool.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/rectangle.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/sincos_tab.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stats.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_binary.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_blob.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_convert.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_dewarp.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_drawing.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_edge.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_equalization.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_filtering.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_find_pixels.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_geometry.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_hough.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_image_io_jpg_sw.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_image_io.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_integral.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_masking.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_math_op.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_mem_alloc.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_morph_op.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_object_det.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_point.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_rect.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_resize.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_rotation.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_stats.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_template.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl_warping.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/stm32ipl.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/template.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/umm_malloc.c
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/xyz_tab.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ${CMAKE_CURRENT_LIST_DIR}/USER/
+    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Inc/
 )
 
 # Add project symbols (macros)
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE 
     # Add user defined symbols
+    STM32IPL
 )
 
 # Remove wrong libob.a library dependency when using cpp files

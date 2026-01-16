@@ -44,6 +44,7 @@
 #include "usbd_cdc_if.h"
 #include "lcd_spi_200.h"
 #include "dcmi_ov5640.h"
+#include "stm32ipl.h"
 
 /* USER CODE END Includes */
 

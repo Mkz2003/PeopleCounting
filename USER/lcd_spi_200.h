@@ -9,6 +9,7 @@
 
 #define LCD_Width     240		// LCD的像素长度
 #define LCD_Height    320		// LCD的像素宽度
+extern uint16_t LCD_Buff[LCD_Height][LCD_Width];
 
 // 显示方向参数
 // 使用示例：LCD_DisplayDirection(Direction_H) 设置屏幕横屏显示
