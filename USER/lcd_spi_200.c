@@ -85,14 +85,11 @@ void LCD_SPI_Transmit()
         }
         else
         {
-            // #ifdef CMSIS_OS2_H_
-            // osThreadYield();  // 让出CPU时间片
-            // #endif
+            #ifdef CMSIS_OS2_H_
+            osThreadYield();  // 让出CPU时间片
+            #endif
         }
     }
-    // #ifdef CMSIS_OS2_H_
-    // osThreadYield();  // 让出CPU时间片
-    // #endif
 }
 
 
