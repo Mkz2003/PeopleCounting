@@ -286,7 +286,6 @@ void ImageProcessTask(void *argument)
 	DCMI_OV5640_Init();   			 	// DCMI以及OV5640初始化
 	OV5640_AF_Download_Firmware();	// 写入自动对焦固件
 	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
-  osDelay(500);
   OV5640_DMA_Transmit_Snapshot((uint32_t)Camera_Buffer[0], Display_BufferSize);  // 启动DMA快照传输
 
   /* Infinite loop */
