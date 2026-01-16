@@ -206,7 +206,7 @@ void LCDRefreshTask(void *argument)
   /* USER CODE BEGIN LCDRefreshTask */
   extern uint16_t* pCamera_Buffer;
 
-  __attribute__((section(".ram_bss"))) __IO static uint16_t adcval[3] = {0};
+  __attribute__((section(".sdram_bss"))) __IO static uint16_t adcval[3] = {0};
 
   HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED);
   HAL_ADC_Start_DMA(&hadc3, (uint32_t*)adcval, 3);

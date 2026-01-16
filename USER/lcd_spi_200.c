@@ -34,7 +34,7 @@ extern SPI_HandleTypeDef hspi5;	      // SPI_HandleTypeDef 结构体变量
 static void LCD_SetAddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2);
 volatile uint8_t LCD_SPI_LOCKED = 0;   // SPI总线锁定标志，0表示空闲，1表示锁定中
 
-__attribute__((section(".ram_bss"))) uint16_t LCD_Buff[LCD_Height][LCD_Width] = {0};        // LCD缓冲区，16位宽（每个像素点占2字节）
+__attribute__((section(".sdram_bss"))) uint16_t LCD_Buff[LCD_Height][LCD_Width] = {0};        // LCD缓冲区，16位宽（每个像素点占2字节）
 
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
@@ -285,8 +285,8 @@ void SPI_LCD_Init(void)
 	LCD_Clear();                           // 清屏
 
     LCD_DC_Data;     // 数据指令选择 引脚输出高电平，代表本次传输 数据
-    HAL_SPI_Transmit(&LCD_SPI, (uint8_t*)LCD_Buff, (sizeof(LCD_Buff) / 2 / 2), HAL_MAX_DELAY); // 传输屏幕缓冲区数据到屏幕
-    HAL_SPI_Transmit(&LCD_SPI, (uint8_t*)LCD_Buff, (sizeof(LCD_Buff) / 2 / 2), HAL_MAX_DELAY); // 传输屏幕缓冲区数据到屏幕
+    LCD_SPI_Transmit();
+    HAL_Delay(500);
 
 // 全部设置完毕之后，打开背光	
    LCD_Backlight_ON;  // 引脚输出高电平点亮背光
