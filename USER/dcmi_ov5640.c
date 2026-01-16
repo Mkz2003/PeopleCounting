@@ -25,6 +25,7 @@
 
 #include "cmsis_os.h"
 #include "lcd_spi_200.h"
+#include "main.h"
 #include "stm32h743xx.h"
 #include "stm32h7xx_hal_dcmi.h"
 #include <stdio.h>
@@ -32,12 +33,13 @@
 
 extern DCMI_HandleTypeDef hdcmi;  // 声明DCMI句柄，方便本文件使用
 
-__IO uint8_t OV5640_FrameState = 0;  // DCMI状态标志，当数据帧传输完成时，会被 HAL_DCMI_FrameEventCallback() 中断回调函数置 1     
-__IO float OV5640_FPS ;          // 帧率
 
-__attribute__((section(".sdram_bss"))) uint16_t Camera_Buffer[2][Display_Height][Display_Width] = {0};
+__attribute__((section(".ram_bss"))) uint16_t Camera_Buffer[2][Display_Height][Display_Width] = {0};
 // __attribute__((section(".sdram_bss"))) uint16_t Camera_Buffer[Display_Height][Display_Width] = {0};
 uint16_t* pCamera_Buffer = (uint16_t*)Camera_Buffer; // 摄像头数据缓冲区指针
+
+__IO uint8_t OV5640_FrameState = 0;  // DCMI状态标志，当数据帧传输完成时，会被 HAL_DCMI_FrameEventCallback() 中断回调函数置 1     
+__IO float OV5640_FPS ;          // 帧率
 
 /***************************************************************************************************************************************
 *	函 数 名: OV5640_Delay
@@ -622,13 +624,9 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
 {
 	static uint32_t DCMI_Tick_Start = 0, DCMI_Tick_End = 0;         	// 用于保存当前的时间计数值
 
-	static uint8_t i = 0;
 	DCMI_Tick_End = HAL_GetTick();
 	OV5640_FPS = 1000.0f / (DCMI_Tick_End - DCMI_Tick_Start);
 	DCMI_Tick_Start = DCMI_Tick_End;
-	OV5640_FrameState = 0;  // 传输完成标志位置0
-	i = 1 - i;		 // 切换缓冲区索引
-	pCamera_Buffer = (uint16_t*)Camera_Buffer[i]; // 切换到另一个缓冲区
 
 	OV5640_FrameState = 1;  // 传输完成标志位置1
 }
@@ -643,11 +641,16 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
 
 void  HAL_DCMI_ErrorCallback(DCMI_HandleTypeDef *hdcmi)
 {
-   // if( HAL_DCMI_GetError(hdcmi) == HAL_DCMI_ERROR_OVR)
-   // {
-   //    printf("FIFO溢出错误！！！\r\n");
-   // }
-//   printf("error:0x%x!!!!\r\n",HAL_DCMI_GetError(hdcmi));
+	if( HAL_DCMI_GetError(hdcmi) == HAL_DCMI_ERROR_OVR)
+	{
+		printf("FIFO溢出错误！！！\r\n");
+	}
+	uint32_t errorCode = HAL_DCMI_GetError(hdcmi);
+	printf("error:0x%x!!!!\r\n", errorCode);
+	while(1)
+	{
+
+	}
 }
 
 /*********************************************************************************************************************************************************************************************************************************************fanke*************/

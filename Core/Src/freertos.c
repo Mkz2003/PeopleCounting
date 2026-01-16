@@ -205,9 +205,12 @@ void LCDRefreshTask(void *argument)
 {
   /* USER CODE BEGIN LCDRefreshTask */
   extern uint16_t* pCamera_Buffer;
+
   __attribute__((section(".ram_bss"))) __IO static uint16_t adcval[3] = {0};
+
   HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED);
   HAL_ADC_Start_DMA(&hadc3, (uint32_t*)adcval, 3);
+
   float vrefint_cal_vref = (VREFINT_CAL_VREF / 1000.0f);
   float temperature_cal1_temp = TEMPSENSOR_CAL1_TEMP;
   float temperature_cal2_temp = TEMPSENSOR_CAL2_TEMP;
@@ -274,13 +277,17 @@ void LEDToggleTask(void *argument)
 void ImageProcessTask(void *argument)
 {
   /* USER CODE BEGIN ImageProcessTask */
+  extern uint16_t Camera_Buffer[2][Display_Height][Display_Width];
+  extern uint16_t* pCamera_Buffer; // 摄像头数据缓冲区指针
 
-  extern uint16_t* pCamera_Buffer;
+  uint8_t i = 0;  // 缓冲区索引
+  // extern uint16_t* pCamera_Buffer;
 
 	DCMI_OV5640_Init();   			 	// DCMI以及OV5640初始化
 	OV5640_AF_Download_Firmware();	// 写入自动对焦固件
 	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
-  OV5640_DMA_Transmit_Continuous((uint32_t)pCamera_Buffer, Display_BufferSize * 2);  // 启动DMA快照传输
+  osDelay(500);
+  OV5640_DMA_Transmit_Snapshot((uint32_t)Camera_Buffer[0], Display_BufferSize);  // 启动DMA快照传输
 
   /* Infinite loop */
   for(;;)
@@ -288,8 +295,15 @@ void ImageProcessTask(void *argument)
     if(OV5640_FrameState == 1)  // 等待一帧数据传输完成
     {
       OV5640_FrameState = 0;  // 清除传输完成标志位
+      pCamera_Buffer = (uint16_t*)Camera_Buffer[i]; // 切换到另一个缓冲区
+      i = 1 - i;		 // 切换缓冲区索引
+      OV5640_DCMI_Stop();
+      OV5640_DMA_Transmit_Snapshot((uint32_t)Camera_Buffer[i], Display_BufferSize);  // 启动DMA快照传输      
       // 这里可以对图像数据进行处理，例如人脸识别、目标检测等
       // 目前只是简单地将摄像头数据复制到image缓冲区
+      	
+      	
+
     }
     else
     {
