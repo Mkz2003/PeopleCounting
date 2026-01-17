@@ -34,7 +34,7 @@
 extern DCMI_HandleTypeDef hdcmi;  // 声明DCMI句柄，方便本文件使用
 
 
-__attribute__((section(".ram_bss"))) uint16_t Camera_Buffer[2][Display_Height][Display_Width] = {0};
+__attribute__((section(".ram_bss"), aligned(32)))uint16_t Camera_Buffer[Display_Height][Display_Width] = {0};
 // __attribute__((section(".sdram_bss"))) uint16_t Camera_Buffer[Display_Height][Display_Width] = {0};
 uint16_t* pCamera_Buffer = (uint16_t*)Camera_Buffer; // 摄像头数据缓冲区指针
 
@@ -76,7 +76,7 @@ int8_t DCMI_OV5640_Init(void)
 
 		OV5640_Config();													// 配置各项参数
 		OV5640_Set_Framesize(OV5640_Width,OV5640_Height);		//	设置OV5640输出的图像大小
-		OV5640_DCMI_Crop( Display_Width, Display_Height, OV5640_Width, OV5640_Height );	// 将输出图像裁剪成适应屏幕的大小，JPG模式不需要裁剪
+		// OV5640_DCMI_Crop( Display_Width, Display_Height, OV5640_Width, OV5640_Height );	// 将输出图像裁剪成适应屏幕的大小，JPG模式不需要裁剪
 				
 		return OV5640_Success;	 // 返回成功标志		
 	}
@@ -645,16 +645,17 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
 
 void  HAL_DCMI_ErrorCallback(DCMI_HandleTypeDef *hdcmi)
 {
-	if( HAL_DCMI_GetError(hdcmi) == HAL_DCMI_ERROR_OVR)
+	uint32_t errorCode = HAL_DCMI_GetError(hdcmi);
+	if(errorCode & HAL_DCMI_ERROR_OVR)
 	{
 		printf("FIFO溢出错误！！！\r\n");
 	}
-	uint32_t errorCode = HAL_DCMI_GetError(hdcmi);
-	printf("error:0x%x!!!!\r\n", errorCode);
-	while(1)
-	{
+	
+	// printf("error:0x%x!!!!\r\n", errorCode);
+	// while(1)
+	// {
 
-	}
+	// }
 }
 
 /*********************************************************************************************************************************************************************************************************************************************fanke*************/

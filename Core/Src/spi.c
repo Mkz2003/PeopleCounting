@@ -124,7 +124,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
 
     /* SPI5 DMA Init */
     /* SPI5_TX Init */
-    hdma_spi5_tx.Instance = DMA1_Stream2;
+    hdma_spi5_tx.Instance = DMA1_Stream3;
     hdma_spi5_tx.Init.Request = DMA_REQUEST_SPI5_TX;
     hdma_spi5_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_spi5_tx.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -133,7 +133,10 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
     hdma_spi5_tx.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     hdma_spi5_tx.Init.Mode = DMA_NORMAL;
     hdma_spi5_tx.Init.Priority = DMA_PRIORITY_MEDIUM;
-    hdma_spi5_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    hdma_spi5_tx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+    hdma_spi5_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+    hdma_spi5_tx.Init.MemBurst = DMA_MBURST_SINGLE;
+    hdma_spi5_tx.Init.PeriphBurst = DMA_PBURST_SINGLE;
     if (HAL_DMA_Init(&hdma_spi5_tx) != HAL_OK)
     {
       Error_Handler();
@@ -142,7 +145,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
     __HAL_LINKDMA(spiHandle,hdmatx,hdma_spi5_tx);
 
     /* SPI5 interrupt Init */
-    HAL_NVIC_SetPriority(SPI5_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(SPI5_IRQn, 14, 0);
     HAL_NVIC_EnableIRQ(SPI5_IRQn);
   /* USER CODE BEGIN SPI5_MspInit 1 */
 

@@ -26,15 +26,16 @@
 
 #include "stm32ipl_def.h"
 
-// #define USE_STM32H743
+#define USE_STM32H743
 
 /* Platform specific settings. */
 #ifdef USE_STM32H743
 
 #include "lcd_spi_200.h"
 #include "dcmi_ov5640.h"
+extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
 
-#define STM32IPL_LCD_FB_ADDR				LCD_Buff	/* Address of the LCD frame buffer. */
+#define STM32IPL_LCD_FB_ADDR				((uint32_t)LCDBackImage)	/* Address of the LCD frame buffer. */
 #define STM32IPL_LCD_WIDTH					LCD_Width			/* LCD width. */
 #define STM32IPL_LCD_HEIGHT					LCD_Height			/* LCD height. */
 #define STM32IPL_LCD_BPP					2			/* LCD bytes per pixel. */
@@ -46,7 +47,7 @@
 #define STM32IPL_CAM_FB_SIZE				(STM32IPL_CAM_WIDTH * STM32IPL_CAM_HEIGHT * STM32IPL_CAM_BPP)	/* Camera frame buffer size (bytes). */
 #define STM32IPL_EXT_MEM_ADDR				(STM32IPL_CAM_FB_ADDR + STM32IPL_CAM_FB_SIZE)	/* Address of the external memory assigned to STM32IPL. */
 #define STM32IPL_EXT_BUFFER_SIZE			(1024 * 2000)	/* Size of the external memory buffer reserved to STM32IPL. */
-#define STM32IPL_INT_BUFFER_SIZE			(1024 * 470)	/* Size of the internal memory buffer reserved to STM32IPL. */
+#define STM32IPL_INT_BUFFER_SIZE			(1024 * 1024 * 2)	/* Size of the internal memory buffer reserved to STM32IPL. */
 #define STM32IPL_ENABLE_HW_SCREEN_DRAWING 	/* Enable hardware accelerated image drawing; comment to disable. */
 #endif /* USE_STM32H743 */
 

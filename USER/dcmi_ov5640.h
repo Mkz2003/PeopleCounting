@@ -33,16 +33,16 @@ extern __IO float OV5640_FPS ;      // 帧率
 
 // 1. 定义OV5640实际输出的图像大小，可以根据实际的应用或者显示屏进行调整
 // 2. 这两个参数不会影响帧率
-// 3. 因为配置的OV5640的ISP窗口比例为4:3(1280*960)，用户设置的输出尺寸也应满足这个比例
+// 3. 因为配置的OV5640的ISP窗口比例为3:4（1458*1944），用户设置的输出尺寸也应满足这个比例
 // 4. 如果需要其它比例，需要修改初始化配置里的参数
-#define 	OV5640_Width          440   // 图像长度 
-#define 	OV5640_Height         330   // 图像宽度
+#define 	OV5640_Width          240   // 图像长度 
+#define 	OV5640_Height         320   // 图像宽度
 
 // 1. 定义要显示的画面大小，数值一定要能被4整除！！
 // 2. RGB565格式下，最终会由DCMI将OV5640输出的4:3图像裁剪为适应屏幕的比例
 // 3. JPG模式下，数值一定要能被8整除！！
-#define 	Display_Width          LCD_Width   	// 图像长度 
-#define 	Display_Height         LCD_Height   // 图像宽度
+#define 	Display_Width          OV5640_Width   	// 图像长度 
+#define 	Display_Height         OV5640_Height   // 图像宽度
 
 #define 	Display_BufferSize     ((Display_Width) * (Display_Height) * 2 / 4)   // DMA传输数据大小（32位宽）
 
