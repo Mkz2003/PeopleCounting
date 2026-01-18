@@ -66,6 +66,11 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
+static uint32_t DetectObject_Tick_Start = 0, DetectObject_Tick_End = 0;         	// 用于保存当前的时间计数值
+float DetectObject_FPS;
+
+uint32_t faceCount;
+
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -205,7 +210,7 @@ void StartDefaultTask(void *argument)
 void LCDRefreshTask(void *argument)
 {
   /* USER CODE BEGIN LCDRefreshTask */
-  extern uint16_t* pCamera_Buffer;
+  extern uint16_t* pCamera_Image;
   extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
 
   __attribute__((section(".ram_bss"))) __IO static uint16_t adcval[3] = {0};
@@ -238,10 +243,11 @@ void LCDRefreshTask(void *argument)
 
     // LCD_Clear();
     LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
-    // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Buffer);  // 将图像数据复制到屏幕
-    LCD_printf(1, 1, "screen fps: %.1f, camera fps: %.1f", (1000.0f / (endTime - startTime)), OV5640_FPS);
+    // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
+    LCD_printf(1, 1, "screen: %.1f, camera: %.1f, DO: %.1f", (1000.0f / (endTime - startTime)), OV5640_FPS, DetectObject_FPS);
     LCD_printf(2, 1, "%d", endTime);
     LCD_printf(3, 1, "VBat: %.1fV, Temp: %.1f^C, VREF: %.1fV", Vbat, Temp, Vref);
+    LCD_printf(4, 1, "%d", faceCount);
     LCD_SPI_Transmit();
     
     startTime = endTime;
@@ -279,11 +285,13 @@ void LEDToggleTask(void *argument)
 void ImageProcessTask(void *argument)
 {
   /* USER CODE BEGIN ImageProcessTask */
-#define MIDIMG_WIDTH   128
-#define MIDIMG_HEIGHT  128
+#define MIDIMG_WIDTH   60
+#define MIDIMG_HEIGHT  80
 
-  __attribute__((section(".sdram_bss"))) static uint8_t stm32iplBuffer[STM32IPL_INT_BUFFER_SIZE]; // STM32 IPL库使用的内部缓冲区
-  __attribute__((section(".sdram_bss"))) static uint16_t midImgBuffer[MIDIMG_HEIGHT][MIDIMG_WIDTH]; // STM32 IPL库使用的内部缓冲区
+  __attribute__((section(".sdram_bss"), aligned(32))) static uint8_t stm32iplBuffer[STM32IPL_INT_BUFFER_SIZE]; // STM32 IPL库使用的内部缓冲区
+
+  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t midImage[MIDIMG_HEIGHT][MIDIMG_WIDTH];
+  
 	cascade_t cascade;			// The cascade structure used by the object detector.
 	uint16_t thickness = 2;		// Set the thickness of the rectangle (pixels).
 	bool fill = false;			// Avoid to fill the rectangle.
@@ -294,14 +302,13 @@ void ImageProcessTask(void *argument)
   STM32Ipl_InitLib(stm32iplBuffer, STM32IPL_INT_BUFFER_SIZE);
   STM32Ipl_LoadFaceCascade(&cascade);
 
-  extern uint16_t Camera_Buffer[Display_Height][Display_Width];
-  extern uint16_t* pCamera_Buffer; // 摄像头数据缓冲区指针
+  extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
   extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
 
 	DCMI_OV5640_Init();   			 	// DCMI以及OV5640初始化
 	OV5640_AF_Download_Firmware();	// 写入自动对焦固件
 	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
-  OV5640_DMA_Transmit_Snapshot((uint32_t)Camera_Buffer, Display_BufferSize);  // 启动DMA快照传输
+  OV5640_StartImageCapture();
 
   /* Infinite loop */
   for(;;)
@@ -312,36 +319,39 @@ void ImageProcessTask(void *argument)
 
       // 这里可以对图像数据进行处理，例如人脸识别、目标检测等
       // 目前只是简单地将摄像头数据复制到image缓冲区
+
       image_t srcImg, midImg, dstImg;
-      STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Buffer);  
-      STM32Ipl_Init(&midImg, 128, 128, IMAGE_BPP_RGB565, (uint8_t*)midImgBuffer);   
+      STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
+      STM32Ipl_Init(&midImg, MIDIMG_WIDTH, MIDIMG_HEIGHT, IMAGE_BPP_RGB565, (uint8_t*)midImage);   
       STM32Ipl_Init(&dstImg, LCD_Width, LCD_Height, IMAGE_BPP_RGB565, (uint8_t*)LCDBackImage);
 
       STM32Ipl_Resize(&srcImg, &midImg, RESIZE_NEAREST);  // 将图像缩放到ai分辨率
       // STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率
 
-			uint32_t faceCount;
+			extern uint32_t faceCount;
 			array_t *faces = 0;
 			// Detect faces. No ROI is passed, so the full image is analyzed.
-			if (stm32ipl_err_Ok == STM32Ipl_DetectObject(&midImg, &faces, NULL, &cascade, 
-                                                         scaleFactor, threshold)) {
+			if (stm32ipl_err_Ok == STM32Ipl_DetectObject(&midImg, &faces, NULL, &cascade, scaleFactor, threshold))
+      {
         STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率
 				// Get the number of detected faces.
 				faceCount = array_length(faces);
 				// Get the bounding box for each detected face.
-				for (int i = 0; i < faceCount; i++) {
+				for (int i = 0; i < faceCount; i++)
+        {
 					rectangle_t *r = array_at(faces, i);
 					// Draw the bounding box around each detected face.
-					STM32Ipl_DrawRectangle(&dstImg, r->x * LCD_Width / MIDIMG_WIDTH, r->y * LCD_Height / MIDIMG_HEIGHT, r->w * LCD_Width / MIDIMG_WIDTH, r->h * LCD_Height / MIDIMG_HEIGHT, 	
-                                           STM32IPL_COLOR_GREEN, thickness, fill);
+					STM32Ipl_DrawRectangle(&dstImg, r->x * LCD_Width / MIDIMG_WIDTH, r->y * LCD_Height / MIDIMG_HEIGHT, r->w * LCD_Width / MIDIMG_WIDTH, r->h * LCD_Height / MIDIMG_HEIGHT, STM32IPL_COLOR_GREEN, thickness, fill);
 				}
 				// Release the array containing the faces.
 				array_free(faces);
 				faces = NULL;
 			}
       // STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率
-      OV5640_DMA_Transmit_Snapshot((uint32_t)Camera_Buffer, Display_BufferSize);  // 启动DMA快照传输
 
+      DetectObject_Tick_End = HAL_GetTick();
+			DetectObject_FPS = 1000.0f / (DetectObject_Tick_End - DetectObject_Tick_Start);
+			DetectObject_Tick_Start = DetectObject_Tick_End;      
     }
     else
     {

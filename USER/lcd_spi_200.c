@@ -21,6 +21,7 @@
 #include "lcd_spi_200.h"
 #include "lcd_font.h"
 #include "stm32h7xx_hal_def.h"
+#include "stm32h7xx_hal_dma.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -34,8 +35,8 @@ extern SPI_HandleTypeDef hspi5;	      // SPI_HandleTypeDef 结构体变量
 static void LCD_SetAddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2);
 volatile uint8_t LCD_SPI_LOCKED = 0;   // SPI总线锁定标志，0表示空闲，1表示锁定中
 
-__attribute__((section(".ram_bss"))) uint16_t LCD_Buff[LCD_Height][LCD_Width] = {0};        // LCD缓冲区，16位宽（每个像素点占2字节）
-__attribute__((section(".ram_bss"))) uint16_t LCDBackImage[LCD_Height][LCD_Width] = {0};        // 图像处理缓冲区，16位宽（每个像素点占2字节）
+__attribute__((section(".ram_bss"), aligned(32))) uint16_t LCD_Buff[LCD_Height][LCD_Width] = {0};        // LCD缓冲区，16位宽（每个像素点占2字节）
+__attribute__((section(".sdram_bss"), aligned(32))) uint16_t LCDBackImage[LCD_Height][LCD_Width] = {0};        // 图像处理缓冲区，16位宽（每个像素点占2字节）
 
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
@@ -651,5 +652,7 @@ void LCD_printf(uint16_t row, uint16_t col, const char *fmt,...)
   */
 void LCD_ShowImage(uint16_t x, uint16_t y, uint16_t* image)
 {
+    
     memcpy(LCD_Buff, image, sizeof(LCD_Buff));
+
 }

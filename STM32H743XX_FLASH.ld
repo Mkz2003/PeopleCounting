@@ -262,6 +262,26 @@ SECTIONS
     _eram_bss = .;          /* 段结束地址 */
   } >RAM
 
+  .ram_d2_bss (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _ram_d2_bss = .;          /* 段起始地址 */
+    *(.ram_d2_bss)             /* 将所有 .ram_d2_bss 输入段放入此处 */
+    *(.ram_d2_bss*)
+    . = ALIGN(4);
+    _eram_d2_bss = .;          /* 段结束地址 */
+  } >RAM_D2
+
+    .ram_d3_bss (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _ram_d3_bss = .;          /* 段起始地址 */
+    *(.ram_d3_bss)             /* 将所有 .ram_d3_bss 输入段放入此处 */
+    *(.ram_d3_bss*)
+    . = ALIGN(4);
+    _eram_d3_bss = .;          /* 段结束地址 */
+  } >RAM_D3
+
   .sdram_bss (NOLOAD) :
   {
     . = ALIGN(4);
