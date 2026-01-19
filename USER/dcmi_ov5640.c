@@ -26,8 +26,8 @@
 #include "cmsis_os.h"
 #include "lcd_spi_200.h"
 #include "main.h"
-#include "stm32h743xx.h"
-#include "stm32h7xx_hal_dcmi.h"
+#include "DMA2DProcess.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -658,10 +658,10 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
         uint32_t offset = transferCount * BATCH_SIZE;
 		uint16_t* p = (uint16_t*)(Camera_Image[currentImage]) + offset;
         // memcpy(p, Camera_Buffer[currentBuffer], BATCH_SIZE * PIXEL_SIZE);
-        extern DMA_HandleTypeDef hdma_memtomem_dma1_stream0;
-		HAL_DMA_Start(&hdma_memtomem_dma1_stream0, (uint32_t)Camera_Buffer[currentBuffer], (uint32_t)p,  BATCH_SIZE * PIXEL_SIZE / 4);
-		HAL_DMA_PollForTransfer(&hdma_memtomem_dma1_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-
+        // extern DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
+		// HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t)Camera_Buffer[currentBuffer], (uint32_t)p,  BATCH_SIZE * PIXEL_SIZE / 4);
+		// HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
+		DMA2D_MemCopy(Camera_Buffer[currentBuffer], p, Display_Width, SINGLE_BATCH_ROWS, 0, 0, DMA2D_OUTPUT_RGB565);
         // 更新传输计数
         transferCount++;
 

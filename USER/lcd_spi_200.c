@@ -20,8 +20,7 @@
 #include "main.h"
 #include "lcd_spi_200.h"
 #include "lcd_font.h"
-#include "stm32h7xx_hal_def.h"
-#include "stm32h7xx_hal_dma.h"
+#include "DMA2DProcess.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -652,7 +651,7 @@ void LCD_printf(uint16_t row, uint16_t col, const char *fmt,...)
   */
 void LCD_ShowImage(uint16_t x, uint16_t y, uint16_t* image)
 {
-    
-    memcpy(LCD_Buff, image, sizeof(LCD_Buff));
+    DMA2D_MemCopy(image, LCD_Buff, LCD_Width, LCD_Height, 0, 0, DMA2D_OUTPUT_RGB565);
+    // memcpy(LCD_Buff, image, sizeof(LCD_Buff));
 
 }
