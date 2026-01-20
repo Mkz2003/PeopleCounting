@@ -30,7 +30,6 @@
 #include "dcmi.h"
 #include "dma.h"
 #include "dma2d.h"
-#include "ltdc.h"
 #include "quadspi.h"
 #include "rtc.h"
 #include "spi.h"
@@ -68,7 +67,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
-static uint32_t DetectObject_Tick_Start = 0, DetectObject_Tick_End = 0;         	// 用于保存当前的时间计数值
+TickType_t DetectObject_Tick_Start = 0, DetectObject_Tick_End = 0;         	// 用于保存当前的时间计数值
 float DetectObject_FPS;
 array_t faces;
 
@@ -212,12 +211,13 @@ void LCDRefreshTask(void *argument)
 {
   /* USER CODE BEGIN LCDRefreshTask */
   extern uint16_t* pCamera_Image;
+  extern __IO float OV5640_FPS ;      // 帧率
   extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
   uint16_t thickness = 2;		// Set the thickness of the rectangle (pixels).
 	bool fill = false;			// Avoid to fill the rectangle.
   uint32_t faceCount;
 
-  __attribute__((section(".ram_bss"))) __IO static uint16_t adcval[3] = {0};
+  __attribute__((section(".ram_d3_bss"))) __IO static uint16_t adcval[3] = {0};
 
   HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED);
   HAL_ADC_Start_DMA(&hadc3, (uint32_t*)adcval, 3);
@@ -234,12 +234,17 @@ void LCDRefreshTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    static TickType_t startTime = 0, endTime = 0;    
-    endTime = xTaskGetTickCount();
+    // 计算LCD刷新帧率
+    static TickType_t LCD_Tick_Start = 0, LCD_Tick_End = 0;
+    float LCD_Tick_FPS; 
+    LCD_Tick_End = xTaskGetTickCount();
+    LCD_Tick_FPS = 1000.0f / (LCD_Tick_End - LCD_Tick_Start);
+    LCD_Tick_Start = LCD_Tick_End;
+
     // sprintf(s, "ADC1: %d, ADC2: %d, ADC3: %d\n", adcval[0], adcval[1], adcval[2]);
     // CDC_Transmit_FS((uint8_t*)s, strlen(s));
     float Vref = vrefint_cal_vref / vrefint_cal_addr * adcval[2];
-    float Vbat = adcval[0] * Vref / 65536.0f * 4.0f; // 电池电压，单位V
+    float Vbat = adcval[0] * Vref / (float)(1 << 16) * 4.0f;
     float Temp = temperature_cal1_temp
                   + (adcval[1] * vrefint_cal_vref / Vref - tempsensor_cal1_addr)
                     * (temperature_cal2_temp - temperature_cal1_temp)
@@ -260,13 +265,12 @@ void LCDRefreshTask(void *argument)
     // LCD_Clear();
     LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
-    LCD_printf(1, 1, "screen: %.1f, camera: %.1f, DO: %.1f", (1000.0f / (endTime - startTime)), OV5640_FPS, DetectObject_FPS);
-    LCD_printf(2, 1, "%d", endTime);
-    LCD_printf(3, 1, "VBat: %.1fV, Temp: %.1f^C, VREF: %.1fV", Vbat, Temp, Vref);
-    LCD_printf(4, 1, "%d", faceCount);
+    LCD_printf(1, 1, "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
+    LCD_printf(2, 1, "Tick: %.3f", LCD_Tick_End / 1000.0f);
+    LCD_printf(3, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
+    LCD_printf(4, 1, "FaceCount: %d", faceCount);
     LCD_SPI_Transmit();
-    
-    startTime = endTime;
+
     // osDelayUntil(endTime + 1000 / 30); // ~30fps
   }
   /* USER CODE END LCDRefreshTask */
@@ -301,7 +305,7 @@ void LEDToggleTask(void *argument)
 void ImageProcessTask(void *argument)
 {
   /* USER CODE BEGIN ImageProcessTask */
-
+  extern __IO uint8_t OV5640_FrameState;  // 声明变量，方便其它文件进行调用
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
 	DCMI_OV5640_Init();   			 	// DCMI以及OV5640初始化
 	OV5640_AF_Download_Firmware();	// 写入自动对焦固件
@@ -316,15 +320,17 @@ void ImageProcessTask(void *argument)
     {
       OV5640_FrameState = 0;  // 清除传输完成标志位
 
+      // 计算帧率
+      DetectObject_Tick_End = xTaskGetTickCount();
+			DetectObject_FPS = 1000.0f / (DetectObject_Tick_End - DetectObject_Tick_Start);
+			DetectObject_Tick_Start = DetectObject_Tick_End;
+
       // 这里可以对图像数据进行处理，例如人脸识别、目标检测等
-      // 将摄像头数据复制到image缓冲区
+      // 将摄像头数据指向srcImg，进行目标检测
       image_t srcImg;
       STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
       FaceDetection(&srcImg, &faces);
 
-      DetectObject_Tick_End = HAL_GetTick();
-			DetectObject_FPS = 1000.0f / (DetectObject_Tick_End - DetectObject_Tick_Start);
-			DetectObject_Tick_Start = DetectObject_Tick_End;      
     }
     else
     {

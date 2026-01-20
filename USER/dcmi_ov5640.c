@@ -33,9 +33,7 @@
 
 extern DCMI_HandleTypeDef hdcmi;  // 声明DCMI句柄，方便本文件使用
 
-
-
-__attribute__((section(".ram_bss"), aligned(32))) uint16_t Camera_Buffer[2][SINGLE_BATCH_ROWS][Display_Width] = {0};
+__attribute__((section(".ram_bss"), aligned(32))) uint16_t Camera_Buffer[1][SINGLE_BATCH_ROWS][Display_Width] = {0};
 __attribute__((section(".sdram_bss"), aligned(32))) uint16_t Camera_Image[2][Display_Height][Display_Width] = {0};
 uint16_t* pCamera_Image = (uint16_t*)Camera_Image; // 摄像头数据缓冲区指针
 
@@ -627,10 +625,8 @@ void OV5640_StartImageCapture(void)
 
     // 复位传输计数
     transferCount = 0;
-    memset(Camera_Buffer, 0, sizeof(Camera_Buffer));
-	memset(Camera_Image, 0, sizeof(Camera_Image));
     // 启动DCMI快照模式
-    HAL_DCMI_Start_DMA(&hdcmi, DCMI_MODE_SNAPSHOT, (uint32_t)Camera_Buffer, BATCH_SIZE * PIXEL_SIZE / 4);
+    HAL_DCMI_Start_DMA(&hdcmi, DCMI_MODE_CONTINUOUS, (uint32_t)Camera_Buffer[0], BATCH_SIZE * PIXEL_SIZE / 4);
 }
 
 /***************************************************************************************************************************************
@@ -649,11 +645,12 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
     if(copyInProgress == 0)
     {
         copyInProgress = 1;		
-		
-		HAL_DCMI_Stop(hdcmi);
-		HAL_DCMI_Start_DMA(hdcmi, DCMI_MODE_SNAPSHOT, (uint32_t)Camera_Buffer[1 - currentBuffer], BATCH_SIZE * PIXEL_SIZE / 4);
 
-		currentBuffer = 1 - currentBuffer;  // 切换缓冲区
+		  // 切换缓冲区
+		// HAL_DCMI_Stop(hdcmi);
+		// HAL_DCMI_Start_DMA(hdcmi, DCMI_MODE_SNAPSHOT, (uint32_t)Camera_Buffer[!currentBuffer], BATCH_SIZE * PIXEL_SIZE / 4);
+		// currentBuffer = !currentBuffer;
+
         // 将buff中的数据复制到当前image的指定位置
         uint32_t offset = transferCount * BATCH_SIZE;
 		uint16_t* p = (uint16_t*)(Camera_Image[currentImage]) + offset;
@@ -674,7 +671,7 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
             pCamera_Image = (uint16_t*)Camera_Image[currentImage];
             
             // 切换图像
-            currentImage = 1 - currentImage;
+            currentImage = !currentImage;
             
             // 设置图像就绪标志（供主程序使用）
             OV5640_FrameState = 1;
@@ -682,6 +679,7 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
             // 重置传输计数
             transferCount = 0;
 
+			// 计算帧率
 			DCMI_Tick_End = HAL_GetTick();
 			OV5640_FPS = 1000.0f / (DCMI_Tick_End - DCMI_Tick_Start);
 			DCMI_Tick_Start = DCMI_Tick_End;            

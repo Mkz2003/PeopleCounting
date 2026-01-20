@@ -17,31 +17,28 @@ void STM32IPL_Init(void)
 /**
  * @brief Detects faces in the source image and draws bounding boxes with black background.
  * @param srcImg RGB565 source image
- * @param _faces array with coordinates
+ * @param _faces array with coordinates. Its data will be refreshed with resultant data.
  * @return none
  */
 void FaceDetection(image_t* srcImg, array_t* _faces)
 {
-    __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t midImageRGB[MIDIMG_HEIGHT][MIDIMG_WIDTH];
-    __attribute__((section(".sdram_bss"), aligned(32))) static uint8_t midImageGray[MIDIMG_HEIGHT][MIDIMG_WIDTH];
+    __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t midImage[MIDIMG_HEIGHT][MIDIMG_WIDTH];
 
 	float scaleFactor = 1.25f;	// Modify this value to detect objects at 
 								// different scale (must be > 1.0f).
 	float threshold = 0.75f;	// Modify this value to tune the detection rate against
     							// the false positive rate (0.0f - 1.0f).
-    image_t _midImgRGB, _midImgGray;
-    image_t* midImgRGB = &_midImgRGB, *midImgGray = &_midImgGray;
-    STM32Ipl_Init(midImgRGB, MIDIMG_WIDTH, MIDIMG_HEIGHT, IMAGE_BPP_RGB565, (uint8_t*)midImageRGB);
-    STM32Ipl_Init(midImgGray, MIDIMG_WIDTH, MIDIMG_HEIGHT, IMAGE_BPP_GRAYSCALE, (uint8_t*)midImageGray);
+    image_t _midImg;
+    image_t* midImg = &_midImg;
+    STM32Ipl_Init(midImg, MIDIMG_WIDTH, MIDIMG_HEIGHT, IMAGE_BPP_RGB565, (uint8_t*)midImage);
 
-    STM32Ipl_Resize(srcImg, midImgRGB, RESIZE_NEAREST);  // 将图像缩放到ai分辨率
-    // STM32Ipl_Gaussian(midImgRGB, 1, true, true, NULL);
-    STM32Ipl_Convert(midImgRGB, midImgGray);
+    STM32Ipl_Resize(srcImg, midImg, RESIZE_NEAREST);  // 将图像缩放到ai分辨率，同时将图像储存。
+    // STM32Ipl_Gaussian(midImg, 1, true, true, NULL);
 
     array_t *faces = 0;
     uint32_t faceCount = 0;
     // Detect faces. No ROI is passed, so the full image is analyzed.
-    if (stm32ipl_err_Ok == STM32Ipl_DetectObject(midImgGray, &faces, NULL, &cascade, scaleFactor, threshold))
+    if (stm32ipl_err_Ok == STM32Ipl_DetectObject(midImg, &faces, NULL, &cascade, scaleFactor, threshold))
     {
         array_clear(_faces);
         // Get the number of detected faces.

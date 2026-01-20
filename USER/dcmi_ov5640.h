@@ -6,11 +6,6 @@
 #include "usart.h"
 #include "lcd_spi_200.h"
 
- // DCMI状态标志，当数据帧传输完成时，会被 HAL_DCMI_FrameEventCallback() 中断回调函数置 1 
-extern __IO uint8_t OV5640_FrameState;  // 声明变量，方便其它文件进行调用
-extern __IO float OV5640_FPS ;      // 帧率
-
-
 // 用于设置输出的格式，被 OV5640_Set_Pixformat() 引用
 #define 	Pixformat_RGB565   0
 #define 	Pixformat_JPEG     1
