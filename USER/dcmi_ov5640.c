@@ -27,20 +27,21 @@
 #include "lcd_spi_200.h"
 #include "main.h"
 #include "DMA2DProcess.h"
+#include "stm32h7xx_hal_dma.h"
 
 #include <stdio.h>
 #include <string.h>
 
 extern DCMI_HandleTypeDef hdcmi;  // 声明DCMI句柄，方便本文件使用
 
-__attribute__((section(".ram_bss"), aligned(32))) uint16_t Camera_Buffer[1][SINGLE_BATCH_ROWS][Display_Width] = {0};
-__attribute__((section(".sdram_bss"), aligned(32))) uint16_t Camera_Image[2][Display_Height][Display_Width] = {0};
+__attribute__((section(".ram_bss"), aligned(32))) uint16_t Camera_Buffer[2][SINGLE_BATCH_ROWS / 2][Display_Width];
+__attribute__((section(".sdram_bss"), aligned(32))) uint16_t Camera_Image[2][Display_Height][Display_Width];
 uint16_t* pCamera_Image = (uint16_t*)Camera_Image; // 摄像头数据缓冲区指针
 
-static __IO uint32_t transferCount = 0;    // 已传输批次计数
-static __IO uint8_t currentImage = 0;      // 当前正在填充的图像索引(0/1)
-static __IO uint8_t currentBuffer = 0;      // 当前正在填充的图像索引(0/1)
-static __IO uint8_t copyInProgress = 0;    // 复制操作进行中标志
+__IO uint32_t transferCount = 0;    // 已传输批次计数
+__IO uint8_t currentImage = 0;      // 当前正在填充的图像索引(0/1)
+__IO uint8_t currentBuffer = 0;      // 当前正在填充的图像索引(0/1)
+__IO uint8_t copyInProgress = 0;    // 复制操作进行中标志
 __IO uint8_t OV5640_FrameState = 0;  // DCMI状态标志，当数据帧传输完成时，会被 HAL_DCMI_FrameEventCallback() 中断回调函数置 1     
 __IO float OV5640_FPS ;          // 帧率
 
@@ -622,9 +623,10 @@ void OV5640_AF_Release(void)
 // 启动DCMI图像捕获
 void OV5640_StartImageCapture(void)
 {
-
     // 复位传输计数
     transferCount = 0;
+	memset(Camera_Buffer, 0, sizeof(Camera_Buffer));
+	// HAL_DMAEx_MultiBufferStart_IT(&hdma_dcmi, (uint32_t)&hdcmi.Instance->DR,(uint32_t)Camera_Buffer[0],(uint32_t)Camera_Buffer[1], BATCH_SIZE * PIXEL_SIZE / 4); // 每次传输一半
     // 启动DCMI快照模式
     HAL_DCMI_Start_DMA(&hdcmi, DCMI_MODE_CONTINUOUS, (uint32_t)Camera_Buffer[0], BATCH_SIZE * PIXEL_SIZE / 4);
 }
@@ -644,26 +646,17 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
  	// 防止中断重入导致复制冲突
     if(copyInProgress == 0)
     {
-        copyInProgress = 1;		
+        copyInProgress = 1;
 
-		  // 切换缓冲区
-		// HAL_DCMI_Stop(hdcmi);
-		// HAL_DCMI_Start_DMA(hdcmi, DCMI_MODE_SNAPSHOT, (uint32_t)Camera_Buffer[!currentBuffer], BATCH_SIZE * PIXEL_SIZE / 4);
-		// currentBuffer = !currentBuffer;
-
-        // 将buff中的数据复制到当前image的指定位置
-        uint32_t offset = transferCount * BATCH_SIZE;
-		uint16_t* p = (uint16_t*)(Camera_Image[currentImage]) + offset;
-        // memcpy(p, Camera_Buffer[currentBuffer], BATCH_SIZE * PIXEL_SIZE);
-        // extern DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
-		// HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t)Camera_Buffer[currentBuffer], (uint32_t)p,  BATCH_SIZE * PIXEL_SIZE / 4);
-		// HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-		DMA2D_MemCopy(Camera_Buffer[currentBuffer], p, Display_Width, SINGLE_BATCH_ROWS, 0, 0, DMA2D_OUTPUT_RGB565);
-        // 更新传输计数
-        transferCount++;
+        // // 将buff中的数据复制到当前image的指定位置
+        // uint32_t offset = transferCount * BATCH_SIZE;
+		// uint16_t* p = (uint16_t*)(Camera_Image[currentImage]) + offset;
+		// DMA2D_MemCopy(Camera_Buffer[currentBuffer], p, Display_Width, SINGLE_BATCH_ROWS, 0, 0, DMA2D_OUTPUT_RGB565);
+        // // 更新传输计数
+        // transferCount++;
 
         // 检查是否完成一帧
-        if(transferCount >= BATCHES_PER_FRAME)
+        if(transferCount >= BATCHES_PER_FRAME * 2 || 1)
         {
 			OV5640_FrameState = 0;  // 清除传输完成标志位
 
@@ -706,7 +699,7 @@ void  HAL_DCMI_ErrorCallback(DCMI_HandleTypeDef *hdcmi)
 	{
 		printf("FIFO溢出错误！！！\r\n");
 	}
-	
+	OV5640_StartImageCapture();
 	// printf("error:0x%x!!!!\r\n", errorCode);
 	// while(1)
 	// {
