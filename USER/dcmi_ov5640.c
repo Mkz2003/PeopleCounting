@@ -626,6 +626,7 @@ void OV5640_StartImageCapture(void)
     // 复位传输计数
     transferCount = 0;
 	memset(Camera_Buffer, 0, sizeof(Camera_Buffer));
+	memset(Camera_Image, 0, sizeof(Camera_Image));
 	// HAL_DMAEx_MultiBufferStart_IT(&hdma_dcmi, (uint32_t)&hdcmi.Instance->DR,(uint32_t)Camera_Buffer[0],(uint32_t)Camera_Buffer[1], BATCH_SIZE * PIXEL_SIZE / 4); // 每次传输一半
     // 启动DCMI快照模式
     HAL_DCMI_Start_DMA(&hdcmi, DCMI_MODE_CONTINUOUS, (uint32_t)Camera_Buffer[0], BATCH_SIZE * PIXEL_SIZE / 4);
@@ -679,7 +680,7 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
 
         }  
 
-        copyInProgress = 0;
+     copyInProgress = 0;
     }
 
 }
@@ -709,3 +710,60 @@ void  HAL_DCMI_ErrorCallback(DCMI_HandleTypeDef *hdcmi)
 
 /*********************************************************************************************************************************************************************************************************************************************fanke*************/
 // 反客
+
+// 在DMA中断调用，接收图像
+void DMAHandler(void)
+{
+
+  // DMA寄存器相关定义，移植于HAL库
+  typedef struct
+  {
+    __IO uint32_t ISR;   
+    __IO uint32_t Reserved0;
+    __IO uint32_t IFCR; 
+  } DMA_Registers;
+
+  //HAL 库的DMA的回调并不开放给用户（DCMI使用了），因此这里直接在总DMA中断进行数据的处理
+  //>>>>>>>> 添加自定义中断处理	  
+  extern DMA_HandleTypeDef hdma_dcmi;
+  extern DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
+
+  uint32_t tmpisr_dma;
+  DMA_Registers  *regs_dma  = (DMA_Registers *)(&hdma_dcmi)->StreamBaseAddress;	// 获取DMA相应的通道地址
+  tmpisr_dma  = regs_dma->ISR;	// 获取寄存器			
+  
+	if (( tmpisr_dma & (DMA_FLAG_TCIF0_4 << ((&hdma_dcmi)->StreamIndex & 0x1FU))) != 0U)	// 判断相应的通道是否被处罚
+	{
+		if(__HAL_DMA_GET_IT_SOURCE(&hdma_dcmi, DMA_IT_TC) != 0U)	// DMA传输完成标志
+		{
+			// 确定复制到当前image的位置
+			uint32_t offset = transferCount * BATCH_SIZE / 2;
+			uint16_t* p = (uint16_t*)(Camera_Image[currentImage]) + offset;  
+			// 判断是否使用双缓冲
+
+			if(((((DMA_Stream_TypeDef   *)(&hdma_dcmi)->Instance)->CR) & (uint32_t)(DMA_SxCR_DBM)) != 0U)
+			{			
+				if((((DMA_Stream_TypeDef   *)(&hdma_dcmi)->Instance)->CR & DMA_SxCR_CT) == 0U) // 缓冲区0
+				{
+					// HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
+					// HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t)Camera_Buffer[1], (uint32_t)p, BATCH_SIZE / 2);
+					DMA2D_MemCopy(Camera_Buffer[1], p, Display_Width, SINGLE_BATCH_ROWS / 2, 0, 0, DMA2D_OUTPUT_RGB565);
+					transferCount++;
+				}
+				else	// 缓冲区1							
+				{
+					// 复制缓冲数据到SDRAM
+					// HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
+					// HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t)Camera_Buffer[0], (uint32_t)p, BATCH_SIZE / 2);
+					DMA2D_MemCopy(Camera_Buffer[0], p, Display_Width, SINGLE_BATCH_ROWS / 2, 0, 0, DMA2D_OUTPUT_RGB565);	
+					transferCount++;								
+				}	
+			}
+			else
+			{
+				DMA2D_MemCopy(Camera_Buffer, p, Display_Width, SINGLE_BATCH_ROWS, 0, 0, DMA2D_OUTPUT_RGB565);
+				transferCount += 2;
+			}
+		}
+	}	
+}

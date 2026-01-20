@@ -58,10 +58,13 @@
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 extern DMA_HandleTypeDef hdma_dcmi;
 extern DCMI_HandleTypeDef hdcmi;
-extern DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
+extern DMA_HandleTypeDef hdma_memtomem_dma1_stream0;
 extern DMA2D_HandleTypeDef hdma2d;
 extern SDRAM_HandleTypeDef hsdram1;
+extern MDMA_HandleTypeDef hmdma_jpeg_infifo_th;
+extern MDMA_HandleTypeDef hmdma_jpeg_outfifo_th;
 extern JPEG_HandleTypeDef hjpeg;
+extern MDMA_HandleTypeDef hmdma_quadspi_fifo_th;
 extern QSPI_HandleTypeDef hqspi;
 extern DMA_HandleTypeDef hdma_spi5_tx;
 extern SPI_HandleTypeDef hspi5;
@@ -173,73 +176,41 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles Flash global interrupt.
+  */
+void FLASH_IRQHandler(void)
+{
+  /* USER CODE BEGIN FLASH_IRQn 0 */
+
+  /* USER CODE END FLASH_IRQn 0 */
+  HAL_FLASH_IRQHandler();
+  /* USER CODE BEGIN FLASH_IRQn 1 */
+
+  /* USER CODE END FLASH_IRQn 1 */
+}
+
+/**
+  * @brief This function handles RCC global interrupt.
+  */
+void RCC_IRQHandler(void)
+{
+  /* USER CODE BEGIN RCC_IRQn 0 */
+
+  /* USER CODE END RCC_IRQn 0 */
+  /* USER CODE BEGIN RCC_IRQn 1 */
+
+  /* USER CODE END RCC_IRQn 1 */
+}
+
+/**
   * @brief This function handles DMA1 stream0 global interrupt.
   */
 void DMA1_Stream0_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Stream0_IRQn 0 */
 
-  #include "DMA2DProcess.h"
-  #include "dcmi_ov5640.h"
-
-  // DMA寄存器相关定义，移植于HAL库
-  typedef struct
-  {
-    __IO uint32_t ISR;   
-    __IO uint32_t Reserved0;
-    __IO uint32_t IFCR; 
-  } DMA_Registers;
-
-  //HAL 库的DMA的回调并不开放给用户（DCMI使用了），因此这里直接在总DMA中断进行数据的处理
-  //>>>>>>>> 添加自定义中断处理	  
-  extern uint16_t Camera_Buffer[2][SINGLE_BATCH_ROWS / 2][Display_Width];
-  extern uint16_t Camera_Image[2][Display_Height][Display_Width];
-  extern __IO uint32_t transferCount;    // 已传输批次计数
-  extern __IO uint8_t currentImage;      // 当前正在填充的图像索引(0/1)
-  extern __IO uint8_t currentBuffer;      // 当前正在填充的图像索引(0/1)
-  extern __IO uint8_t copyInProgress;    // 复制操作进行中标志	
-  extern DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
-
-  uint32_t tmpisr_dma;
-  DMA_Registers  *regs_dma  = (DMA_Registers *)(&hdma_dcmi)->StreamBaseAddress;	// 获取DMA相应的通道地址
-  tmpisr_dma  = regs_dma->ISR;	// 获取寄存器			
-  
-	if (( tmpisr_dma & (DMA_FLAG_TCIF0_4 << ((&hdma_dcmi)->StreamIndex & 0x1FU))) != 0U)	// 判断相应的通道是否被处罚
-	{
-    if(__HAL_DMA_GET_IT_SOURCE(&hdma_dcmi, DMA_IT_TC) != 0U)	// DMA传输完成标志
-    {
-      // 确定复制到当前image的位置
-      uint32_t offset = transferCount * BATCH_SIZE / 2;
-      uint16_t* p = (uint16_t*)(Camera_Image[currentImage]) + offset;  
-      // 判断是否使用双缓冲
-
-      if(((((DMA_Stream_TypeDef   *)(&hdma_dcmi)->Instance)->CR) & (uint32_t)(DMA_SxCR_DBM)) != 0U)
-      {			
-        if((((DMA_Stream_TypeDef   *)(&hdma_dcmi)->Instance)->CR & DMA_SxCR_CT) == 0U) // 缓冲区0
-        {
-          // HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-          // HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t)Camera_Buffer[1], (uint32_t)p, BATCH_SIZE / 2);
-          DMA2D_MemCopy(Camera_Buffer[0], p, Display_Width, SINGLE_BATCH_ROWS / 2, 0, 0, DMA2D_OUTPUT_RGB565);
-          transferCount++;
-        }
-        else	// 缓冲区1							
-        {
-          // 复制缓冲数据到SDRAM
-          // HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-          // HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t)Camera_Buffer[0], (uint32_t)p, BATCH_SIZE / 2);
-          DMA2D_MemCopy(Camera_Buffer[1], p, Display_Width, SINGLE_BATCH_ROWS / 2, 0, 0, DMA2D_OUTPUT_RGB565);	
-          transferCount++;								
-        }	
-      }
-      else
-      {
-        DMA2D_MemCopy(Camera_Buffer, p, Display_Width, SINGLE_BATCH_ROWS, 0, 0, DMA2D_OUTPUT_RGB565);
-        transferCount += 2;
-      }
-		}
-	}	
   /* USER CODE END DMA1_Stream0_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_dcmi);
+  HAL_DMA_IRQHandler(&hdma_memtomem_dma1_stream0);
   /* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
 
   /* USER CODE END DMA1_Stream0_IRQn 1 */
@@ -335,9 +306,10 @@ void TIM6_DAC_IRQHandler(void)
 void DMA2_Stream0_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
-
+  #include "dcmi_ov5640.h"
+  DMAHandler();
   /* USER CODE END DMA2_Stream0_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_memtomem_dma2_stream0);
+  HAL_DMA_IRQHandler(&hdma_dcmi);
   /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
 
   /* USER CODE END DMA2_Stream0_IRQn 1 */
@@ -355,6 +327,19 @@ void DCMI_IRQHandler(void)
   /* USER CODE BEGIN DCMI_IRQn 1 */
 
   /* USER CODE END DCMI_IRQn 1 */
+}
+
+/**
+  * @brief This function handles FPU global interrupt.
+  */
+void FPU_IRQHandler(void)
+{
+  /* USER CODE BEGIN FPU_IRQn 0 */
+
+  /* USER CODE END FPU_IRQn 0 */
+  /* USER CODE BEGIN FPU_IRQn 1 */
+
+  /* USER CODE END FPU_IRQn 1 */
 }
 
 /**
@@ -425,6 +410,22 @@ void JPEG_IRQHandler(void)
   /* USER CODE BEGIN JPEG_IRQn 1 */
 
   /* USER CODE END JPEG_IRQn 1 */
+}
+
+/**
+  * @brief This function handles MDMA global interrupt.
+  */
+void MDMA_IRQHandler(void)
+{
+  /* USER CODE BEGIN MDMA_IRQn 0 */
+
+  /* USER CODE END MDMA_IRQn 0 */
+  HAL_MDMA_IRQHandler(&hmdma_quadspi_fifo_th);
+  HAL_MDMA_IRQHandler(&hmdma_jpeg_infifo_th);
+  HAL_MDMA_IRQHandler(&hmdma_jpeg_outfifo_th);
+  /* USER CODE BEGIN MDMA_IRQn 1 */
+
+  /* USER CODE END MDMA_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
