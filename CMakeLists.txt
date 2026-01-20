@@ -68,7 +68,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/imlib.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/integral_mw.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/integral.c
-    ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/jdata_conf.c
+    # ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/jdata_conf.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/lab_tab.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/line.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/matd.c

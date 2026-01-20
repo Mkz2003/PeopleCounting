@@ -56,8 +56,8 @@ extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
 #define STM32IPL_JPEG_SUBSAMPLING			STM32IPL_JPEG_422_SUBSAMPLING	/* The chroma subsampling used to encode JPEG images. */
 
 /* Library modules enablers. */
-// #define STM32IPL_ENABLE_IMAGE_IO				/* Enable image IO functions; comment to disable. */
-// #define STM32IPL_ENABLE_JPEG					/* Enable JPEG codec (active only if STM32IPL_ENABLE_IMAGE_IO is defined); comment to disable. */
+#define STM32IPL_ENABLE_IMAGE_IO				/* Enable image IO functions; comment to disable. */
+#define STM32IPL_ENABLE_JPEG					/* Enable JPEG codec (active only if STM32IPL_ENABLE_IMAGE_IO is defined); comment to disable. */
 #define STM32IPL_ENABLE_OBJECT_DETECTION		/* Enable object detection; comment to disable. */
 #define STM32IPL_ENABLE_FRONTAL_FACE_CASCADE	/* Use frontal face cascade; comment to do not use. */
 #define STM32IPL_ENABLE_EYE_CASCADE				/* Use eye cascade; comment to do not use. */

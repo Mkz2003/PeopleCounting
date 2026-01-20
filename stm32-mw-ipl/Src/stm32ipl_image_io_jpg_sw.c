@@ -19,6 +19,7 @@
 ///@cond
 
 #include "stm32ipl_image_io_jpg_sw.h"
+#include "stm32ipl_imlib_int.h"
 
 #ifdef STM32IPL_ENABLE_IMAGE_IO
 #ifdef STM32IPL_ENABLE_JPEG
