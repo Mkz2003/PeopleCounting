@@ -34,7 +34,7 @@
 
 extern DCMI_HandleTypeDef hdcmi;  // 声明DCMI句柄，方便本文件使用
 
-__attribute__((section(".ram_bss"), aligned(32))) uint16_t Camera_Buffer[2][SINGLE_BATCH_ROWS / 2][Display_Width];
+__attribute__((section(".ram_d2_bss"), aligned(32))) uint16_t Camera_Buffer[2][SINGLE_BATCH_ROWS / 2][Display_Width];
 __attribute__((section(".sdram_bss"), aligned(32))) uint16_t Camera_Image[2][Display_Height][Display_Width];
 uint16_t* pCamera_Image = (uint16_t*)Camera_Image; // 摄像头数据缓冲区指针
 
@@ -726,7 +726,6 @@ void DMAHandler(void)
   //HAL 库的DMA的回调并不开放给用户（DCMI使用了），因此这里直接在总DMA中断进行数据的处理
   //>>>>>>>> 添加自定义中断处理	  
   extern DMA_HandleTypeDef hdma_dcmi;
-  extern DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
 
   uint32_t tmpisr_dma;
   DMA_Registers  *regs_dma  = (DMA_Registers *)(&hdma_dcmi)->StreamBaseAddress;	// 获取DMA相应的通道地址
@@ -745,16 +744,12 @@ void DMAHandler(void)
 			{			
 				if((((DMA_Stream_TypeDef   *)(&hdma_dcmi)->Instance)->CR & DMA_SxCR_CT) == 0U) // 缓冲区0
 				{
-					// HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-					// HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t)Camera_Buffer[1], (uint32_t)p, BATCH_SIZE / 2);
 					DMA2D_MemCopy(Camera_Buffer[1], p, Display_Width, SINGLE_BATCH_ROWS / 2, 0, 0, DMA2D_OUTPUT_RGB565);
 					transferCount++;
 				}
 				else	// 缓冲区1							
 				{
 					// 复制缓冲数据到SDRAM
-					// HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-					// HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t)Camera_Buffer[0], (uint32_t)p, BATCH_SIZE / 2);
 					DMA2D_MemCopy(Camera_Buffer[0], p, Display_Width, SINGLE_BATCH_ROWS / 2, 0, 0, DMA2D_OUTPUT_RGB565);	
 					transferCount++;								
 				}	
