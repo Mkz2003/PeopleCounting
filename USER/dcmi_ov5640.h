@@ -30,8 +30,8 @@
 // 2. 这两个参数不会影响帧率
 // 3. 因为配置的OV5640的ISP窗口比例为3:4（1458*1944），用户设置的输出尺寸也应满足这个比例
 // 4. 如果需要其它比例，需要修改初始化配置里的参数
-#define OV5640_Width    576   // 图像长度 
-#define OV5640_Height   768   // 图像宽度
+#define OV5640_Width    240   // 图像长度 
+#define OV5640_Height   320   // 图像宽度
 
 // 1. 定义要显示的画面大小，数值一定要能被4整除！！
 // 2. RGB565格式下，最终会由DCMI将OV5640输出的4:3图像裁剪为适应屏幕的比例
@@ -40,7 +40,7 @@
 #define Display_Height  OV5640_Height   // 图像宽度
 
 #define PIXEL_SIZE  2          // RGB565为2字节
-#define SINGLE_BATCH_ROWS 256      // 每批传输的行数
+#define SINGLE_BATCH_ROWS 160      // 每批传输的行数
 #define BATCH_SIZE  ((Display_Width) * (SINGLE_BATCH_ROWS)) // 每批传输400行
 #define BATCHES_PER_FRAME   ((Display_Height) / (SINGLE_BATCH_ROWS))  // 每帧的批次数
 

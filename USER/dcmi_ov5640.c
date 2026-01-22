@@ -620,6 +620,188 @@ void OV5640_AF_Release(void)
 	SCCB_WriteReg_16Bit(OV5640_AF_CMD_MAIN,0x08);	// 对焦释放指令		
 }
 
+/**
+  * @brief  DMA conversion complete callback.
+  * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+  *                the configuration information for the specified DMA module.
+  * @retval None
+  */
+static void DCMI_DMAXferCplt(DMA_HandleTypeDef *hdma)
+{
+  uint32_t tmp ;
+
+  DCMI_HandleTypeDef *hdcmi = (DCMI_HandleTypeDef *)((DMA_HandleTypeDef *)hdma)->Parent;
+
+  if (hdcmi->XferCount != 0U)
+  {
+    /* Update memory 0 address location */
+    tmp = ((((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->CR) & DMA_SxCR_CT);
+    if (((hdcmi->XferCount % 2U) == 0U) && (tmp != 0U))
+    {
+      tmp = ((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->M0AR;
+      (void)HAL_DMAEx_ChangeMemory(hdcmi->DMA_Handle, (tmp + (8U * hdcmi->XferSize)), MEMORY0);
+      hdcmi->XferCount--;
+    }
+    /* Update memory 1 address location */
+    else if ((((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->CR & DMA_SxCR_CT) == 0U)
+    {
+      tmp = ((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->M1AR;
+      (void)HAL_DMAEx_ChangeMemory(hdcmi->DMA_Handle, (tmp + (8U * hdcmi->XferSize)), MEMORY1);
+      hdcmi->XferCount--;
+    }
+    else
+    {
+      /* Nothing to do */
+    }
+  }
+  /* Update memory 0 address location */
+  else if ((((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->CR & DMA_SxCR_CT) != 0U)
+  {
+    ((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->M0AR = hdcmi->pBuffPtr;
+  }
+  /* Update memory 1 address location */
+  else if ((((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->CR & DMA_SxCR_CT) == 0U)
+  {
+    tmp = hdcmi->pBuffPtr;
+    ((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->M1AR = (tmp + (4U * hdcmi->XferSize));
+    hdcmi->XferCount = hdcmi->XferTransferNumber;
+  }
+  else
+  {
+    /* Nothing to do */
+  }
+
+  /* Check if the frame is transferred */
+  if (hdcmi->XferCount == hdcmi->XferTransferNumber)
+  {
+    /* Enable the Frame interrupt */
+    __HAL_DCMI_ENABLE_IT(hdcmi, DCMI_IT_FRAME);
+
+    /* When snapshot mode, set dcmi state to ready */
+    if ((hdcmi->Instance->CR & DCMI_CR_CM) == DCMI_MODE_SNAPSHOT)
+    {
+      hdcmi->State = HAL_DCMI_STATE_READY;
+    }
+  }
+}
+
+/**
+  * @brief  DMA error callback
+  * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+  *                the configuration information for the specified DMA module.
+  * @retval None
+  */
+static void DCMI_DMAError(DMA_HandleTypeDef *hdma)
+{
+  DCMI_HandleTypeDef *hdcmi = (DCMI_HandleTypeDef *)((DMA_HandleTypeDef *)hdma)->Parent;
+
+  if (hdcmi->DMA_Handle->ErrorCode != HAL_DMA_ERROR_FE)
+  {
+    /* Initialize the DCMI state*/
+    hdcmi->State = HAL_DCMI_STATE_READY;
+
+    /* Set DCMI Error Code */
+    hdcmi->ErrorCode |= HAL_DCMI_ERROR_DMA;
+  }
+
+  /* DCMI error Callback */
+#if (USE_HAL_DCMI_REGISTER_CALLBACKS == 1)
+  /*Call registered DCMI error callback*/
+  hdcmi->ErrorCallback(hdcmi);
+#else
+  HAL_DCMI_ErrorCallback(hdcmi);
+#endif /* USE_HAL_DCMI_REGISTER_CALLBACKS */
+}
+
+/**
+  * @brief  Enables DCMI DMA request with multibuffer and enables DCMI capture. If Length > 65535, please use standard HAL function HAL_DCMI_Start_DMA().
+  * @param  hdcmi     pointer to a DCMI_HandleTypeDef structure that contains
+  *                    the configuration information for DCMI.
+  * @param  DCMI_Mode DCMI capture mode snapshot or continuous grab.
+  * @param  pData     The destination memory Buffer address (LCD Frame buffer).
+  * @param  Length    The length of capture to be transferred.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DCMI_Start_MultiDMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mode, uint32_t pData, uint32_t Length)
+{
+	/* Initialize the second memory address */
+	uint32_t SecondMemAddress;
+
+	/* Check function parameters */
+	assert_param(IS_DCMI_CAPTURE_MODE(DCMI_Mode));
+
+	/* Process Locked */
+	__HAL_LOCK(hdcmi);
+
+	/* Lock the DCMI peripheral state */
+	hdcmi->State = HAL_DCMI_STATE_BUSY;
+
+	/* Enable DCMI by setting DCMIEN bit */
+	__HAL_DCMI_ENABLE(hdcmi);
+
+	/* Configure the DCMI Mode */
+	hdcmi->Instance->CR &= ~(DCMI_CR_CM);
+	hdcmi->Instance->CR |= (uint32_t)(DCMI_Mode);
+
+	/* Set the DMA memory0 conversion complete callback */
+	hdcmi->DMA_Handle->XferCpltCallback = DCMI_DMAXferCplt;
+
+	/* Set the DMA error callback */
+	hdcmi->DMA_Handle->XferErrorCallback = DCMI_DMAError;
+
+	/* Set the dma abort callback */
+	hdcmi->DMA_Handle->XferAbortCallback = NULL;
+
+	/* Reset transfer counters value */
+	hdcmi->XferCount = 0;
+	hdcmi->XferTransferNumber = 0;
+	hdcmi->XferSize = 0;
+	hdcmi->pBuffPtr = 0;
+
+	/* DCMI_DOUBLE_BUFFER Mode */
+
+	/* Set the DMA memory1 conversion complete callback */
+	hdcmi->DMA_Handle->XferM1CpltCallback = DCMI_DMAXferCplt;
+
+	/* Initialize transfer parameters */
+	hdcmi->XferCount = 1;
+	hdcmi->XferSize = Length;
+	hdcmi->pBuffPtr = pData;
+
+	/* Get the number of buffer */
+	hdcmi->XferSize = (hdcmi->XferSize / 2U);
+	hdcmi->XferCount = hdcmi->XferCount * 2U;
+
+	/* Update DCMI counter  and transfer number*/
+	hdcmi->XferCount = (hdcmi->XferCount - 2U);
+	hdcmi->XferTransferNumber = hdcmi->XferCount;
+
+	/* Update second memory address */
+	SecondMemAddress = (uint32_t)(pData + (4U * hdcmi->XferSize));
+
+	/* Start DMA multi buffer transfer */
+	if (HAL_DMAEx_MultiBufferStart_IT(hdcmi->DMA_Handle, (uint32_t)&hdcmi->Instance->DR, (uint32_t)pData, SecondMemAddress, hdcmi->XferSize) != HAL_OK)
+	{
+		/* Set Error Code */
+		hdcmi->ErrorCode = HAL_DCMI_ERROR_DMA;
+		/* Change DCMI state */
+		hdcmi->State = HAL_DCMI_STATE_READY;
+		/* Release Lock */
+		__HAL_UNLOCK(hdcmi);
+		/* Return function status */
+		return HAL_ERROR;
+	}
+
+	/* Enable Capture */
+	hdcmi->Instance->CR |= DCMI_CR_CAPTURE;
+
+	/* Release Lock */
+	__HAL_UNLOCK(hdcmi);
+
+	/* Return function status */
+	return HAL_OK;
+}
+
 // 启动DCMI图像捕获
 void OV5640_StartImageCapture(void)
 {
@@ -628,8 +810,8 @@ void OV5640_StartImageCapture(void)
 	memset(Camera_Buffer, 0, sizeof(Camera_Buffer));
 	memset(Camera_Image, 0, sizeof(Camera_Image));
 	// HAL_DMAEx_MultiBufferStart_IT(&hdma_dcmi, (uint32_t)&hdcmi.Instance->DR,(uint32_t)Camera_Buffer[0],(uint32_t)Camera_Buffer[1], BATCH_SIZE * PIXEL_SIZE / 4); // 每次传输一半
-    // 启动DCMI快照模式
-    HAL_DCMI_Start_DMA(&hdcmi, DCMI_MODE_CONTINUOUS, (uint32_t)Camera_Buffer[0], BATCH_SIZE * PIXEL_SIZE / 4);
+    // 启动DCMI连续模式
+    HAL_DCMI_Start_MultiDMA(&hdcmi, DCMI_MODE_CONTINUOUS, (uint32_t)Camera_Buffer[0], BATCH_SIZE * PIXEL_SIZE / 4);
 }
 
 /***************************************************************************************************************************************

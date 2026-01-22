@@ -271,7 +271,7 @@ void LCDRefreshTask(void *argument)
     LCD_printf(4, 1, "FaceCount: %d", faceCount);
     LCD_SPI_Transmit();
 
-    // osDelayUntil(endTime + 1000 / 30); // ~30fps
+    osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
   }
   /* USER CODE END LCDRefreshTask */
 }
@@ -290,7 +290,7 @@ void LEDToggleTask(void *argument)
   for(;;)
   {
     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-    osDelay(1000);
+    osDelayUntil(xTaskGetTickCount() / 1000 * 1000 + 1000);
   }
   /* USER CODE END LEDToggleTask */
 }
