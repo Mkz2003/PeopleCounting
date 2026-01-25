@@ -2,13 +2,14 @@
 #include "main.h"
 #include "usart.h"
 #include <stdio.h>
+#include "qspi_w25q64.h"
 
 
 
 
 void Setup(void)
 {
-
+    QSPI_W25Qxx_Init();
 }
 
 #ifdef __GNUC__

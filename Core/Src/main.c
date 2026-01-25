@@ -39,6 +39,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "MyCode.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -130,6 +132,8 @@ int main(void)
   MX_RTC_Init();
   MX_LIBJPEG_Init();
   /* USER CODE BEGIN 2 */
+
+  Setup();
 
   /* USER CODE END 2 */
 

@@ -51,6 +51,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/USER/sccb.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/MySTM32IPL.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/DMA2DProcess.c
+    ${CMAKE_CURRENT_LIST_DIR}/USER/qspi_w25q64.c
 
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/apriltag.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/array.c

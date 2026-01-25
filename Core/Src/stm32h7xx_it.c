@@ -60,12 +60,9 @@ extern DMA_HandleTypeDef hdma_dcmi;
 extern DCMI_HandleTypeDef hdcmi;
 extern DMA_HandleTypeDef hdma_memtomem_dma1_stream0;
 extern DMA2D_HandleTypeDef hdma2d;
-extern SDRAM_HandleTypeDef hsdram1;
 extern MDMA_HandleTypeDef hmdma_jpeg_infifo_th;
 extern MDMA_HandleTypeDef hmdma_jpeg_outfifo_th;
 extern JPEG_HandleTypeDef hjpeg;
-extern MDMA_HandleTypeDef hmdma_quadspi_fifo_th;
-extern QSPI_HandleTypeDef hqspi;
 extern DMA_HandleTypeDef hdma_spi5_tx;
 extern SPI_HandleTypeDef hspi5;
 extern DMA_HandleTypeDef hdma_usart1_rx;
@@ -176,20 +173,6 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles Flash global interrupt.
-  */
-void FLASH_IRQHandler(void)
-{
-  /* USER CODE BEGIN FLASH_IRQn 0 */
-
-  /* USER CODE END FLASH_IRQn 0 */
-  HAL_FLASH_IRQHandler();
-  /* USER CODE BEGIN FLASH_IRQn 1 */
-
-  /* USER CODE END FLASH_IRQn 1 */
-}
-
-/**
   * @brief This function handles RCC global interrupt.
   */
 void RCC_IRQHandler(void)
@@ -273,20 +256,6 @@ void USART1_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles FMC global interrupt.
-  */
-void FMC_IRQHandler(void)
-{
-  /* USER CODE BEGIN FMC_IRQn 0 */
-
-  /* USER CODE END FMC_IRQn 0 */
-  HAL_SDRAM_IRQHandler(&hsdram1);
-  /* USER CODE BEGIN FMC_IRQn 1 */
-
-  /* USER CODE END FMC_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM6 global interrupt, DAC1_CH1 and DAC1_CH2 underrun error interrupts.
   */
 void TIM6_DAC_IRQHandler(void)
@@ -330,19 +299,6 @@ void DCMI_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles FPU global interrupt.
-  */
-void FPU_IRQHandler(void)
-{
-  /* USER CODE BEGIN FPU_IRQn 0 */
-
-  /* USER CODE END FPU_IRQn 0 */
-  /* USER CODE BEGIN FPU_IRQn 1 */
-
-  /* USER CODE END FPU_IRQn 1 */
-}
-
-/**
   * @brief This function handles SPI5 global interrupt.
   */
 void SPI5_IRQHandler(void)
@@ -368,20 +324,6 @@ void DMA2D_IRQHandler(void)
   /* USER CODE BEGIN DMA2D_IRQn 1 */
 
   /* USER CODE END DMA2D_IRQn 1 */
-}
-
-/**
-  * @brief This function handles QUADSPI global interrupt.
-  */
-void QUADSPI_IRQHandler(void)
-{
-  /* USER CODE BEGIN QUADSPI_IRQn 0 */
-
-  /* USER CODE END QUADSPI_IRQn 0 */
-  HAL_QSPI_IRQHandler(&hqspi);
-  /* USER CODE BEGIN QUADSPI_IRQn 1 */
-
-  /* USER CODE END QUADSPI_IRQn 1 */
 }
 
 /**
@@ -420,7 +362,6 @@ void MDMA_IRQHandler(void)
   /* USER CODE BEGIN MDMA_IRQn 0 */
 
   /* USER CODE END MDMA_IRQn 0 */
-  HAL_MDMA_IRQHandler(&hmdma_quadspi_fifo_th);
   HAL_MDMA_IRQHandler(&hmdma_jpeg_infifo_th);
   HAL_MDMA_IRQHandler(&hmdma_jpeg_outfifo_th);
   /* USER CODE BEGIN MDMA_IRQn 1 */

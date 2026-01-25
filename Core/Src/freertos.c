@@ -266,9 +266,10 @@ void LCDRefreshTask(void *argument)
     LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
     LCD_printf(1, 1, "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
-    LCD_printf(2, 1, "Tick: %.3f", LCD_Tick_End / 1000.0f);
+    LCD_printf(2, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
     LCD_printf(3, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
     LCD_printf(4, 1, "FaceCount: %d", faceCount);
+    // 5LCD_printf(5, 1, "%x %x %x %x", *((uint32_t*)(0x90000000)), *((uint32_t*)(0x90000004)), *((uint32_t*)(0x90000008)), *((uint32_t*)(0x90000012)));
     LCD_SPI_Transmit();
 
     osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
