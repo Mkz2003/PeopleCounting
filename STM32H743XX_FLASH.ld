@@ -62,7 +62,7 @@ RAM_D3 (xrw)      : ORIGIN = 0x38000000, LENGTH = 64K
 ITCMRAM (xrw)      : ORIGIN = 0x00000000, LENGTH = 64K
 FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 2048K
 SDRAM (xrw)      : ORIGIN = 0xC0000000, LENGTH = 32M
-
+QUADSPI (rx)      : ORIGIN = 0x90000000, LENGTH = 8M
 }
 
 /* Highest address of the user mode stack */
@@ -292,5 +292,14 @@ SECTIONS
     _esdram_bss = .;          /* 段结束地址 */
   } >SDRAM
 
+  .quadspi (READONLY) :
+  {
+    . = ALIGN(4);
+    _quadspi = .;          /* 段起始地址 */
+    *(.quadspi)             /* 将所有 .quadspi 输入段放入此处 */
+    *(.quadspi*)
+    . = ALIGN(4);
+    _equadspi = .;          /* 段结束地址 */
+  } >QUADSPI
 
 }

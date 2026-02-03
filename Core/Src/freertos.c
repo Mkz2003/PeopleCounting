@@ -212,7 +212,7 @@ void LCDRefreshTask(void *argument)
   /* USER CODE BEGIN LCDRefreshTask */
   extern uint16_t* pCamera_Image;
   extern __IO float OV5640_FPS ;      // 帧率
-  extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
+  extern uint16_t LCD_Buff[LCD_Height][LCD_Width];
   uint16_t thickness = 2;		// Set the thickness of the rectangle (pixels).
 	bool fill = false;			// Avoid to fill the rectangle.
   uint32_t faceCount;
@@ -252,8 +252,8 @@ void LCDRefreshTask(void *argument)
 
     image_t srcImg, dstImg;
     STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
-    STM32Ipl_Init(&dstImg, LCD_Width, LCD_Height, IMAGE_BPP_RGB565, (uint8_t*)LCDBackImage);
-    STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率
+    STM32Ipl_Init(&dstImg, LCD_Width, LCD_Height, IMAGE_BPP_RGB565, (uint8_t*)LCD_Buff);
+    STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
     faceCount = array_length(&faces);
     for (int i = 0; i < faceCount; i++)
     {
@@ -263,13 +263,13 @@ void LCDRefreshTask(void *argument)
     }
     
     // LCD_Clear();
-    LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
+    // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
     LCD_printf(1, 1, "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
     LCD_printf(2, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
     LCD_printf(3, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
     LCD_printf(4, 1, "FaceCount: %d", faceCount);
-    // 5LCD_printf(5, 1, "%x %x %x %x", *((uint32_t*)(0x90000000)), *((uint32_t*)(0x90000004)), *((uint32_t*)(0x90000008)), *((uint32_t*)(0x90000012)));
+    LCD_printf(5, 1, "%x %x %x %x", *((uint32_t*)(0x90000000)), *((uint32_t*)(0x90000004)), *((uint32_t*)(0x90000008)), *((uint32_t*)(0x90000012)));
     LCD_SPI_Transmit();
 
     osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps

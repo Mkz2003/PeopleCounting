@@ -10,6 +10,17 @@
 void Setup(void)
 {
     QSPI_W25Qxx_Init();
+    // QSPI_W25Qxx_ChipErase();
+    int QSPI_Status = QSPI_W25Qxx_MemoryMappedMode(); // 配置QSPI为内存映射模式
+	if( QSPI_Status == QSPI_W25Qxx_OK )
+	{
+		printf ("\r\n进入内存映射模式成功，开始读取>>>>\r\n");		
+	}
+	else
+	{
+		printf ("\r\n内存映射错误！！  错误代码:%d\r\n",QSPI_Status);
+		while (1);
+	}
 }
 
 #ifdef __GNUC__

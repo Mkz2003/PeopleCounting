@@ -144,7 +144,11 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 # 如果需要，可以定义 SDRAM 起始地址供代码使用
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     SDRAM_BASE=0xC0000000
+    QUADSPI_BASE=0x90000000
 )
 
-target_link_options(${CMAKE_PROJECT_NAME} PRIVATE -u _printf_float)
-
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
+    -mfloat-abi=hard
+    -mfpu=fpv5-d16
+    -u _printf_float
+)
