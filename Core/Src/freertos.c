@@ -26,26 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-#include "adc.h"
-#include "dcmi.h"
-#include "dma.h"
-#include "dma2d.h"
-#include "quadspi.h"
-#include "rtc.h"
-#include "spi.h"
-#include "usart.h"
-#include "usb_device.h"
-#include "gpio.h"
-#include "fmc.h"
-
 #include "MyCode.h"
-#include <stdio.h>
-#include "usbd_cdc_if.h"
-#include "lcd_spi_200.h"
-#include "dcmi_ov5640.h"
-#include "stm32ipl.h"
-#include "MySTM32IPL.h"
-#include "DMA2DProcess.h"
 
 /* USER CODE END Includes */
 
@@ -100,6 +81,13 @@ const osThreadAttr_t ImageProcess_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for ObjectDetect */
+osThreadId_t ObjectDetectHandle;
+const osThreadAttr_t ObjectDetect_attributes = {
+  .name = "ObjectDetect",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -110,6 +98,7 @@ void StartDefaultTask(void *argument);
 void LCDRefreshTask(void *argument);
 void LEDToggleTask(void *argument);
 void ImageProcessTask(void *argument);
+void ObjectDetectTask(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -170,6 +159,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of ImageProcess */
   ImageProcessHandle = osThreadNew(ImageProcessTask, NULL, &ImageProcess_attributes);
 
+  /* creation of ObjectDetect */
+  ObjectDetectHandle = osThreadNew(ObjectDetectTask, NULL, &ObjectDetect_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -210,6 +202,7 @@ void StartDefaultTask(void *argument)
 void LCDRefreshTask(void *argument)
 {
   /* USER CODE BEGIN LCDRefreshTask */
+
   extern uint16_t* pCamera_Image;
   extern __IO float OV5640_FPS ;      // 帧率
   extern uint16_t LCD_Buff[LCD_Height][LCD_Width];
@@ -306,20 +299,58 @@ void LEDToggleTask(void *argument)
 void ImageProcessTask(void *argument)
 {
   /* USER CODE BEGIN ImageProcessTask */
-  extern __IO uint8_t OV5640_FrameState;  // 声明变量，方便其它文件进行调用
+
+  extern OV5640_FrameState ov5640_FrameState;
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
+
+  JPEGEncodeInit();
+
 	DCMI_OV5640_Init();   			 	// DCMI以及OV5640初始化
 	OV5640_AF_Download_Firmware();	// 写入自动对焦固件
 	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
   OV5640_StartImageCapture();
+
+  /* Infinite loop */
+  for(;;)
+  {
+    if(ov5640_FrameState.imageProcessState)  // 等待一帧数据传输完成
+    {
+      ov5640_FrameState.imageProcessState = 0;
+
+      uint32_t dstSize = JPEGEncode((uint8_t*)pCamera_Image, Display_Height * Display_Width * 2);
+      CDC_Transmit_FS(jpeg_buffer, dstSize);
+    }
+    else
+    {
+      osThreadYield();
+    }
+  }
+  /* USER CODE END ImageProcessTask */
+}
+
+/* USER CODE BEGIN Header_ObjectDetectTask */
+/**
+* @brief Function implementing the ObjectDetect thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_ObjectDetectTask */
+void ObjectDetectTask(void *argument)
+{
+  /* USER CODE BEGIN ObjectDetectTask */
+
+  extern OV5640_FrameState ov5640_FrameState;
+  extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
+  extern OV5640_FrameState ov5640_FrameState;
+
   STM32IPL_Init();
 
   /* Infinite loop */
   for(;;)
   {
-    if(OV5640_FrameState == 1)  // 等待一帧数据传输完成
+    if(ov5640_FrameState.objectDetectState)  // 等待一帧数据传输完成
     {
-      OV5640_FrameState = 0;  // 清除传输完成标志位
+      ov5640_FrameState.objectDetectState = 0;
 
       // 计算帧率
       DetectObject_Tick_End = xTaskGetTickCount();
@@ -338,7 +369,7 @@ void ImageProcessTask(void *argument)
       osThreadYield();
     }
   }
-  /* USER CODE END ImageProcessTask */
+  /* USER CODE END ObjectDetectTask */
 }
 
 /* Private application code --------------------------------------------------*/

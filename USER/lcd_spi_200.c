@@ -32,7 +32,7 @@ extern SPI_HandleTypeDef hspi5;	      // SPI_HandleTypeDef 结构体变量
 
 //SPI传输相关
 static void LCD_SetAddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2);
-volatile uint8_t LCD_SPI_LOCKED = 0;   // SPI总线锁定标志，0表示空闲，1表示锁定中
+__IO uint8_t LCD_SPI_LOCKED = 0;   // SPI总线锁定标志，0表示空闲，1表示锁定中
 
 __attribute__((section(".ram_bss"), aligned(32))) uint16_t LCD_Buff[LCD_Height][LCD_Width] = {0};        // LCD缓冲区，16位宽（每个像素点占2字节）
 // __attribute__((section(".sdram_bss"), aligned(32))) uint16_t LCDBackImage[LCD_Height][LCD_Width] = {0};        // 图像处理缓冲区，16位宽（每个像素点占2字节）
@@ -55,7 +55,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 *	函数功能: 批量写入数据到屏幕
 *	
 ****************************************************************************************************************************************/
-__attribute__((section(".quadspi")))void LCD_SPI_Transmit()
+void LCD_SPI_Transmit()
 {
     //This function transmits the data in the LCD_Buff buffer to the LCD screen using DMA in 16-bit data width, big-endian format.
     //此函数以16bit数据宽度通过DMA方式批量传输LCD_Buff缓冲区的数据到屏幕，大端优先。

@@ -24,6 +24,7 @@
 #include "dcmi_ov5640_cfg.h" 
 
 #include "cmsis_os.h"
+#include "jpeglib.h"
 #include "lcd_spi_200.h"
 #include "main.h"
 #include "DMA2DProcess.h"
@@ -42,8 +43,8 @@ __IO uint32_t transferCount = 0;    // 已传输批次计数
 __IO uint8_t currentImage = 0;      // 当前正在填充的图像索引(0/1)
 __IO uint8_t currentBuffer = 0;      // 当前正在填充的图像索引(0/1)
 __IO uint8_t copyInProgress = 0;    // 复制操作进行中标志
-__IO uint8_t OV5640_FrameState = 0;  // DCMI状态标志，当数据帧传输完成时，会被 HAL_DCMI_FrameEventCallback() 中断回调函数置 1     
-__IO float OV5640_FPS ;          // 帧率
+__IO OV5640_FrameState ov5640_FrameState = {0};  // DCMI状态标志，当数据帧传输完成时，会被 HAL_DCMI_FrameEventCallback() 中断回调函数置 1     
+float OV5640_FPS ;          // 帧率
 
 /***************************************************************************************************************************************
 *	函 数 名: OV5640_Delay
@@ -841,7 +842,7 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
         // 检查是否完成一帧
         if(transferCount >= BATCHES_PER_FRAME * 2 || 1)
         {
-			OV5640_FrameState = 0;  // 清除传输完成标志位
+			memset(&ov5640_FrameState, 0, sizeof(ov5640_FrameState));
 
             // 更新pCamera_Image指向已完成的图像
             pCamera_Image = (uint16_t*)Camera_Image[currentImage];
@@ -850,7 +851,7 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
             currentImage = !currentImage;
             
             // 设置图像就绪标志（供主程序使用）
-            OV5640_FrameState = 1;
+            memset(&ov5640_FrameState, 1, sizeof(ov5640_FrameState));
             
             // 重置传输计数
             transferCount = 0;

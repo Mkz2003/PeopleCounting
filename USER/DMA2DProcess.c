@@ -12,19 +12,21 @@
  * @param offsetDestination: Destination image line offset.
  * @param width: Width of the image in pixels.
  * @param height: Height of the image in pixels.
- * @param pixelFormat: Pixel format (e.g., DMA2D_OUTPUT_RGB565).
+ * @param foregroundPixelFormat: Foreground Pixel format (e.g., DMA2D_OUTPUT_RGB565).
+ * @param backgroundPixelFormat: Background Pixel format (e.g., DMA2D_OUTPUT_RGB565).
+ * @param destinationPixelFormat: Destination Pixel format (e.g., DMA2D_OUTPUT_RGB565).
  * @param opacity: Opacity of the foreground image (0-255).
  * @return none
  */
 void DMA2D_BlendColors(void* pForeground, void* pBackground, void* pDestination,
         uint32_t offsetForeground, uint32_t offsetBackground, uint32_t offsetDestination,
         uint16_t width, uint16_t height,
-        uint32_t pixelFormat, uint8_t opacity) {
+        uint32_t foregroundPixelFormat, uint32_t backgroundPixelFormat, uint32_t destinationPixelFormat, uint8_t opacity) {
 
     /* 等待DMA2D传输完成 */
     while (DMA2D->CR & DMA2D_CR_START);
 
-    DMA2D->CR    = 0x00020000UL;             // 设置工作模式为存储器到存储器并带颜色混合
+    DMA2D->CR    = DMA2D_M2M_BLEND;             // 设置工作模式为存储器到存储器并带颜色混合
 
     DMA2D->FGMAR = (uint32_t)pForeground;               // 设置前景数据内存地址
     DMA2D->BGMAR = (uint32_t)pBackground;               // 设置背景数据内存地址
@@ -36,12 +38,48 @@ void DMA2D_BlendColors(void* pForeground, void* pBackground, void* pDestination,
 
     DMA2D->NLR = (uint32_t)(width << 16) | (uint16_t)height; // 设置图像数据宽高（像素）
     
-    DMA2D->FGPFCCR = pixelFormat                // 设置前景色颜色格式
+    DMA2D->FGPFCCR = foregroundPixelFormat                // 设置前景色颜色格式
             | (1UL << 16)                       // 忽略前景颜色数据中的Alpha通道
             | ((uint32_t)opacity << 24);            // 设置前景色不透明度
 
-    DMA2D->BGPFCCR = pixelFormat;               // 设置背景颜色格式
-    DMA2D->OPFCCR  = pixelFormat;                // 设置输出颜色格式
+    DMA2D->BGPFCCR = backgroundPixelFormat;               // 设置背景颜色格式
+    DMA2D->OPFCCR  = destinationPixelFormat;                // 设置输出颜色格式
+
+    /* 启动传输 */
+    DMA2D->CR   |= DMA2D_CR_START;
+
+    /* 等待DMA2D传输完成 */
+    while (DMA2D->CR & DMA2D_CR_START);
+}
+
+/**
+  * @brief  DMA2D格式转换功能
+  * @param  pSrc: 源图像地址
+  * @param  pDst: 目标图像地址
+  * @param  width: 图像宽度（像素数）
+  * @param  height: 图像高度（像素数）
+  * @param  offsetSrc: 源图像行偏移（字节数）
+  * @param  offsetDst: 目标图像行偏移（字节数）
+  * @param  sourcePixelFormat: 源像素格式
+  * @param  destPixelFormat: 目标像素格式
+  * @retval None
+  */
+void DMA2D_FormatConvert(void *pSrc, void *pDst, int width, int height, 
+                         int offsetSrc, int offsetDst, 
+                         uint32_t sourcePixelFormat, uint32_t destPixelFormat)
+{
+    /* 等待DMA2D传输完成 */
+    while (DMA2D->CR & DMA2D_CR_START);
+
+    /* DMA2D配置为格式转换模式（存储器到存储器并带像素格式转换）*/
+    DMA2D->CR      = DMA2D_M2M_PFC;  /* 模式：存储器到存储器并带像素格式转换 */
+    DMA2D->FGMAR   = (uint32_t)pSrc;                     /* 前景存储器地址（源） */
+    DMA2D->OMAR    = (uint32_t)pDst;                     /* 输出存储器地址（目标） */
+    DMA2D->FGOR    = offsetSrc;                         /* 前景偏移 */
+    DMA2D->OOR     = offsetDst;                         /* 输出偏移 */
+    DMA2D->FGPFCCR = sourcePixelFormat;                  /* 前景像素格式控制 */
+    DMA2D->OPFCCR  = destPixelFormat;                    /* 输出像素格式控制 */
+    DMA2D->NLR     = (uint32_t)(width << 16) | (uint16_t)height; /* 行数和每行像素数 */
 
     /* 启动传输 */
     DMA2D->CR   |= DMA2D_CR_START;
@@ -67,7 +105,7 @@ void DMA2D_MemCopy(void * pSrc, void * pDst, int width, int height, int offsetSr
     while (DMA2D->CR & DMA2D_CR_START);
 
     /* DMA2D配置 */
-    DMA2D->CR      = 0x00000000UL;
+    DMA2D->CR      = DMA2D_M2M;
     DMA2D->FGMAR   = (uint32_t)pSrc;
     DMA2D->OMAR    = (uint32_t)pDst;
     DMA2D->FGOR    = offsetSrc;

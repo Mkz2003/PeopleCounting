@@ -52,6 +52,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/USER/MySTM32IPL.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/DMA2DProcess.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/qspi_w25q64.c
+    ${CMAKE_CURRENT_LIST_DIR}/USER/JPEGEncode.c
 
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/apriltag.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/array.c
@@ -69,7 +70,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/imlib.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/integral_mw.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/integral.c
-    # ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/jdata_conf.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/lab_tab.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/line.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/matd.c

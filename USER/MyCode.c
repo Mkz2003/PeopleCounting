@@ -1,11 +1,4 @@
 #include "MyCode.h"
-#include "main.h"
-#include "usart.h"
-#include <stdio.h>
-#include "qspi_w25q64.h"
-
-
-
 
 void Setup(void)
 {
@@ -44,7 +37,9 @@ int fputc(int ch, FILE *f)
 }
 
 
-// int8_t CDC_Receive_Callback(uint8_t* Buf, uint32_t Len)
-// {
-    
-// }
+int8_t CDC_Receive_Callback(uint8_t* Buf, uint32_t Len)
+{
+    CDC_Transmit_FS(Buf, Len);
+
+    return (USBD_OK);
+}

@@ -6,6 +6,12 @@
 #include "usart.h"
 #include "lcd_spi_200.h"
 
+// 存储数据传输完成标志
+typedef struct
+{
+    uint8_t imageProcessState, objectDetectState;
+}OV5640_FrameState;
+
 // 用于设置输出的格式，被 OV5640_Set_Pixformat() 引用
 #define 	Pixformat_RGB565   0
 #define 	Pixformat_JPEG     1
