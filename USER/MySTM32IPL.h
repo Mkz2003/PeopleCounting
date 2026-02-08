@@ -3,10 +3,27 @@
 
 #include "stm32ipl.h"
 
-#define MIDIMG_WIDTH   240
-#define MIDIMG_HEIGHT  320
+#define MIDIMG_WIDTH   (Display_Width / 2)
+#define MIDIMG_HEIGHT  (Display_Height / 2)
 
-void STM32IPL_Init(void);
-void FaceDetection(image_t* srcImg, array_t* _faces);
+typedef enum
+{
+    FACE = 0,
+    EYE,
+}DetectionType;
+
+typedef enum
+{
+    NONE = 0,
+    Flip,
+    Mirror,
+    FlipMirror,
+    Rotation90,
+    Rotation180,
+    Rotation270,
+}ReplaceType;
+
+void STM32IPL_MemInit(void);
+void CascadeDetection(image_t* srcImg, array_t* _array, DetectionType detection, ReplaceType replace);
 
 #endif /* __MYSTM32IPL_H */

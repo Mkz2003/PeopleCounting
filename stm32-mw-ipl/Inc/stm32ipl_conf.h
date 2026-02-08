@@ -46,7 +46,7 @@ extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
 #define STM32IPL_CAM_BPP					2			/* Camera bytes per pixel. */
 #define STM32IPL_CAM_FB_SIZE				(STM32IPL_CAM_WIDTH * STM32IPL_CAM_HEIGHT * STM32IPL_CAM_BPP)	/* Camera frame buffer size (bytes). */
 #define STM32IPL_EXT_MEM_ADDR				(STM32IPL_CAM_FB_ADDR + STM32IPL_CAM_FB_SIZE)	/* Address of the external memory assigned to STM32IPL. */
-#define STM32IPL_EXT_BUFFER_SIZE			(1024 * 2000)	/* Size of the external memory buffer reserved to STM32IPL. */
+#define STM32IPL_EXT_BUFFER_SIZE			(1024 * 1024 * 2)	/* Size of the external memory buffer reserved to STM32IPL. */
 #define STM32IPL_INT_BUFFER_SIZE			(1024 * 1024 * 2)	/* Size of the internal memory buffer reserved to STM32IPL. */
 #define STM32IPL_ENABLE_HW_SCREEN_DRAWING 	/* Enable hardware accelerated image drawing; comment to disable. */
 #endif /* USE_STM32H743 */
@@ -56,8 +56,8 @@ extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
 #define STM32IPL_JPEG_SUBSAMPLING			STM32IPL_JPEG_422_SUBSAMPLING	/* The chroma subsampling used to encode JPEG images. */
 
 /* Library modules enablers. */
-#define STM32IPL_ENABLE_IMAGE_IO				/* Enable image IO functions; comment to disable. */
-#define STM32IPL_ENABLE_JPEG					/* Enable JPEG codec (active only if STM32IPL_ENABLE_IMAGE_IO is defined); comment to disable. */
+// #define STM32IPL_ENABLE_IMAGE_IO				/* Enable image IO functions; comment to disable. */
+// #define STM32IPL_ENABLE_JPEG					/* Enable JPEG codec (active only if STM32IPL_ENABLE_IMAGE_IO is defined); comment to disable. */
 #define STM32IPL_ENABLE_OBJECT_DETECTION		/* Enable object detection; comment to disable. */
 #define STM32IPL_ENABLE_FRONTAL_FACE_CASCADE	/* Use frontal face cascade; comment to do not use. */
 #define STM32IPL_ENABLE_EYE_CASCADE				/* Use eye cascade; comment to do not use. */

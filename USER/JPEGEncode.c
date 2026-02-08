@@ -84,6 +84,11 @@ void HAL_JPEG_GetDataCallback(JPEG_HandleTypeDef *hjpeg, uint32_t NbDecodedData)
 
 void HAL_JPEG_EncodeCpltCallback(JPEG_HandleTypeDef *hjpeg)
 {    
-  Jpeg_HWEncodingEnd = 1; 
+    Jpeg_HWEncodingEnd = 1; 
 }
 
+void HAL_JPEG_ErrorCallback(JPEG_HandleTypeDef *hjpeg)
+{
+    length = 0;
+    Jpeg_HWEncodingEnd = 1; 
+}

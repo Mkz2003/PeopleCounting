@@ -560,8 +560,19 @@ void LCD_show_char(uint16_t row, uint16_t col, uint16_t chr)
         for (t1 = 0; t1 < 8; t1++)
         {
             if (temp&0x80)
-                LCD_draw_point(x, y);
-
+            {
+                /* check the corrdinate */
+                if ((x < 0) || (x > (LCD_Height - 1)) || (y < 0) || (y > (LCD_Width - 1)))
+                {
+                    continue;
+                }
+                LCD_Buff[LCD_Height - 1 - x][y] = LCD.Color;
+                // uint16_t color = LCD_Buff[LCD_Height - 1 - x][y];
+                // uint8_t r5 = (color >> 11) & 0x1f, g6 = (color >> 5) & 0x3f, b5 = color & 0x1f;
+                // uint16_t r8 = (r5 << 3) | (r5 >> 2), g8 = (g6 << 2) | (g6 >> 4), b8 = (b5 << 3) | (b5 >> 2);
+                // uint8_t Y = (77 * r8 + 150 * g8 + 29 * b8) >> 8;
+                // LCD_Buff[LCD_Height - 1 - x][y] = Y > 85 ? 0x0000 : 0xffff;
+            }
             temp <<= 1;
             y++;
             if ((y - y0) == 12)
