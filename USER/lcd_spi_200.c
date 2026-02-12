@@ -313,6 +313,75 @@ static void LCD_SetAddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2)
 }
 
 /****************************************************************************************************************************************
+*	函 数 名:	LCD_GetColor888
+*
+*	入口参数:	Color - 原色，示例：0x0000FF 表示蓝色
+*
+*	函数功能:	此函数用于转换16位颜色为24位颜色
+*
+*	说    明:	1. 出口参数使用24位 RGB888的颜色格式
+*					2. 24位的颜色中，从高位到低位分别对应 R、G、B  3个颜色通道
+*
+*****************************************************************************************************************************************/
+
+uint32_t LCD_GetColor888(uint16_t Color)
+{
+	uint8_t Red_Value = 0, Green_Value = 0, Blue_Value = 0; //各个颜色通道的值
+
+	Red_Value   = ((Color&0xf800) >> 8);   // 转换成 24位 的RGB565颜色
+	Green_Value = ((Color&0x07e0) >> 3);
+	Blue_Value  = ((Color&0x001f) << 3);
+
+	return ((Red_Value << 16) | (Green_Value << 8) | (Blue_Value << 0));		
+}
+
+/****************************************************************************************************************************************
+*	函 数 名:	LCD_GetColor565
+*
+*	入口参数:	Color - 要显示的颜色，示例：0x0000FF 表示蓝色
+*
+*	函数功能:	此函数用于设置画笔的颜色，例如显示字符、画点画线、绘图的颜色
+*
+*	说    明:	1. 为了方便用户使用自定义颜色，入口参数 Color 使用24位 RGB888的颜色格式，用户无需关心颜色格式的转换
+*					2. 24位的颜色中，从高位到低位分别对应 R、G、B  3个颜色通道
+*
+*****************************************************************************************************************************************/
+
+uint16_t LCD_GetColor565(uint32_t Color)
+{
+	uint16_t Red_Value = 0, Green_Value = 0, Blue_Value = 0; //各个颜色通道的值
+
+	Red_Value   = (uint16_t)((Color&0x00F80000)>>8);   // 转换成 16位 的RGB565颜色
+	Green_Value = (uint16_t)((Color&0x0000FC00)>>5);
+	Blue_Value  = (uint16_t)((Color&0x000000F8)>>3);
+
+	return (uint16_t)(Red_Value | Green_Value | Blue_Value);  // 将颜色写入全局LCD参数		
+}
+
+/****************************************************************************************************************************************
+*	函 数 名:	LCD_GetY565
+*
+*	入口参数:	Color - 原色，示例：0x0000FF 表示蓝色
+*
+*	函数功能:	此函数用于转换16位颜色为亮度
+*
+*	说    明:	1. 出口参数使用8位 RGB888的颜色格式对应亮度
+*					2. 24位的颜色中，从高位到低位分别对应 R、G、B  3个颜色通道
+*
+*****************************************************************************************************************************************/
+
+uint8_t LCD_GetY565(uint16_t Color)
+{
+	uint8_t Red_Value = 0, Green_Value = 0, Blue_Value = 0; //各个颜色通道的值
+
+	Red_Value   = ((Color&0xf800) >> 8);   // 转换成 24位 的RGB565颜色
+	Green_Value = ((Color&0x07e0) >> 3);
+	Blue_Value  = ((Color&0x001f) << 3);
+
+	return (Red_Value + Green_Value + Blue_Value) / 3;		
+}
+
+/****************************************************************************************************************************************
 *	函 数 名:	LCD_SetColor
 *
 *	入口参数:	Color - 要显示的颜色，示例：0x0000FF 表示蓝色
@@ -546,13 +615,41 @@ void LCD_show_char(uint16_t row, uint16_t col, uint16_t chr)
     uint16_t x = col * 6;
     uint16_t y = row * 12;
     uint16_t temp, t, t1;
-    uint16_t y0 = y;
+    uint16_t y0 = row * 12;
     chr = chr - ' ';
 
     if(row >= (LCD_Width / 12) || col >= (LCD_Height / 6))
     {
         return;
     }
+
+    uint32_t Y = 0;
+    for (t = 0; t < 12; t++)
+    {
+        for (t1 = 0; t1 < 8; t1++)
+        {
+            /* check the corrdinate */
+            if ((x < 0) || (x > (LCD_Height - 1)) || (y < 0) || (y > (LCD_Width - 1)))
+            {
+                continue;
+            }
+            Y += LCD_GetY565(LCD_Buff[LCD_Height - 1 - x][y]);
+            y++;
+            if ((y - y0) == 12)
+            {
+                y = y0;
+                x++;
+                break;
+            }
+        }
+    }
+    Y /= 6 * 12;
+    uint16_t color = Y >= 170 ? 0x0000 : 0xffff;
+
+    x = col * 6;
+    y = row * 12;
+    y0 = row * 12;
+
     for (t = 0; t < 12; t++)
     {
         temp = asc2_1206[chr][t];
@@ -566,12 +663,7 @@ void LCD_show_char(uint16_t row, uint16_t col, uint16_t chr)
                 {
                     continue;
                 }
-                LCD_Buff[LCD_Height - 1 - x][y] = LCD.Color;
-                // uint16_t color = LCD_Buff[LCD_Height - 1 - x][y];
-                // uint8_t r5 = (color >> 11) & 0x1f, g6 = (color >> 5) & 0x3f, b5 = color & 0x1f;
-                // uint16_t r8 = (r5 << 3) | (r5 >> 2), g8 = (g6 << 2) | (g6 >> 4), b8 = (b5 << 3) | (b5 >> 2);
-                // uint8_t Y = (77 * r8 + 150 * g8 + 29 * b8) >> 8;
-                // LCD_Buff[LCD_Height - 1 - x][y] = Y > 85 ? 0x0000 : 0xffff;
+                LCD_Buff[LCD_Height - 1 - x][y] = color;
             }
             temp <<= 1;
             y++;

@@ -272,7 +272,7 @@ SECTIONS
     _eram_d2_bss = .;          /* 段结束地址 */
   } >RAM_D2
 
-    .ram_d3_bss (NOLOAD) :
+  .ram_d3_bss (NOLOAD) :
   {
     . = ALIGN(4);
     _ram_d3_bss = .;          /* 段起始地址 */

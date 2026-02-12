@@ -3,8 +3,8 @@
 
 #include "stm32ipl.h"
 
-#define MIDIMG_WIDTH   (Display_Width / 2)
-#define MIDIMG_HEIGHT  (Display_Height / 2)
+#define DETECT_WIDTH   (Display_Width / 2)
+#define DETECT_HEIGHT  (Display_Height / 2)
 
 typedef enum
 {

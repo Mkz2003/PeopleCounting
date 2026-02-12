@@ -9,7 +9,7 @@
 // 存储数据传输完成标志
 typedef struct
 {
-    uint8_t imageProcessState, objectDetectState;
+    __IO uint8_t imageProcessState, objectDetectState;
 }OV5640_FrameState;
 
 // 用于设置输出的格式，被 OV5640_Set_Pixformat() 引用

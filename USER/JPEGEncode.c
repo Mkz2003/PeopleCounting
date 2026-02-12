@@ -35,7 +35,7 @@ void JPEGEncodeInit()
     jpegConf.ChromaSubsampling = JPEG_422_SUBSAMPLING;
     jpegConf.ImageWidth = Display_Width;
     jpegConf.ImageHeight = Display_Height;
-    jpegConf.ImageQuality = 75;
+    jpegConf.ImageQuality = 50;
     // 应用配置
     if (HAL_JPEG_ConfigEncoding(&hjpeg, &jpegConf) != HAL_OK)
     {

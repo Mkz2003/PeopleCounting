@@ -55,6 +55,9 @@
 
 /*------------------------------------------------ 函数声明 ----------------------------------------------*/
 void SPI_LCD_Init(void);
+uint32_t LCD_GetColor888(uint16_t Color);
+uint16_t LCD_GetColor565(uint32_t Color);
+uint8_t LCD_GetY565(uint16_t Color);
 void LCD_SetColor(uint32_t Color);
 void LCD_SetBackColor(uint32_t Color);
 void LCD_SetDirection(uint8_t direction);

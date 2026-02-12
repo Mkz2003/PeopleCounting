@@ -11,7 +11,9 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
-
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -28,8 +30,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 project(${CMAKE_PROJECT_NAME})
 message("Build type: " ${CMAKE_BUILD_TYPE})
 
-# Enable CMake support for ASM and C languages
-enable_language(C ASM)
+# Enable CMake support for ASM and C languages and CXX languages
+enable_language(C CXX ASM)
 
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME})
@@ -53,6 +55,13 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/USER/DMA2DProcess.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/qspi_w25q64.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/JPEGEncode.c
+
+    ${CMAKE_CURRENT_LIST_DIR}/USER/MyByteTrack.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/BYTETracker.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/kalmanFilter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/lapjv.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/STrack.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/utils.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/apriltag.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Src/array.c
@@ -121,6 +130,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ${CMAKE_CURRENT_LIST_DIR}/USER/
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Inc/
+    ${CMAKE_CURRENT_LIST_DIR}/eigen
+    ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/include
 )
 
 # Add project symbols (macros)
@@ -148,7 +159,5 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
 target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
-    -mfloat-abi=hard
-    -mfpu=fpv5-d16
     -u _printf_float
 )

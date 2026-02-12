@@ -6,8 +6,8 @@
 #include "stm32ipl_imlib_int.h"
 
 __attribute__((section(".sdram_bss"), aligned(32))) static uint8_t stm32iplBuffer[STM32IPL_INT_BUFFER_SIZE]; // STM32 IPL库使用的内部缓冲区   
-__attribute__((section(".sdram_bss"), aligned(32))) static uint16_t midImage[MIDIMG_HEIGHT][MIDIMG_WIDTH];
-__attribute__((section(".sdram_bss"), aligned(32))) static uint16_t dstImage[MIDIMG_HEIGHT][MIDIMG_WIDTH];
+__attribute__((section(".sdram_bss"), aligned(32))) static uint16_t midImage[DETECT_HEIGHT][DETECT_WIDTH];
+__attribute__((section(".sdram_bss"), aligned(32))) static uint16_t dstImage[DETECT_HEIGHT][DETECT_WIDTH];
 
 cascade_t face_cascade;			// The cascade structure used by the object detector.
 cascade_t eye_cascade;			// The cascade structure used by the object detector.
@@ -30,8 +30,8 @@ void CascadeDetection(image_t* srcImg, array_t* _array, DetectionType detection,
 {
     image_t _midImg, * midImg = &_midImg;
     image_t _dstImg, * dstImg = &_dstImg;
-    STM32Ipl_Init(midImg, MIDIMG_WIDTH, MIDIMG_HEIGHT, IMAGE_BPP_RGB565, (uint8_t*)midImage);
-    STM32Ipl_Init(dstImg, MIDIMG_WIDTH, MIDIMG_HEIGHT, IMAGE_BPP_RGB565, (uint8_t*)dstImage);
+    STM32Ipl_Init(midImg, DETECT_WIDTH, DETECT_HEIGHT, IMAGE_BPP_RGB565, (uint8_t*)midImage);
+    STM32Ipl_Init(dstImg, DETECT_WIDTH, DETECT_HEIGHT, IMAGE_BPP_RGB565, (uint8_t*)dstImage);
 
     cascade_t* cascade;
     switch(detection)
@@ -49,6 +49,16 @@ void CascadeDetection(image_t* srcImg, array_t* _array, DetectionType detection,
     STM32Ipl_Resize(srcImg, midImg, RESIZE_NEAREST);  // 将图像缩放、旋转，同时将图像储存。
     switch(replace)
     {
+        case Rotation90:
+        {
+            STM32Ipl_Rotation90(dstImg, midImg);
+            break;            
+        }
+        case Rotation180:
+        {
+            STM32Ipl_Rotation180(dstImg, midImg);
+            break;  
+        }
         case Rotation270:
         {
             STM32Ipl_Rotation270(dstImg, midImg);
@@ -78,18 +88,40 @@ void CascadeDetection(image_t* srcImg, array_t* _array, DetectionType detection,
             // Draw the bounding box around each detected face.
             switch(replace)
             {
+                case Rotation90:
+                {
+                    array_push_back(_array, 
+                                    rectangle_alloc(r->y * Display_Width / DETECT_WIDTH, 
+                                                            (DETECT_HEIGHT - r->x - r->w) * Display_Height / DETECT_HEIGHT, 
+                                                            r->h * Display_Width / DETECT_WIDTH, 
+                                                            r->w * Display_Height / DETECT_HEIGHT));    // transform coordinates because it is rotated 270.   
+                    break;                 
+                }
+                case Rotation180:
+                {
+                    array_push_back(_array, 
+                                    rectangle_alloc((DETECT_WIDTH - r->x - r->w) * Display_Width / DETECT_WIDTH, 
+                                                            (DETECT_HEIGHT - r->y - r->h) * Display_Height / DETECT_HEIGHT, 
+                                                            r->w * Display_Width / DETECT_WIDTH, 
+                                                            r->h * Display_Height / DETECT_HEIGHT));                    
+                    break;
+                }
                 case Rotation270:
                 {
                     array_push_back(_array, 
-                                    rectangle_alloc((MIDIMG_WIDTH - r->y - r->h) * LCD_Width / MIDIMG_WIDTH, 
-                                        r->x * LCD_Height / MIDIMG_HEIGHT, 
-                                        r->h * LCD_Width / MIDIMG_WIDTH, 
-                                        r->w * LCD_Height / MIDIMG_HEIGHT));    // transform coordinates because it is rotated 270.
+                                    rectangle_alloc((DETECT_WIDTH - r->y - r->h) * Display_Width / DETECT_WIDTH, 
+                                                            r->x * Display_Height / DETECT_HEIGHT, 
+                                                            r->h * Display_Width / DETECT_WIDTH, 
+                                                            r->w * Display_Height / DETECT_HEIGHT));    // transform coordinates because it is rotated 270.
                     break;
                 }
                 default:
                 {
-                    array_push_back(_array, rectangle_alloc(r->x * LCD_Width / MIDIMG_WIDTH, r->y * LCD_Height / MIDIMG_HEIGHT, r->w * LCD_Width / MIDIMG_WIDTH, r->h * LCD_Height / MIDIMG_HEIGHT));
+                    array_push_back(_array, 
+                                    rectangle_alloc(r->x * Display_Width / DETECT_WIDTH, 
+                                                            r->y * Display_Height / DETECT_HEIGHT, 
+                                                            r->w * Display_Width / DETECT_WIDTH, 
+                                                            r->h * Display_Height / DETECT_HEIGHT));
                     break;
                 }
             }

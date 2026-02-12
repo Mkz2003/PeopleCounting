@@ -43,7 +43,7 @@ __IO uint32_t transferCount = 0;    // 已传输批次计数
 __IO uint8_t currentImage = 0;      // 当前正在填充的图像索引(0/1)
 __IO uint8_t currentBuffer = 0;      // 当前正在填充的图像索引(0/1)
 __IO uint8_t copyInProgress = 0;    // 复制操作进行中标志
-__IO OV5640_FrameState ov5640_FrameState = {0};  // DCMI状态标志，当数据帧传输完成时，会被 HAL_DCMI_FrameEventCallback() 中断回调函数置 1     
+OV5640_FrameState ov5640_FrameState = {0};  // DCMI状态标志，当数据帧传输完成时，会被 HAL_DCMI_FrameEventCallback() 中断回调函数置 1     
 float OV5640_FPS ;          // 帧率
 
 /***************************************************************************************************************************************

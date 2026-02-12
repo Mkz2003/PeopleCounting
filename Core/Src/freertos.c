@@ -50,7 +50,7 @@
 
 TickType_t DetectObject_Tick_Start = 0, DetectObject_Tick_End = 0;         	// 用于保存当前的时间计数值
 float DetectObject_FPS = 0.0f;
-array_t faces = {0}, eyes = {0};
+array_t* faces = NULL,  * eyes = NULL, * faceIDs = NULL;
 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
@@ -85,7 +85,7 @@ const osThreadAttr_t ImageProcess_attributes = {
 osThreadId_t ObjectDetectHandle;
 const osThreadAttr_t ObjectDetect_attributes = {
   .name = "ObjectDetect",
-  .stack_size = 1024 * 4,
+  .stack_size = 8192 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 
@@ -202,6 +202,10 @@ void StartDefaultTask(void *argument)
 void LCDRefreshTask(void *argument)
 {
   /* USER CODE BEGIN LCDRefreshTask */
+  extern size_t umm_free_heap_size( void );
+  extern size_t umm_max_free_block_size( void );
+  extern int umm_usage_metric( void );
+  extern int umm_fragmentation_metric( void );
 
   extern uint16_t* pCamera_Image;
   extern __IO float OV5640_FPS ;      // 帧率
@@ -247,28 +251,27 @@ void LCDRefreshTask(void *argument)
     STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
     STM32Ipl_Init(&dstImg, LCD_Width, LCD_Height, IMAGE_BPP_RGB565, (uint8_t*)LCD_Buff);
     STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
-    faceCount = array_length(&faces);
-    eyeCount = array_length(&eyes);
+
+    faceCount = (faceIDs != NULL ? array_length(faceIDs) : 0);
     for (int i = 0; i < faceCount; i++)
     {
-        rectangle_t *r = array_at(&faces, i);
+        faceIDObject_t *f = array_at(faceIDs, i);
         // Draw the bounding box around each detected face.
-        STM32Ipl_DrawRectangle(&dstImg, r->x, r->y, r->w, r->h, STM32IPL_COLOR_GREEN, thickness, fill);
-    }
-    for (int i = 0; i < eyeCount; i++)
-    {
-        rectangle_t *r = array_at(&eyes, i);
-        // Draw the bounding box around each detected face.
-        STM32Ipl_DrawRectangle(&dstImg, r->x, r->y, r->w, r->h, STM32IPL_COLOR_RED, thickness, fill);
-    }    
+        STM32Ipl_DrawRectangle(&dstImg, 
+                                f->r.x * LCD_Width / Display_Width, 
+                                f->r.y * LCD_Height / Display_Height, 
+                                f->r.w * LCD_Width / Display_Width, 
+                                f->r.h * LCD_Height / Display_Height, 
+                                f->color, thickness, fill);
+    }   
     // LCD_Clear();
     // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
     LCD_printf(1, 1, "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
     LCD_printf(2, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
     LCD_printf(3, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
-    LCD_printf(4, 1, "FaceCount: %d", faceCount);
-    LCD_printf(5, 1, "%x %x %x %x", *((uint32_t*)(0x90000000)), *((uint32_t*)(0x90000004)), *((uint32_t*)(0x90000008)), *((uint32_t*)(0x90000012)));
+    LCD_printf(4, 1, "Face: %d, Eye: %d", faceCount, eyeCount);
+    LCD_printf(5, 1, "%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
     LCD_SPI_Transmit();
 
     osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
@@ -322,7 +325,6 @@ void ImageProcessTask(void *argument)
     if(ov5640_FrameState.imageProcessState)  // 等待一帧数据传输完成
     {
       ov5640_FrameState.imageProcessState = 0;
-
       // uint32_t dstSize = JPEGEncode((uint8_t*)pCamera_Image, Display_Height * Display_Width * 2);
       // CDC_Transmit_FS(jpeg_buffer, dstSize);
     }
@@ -348,8 +350,12 @@ void ObjectDetectTask(void *argument)
   extern OV5640_FrameState ov5640_FrameState;
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
   extern OV5640_FrameState ov5640_FrameState;
+  extern void xfree(void *mem);
 
   STM32IPL_MemInit();
+  array_alloc(&faces, xfree);
+  array_alloc(&eyes, xfree);
+  array_alloc(&faceIDs, xfree);
 
   /* Infinite loop */
   for(;;)
@@ -367,8 +373,18 @@ void ObjectDetectTask(void *argument)
       // 将摄像头数据指向srcImg，进行目标检测
       image_t srcImg;
       STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
-      CascadeDetection(&srcImg, &faces, FACE, Rotation270);
-      // CascadeDetection(&srcImg, &eyes, EYE);
+      CascadeDetection(&srcImg, faces, FACE, Rotation90);
+      // CascadeDetection(&srcImg, &eyes, EYE, Rotation270);
+      get(faces, faceIDs);
+  
+
+      if(array_length(faceIDs) > 0) CDC_printf("%ds\n", xTaskGetTickCount() / 1000);
+      for(int i = 0; i < array_length(faceIDs); i++)
+      {
+        faceIDObject_t *f = array_at(faceIDs, i);
+        CDC_printf("id: %d, x: %d, y: %d, w: %d, h: %d\n", f->id, f->r.x, f->r.y, f->r.w, f->r.h);
+      }
+      if(array_length(faceIDs) > 0) CDC_printf("\n");
 
     }
     else

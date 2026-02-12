@@ -31,9 +31,10 @@
 #include "DMA2DProcess.h"
 #include "qspi_w25q64.h"
 #include "JPEGEncode.h"
+#include "MyByteTrack.h"
 
 void Setup(void);
-
+void CDC_printf(const char* fmt, ...);
 
 
 #endif /* __MYCODE_H */

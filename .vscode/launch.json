@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "CMSIS-DAP Debug (H7) (Debug Only)",
+            "name": "CMSIS-DAP Debug (H7) (Debug Only --Release)",
             "type": "cortex-debug",
             "request": "attach",
             "servertype": "openocd",
@@ -11,7 +11,7 @@
             "configFiles": [
                 "${workspaceFolder}/cmsis-dap.cfg"
             ],
-            "executable": "${workspaceFolder}/build/Debug/${workspaceFolderBasename}.elf",
+            "executable": "${workspaceFolder}/build/Release/${workspaceFolderBasename}.elf",
             "device": "STM32H743xx",
             "svdPath": "${workspaceFolder}/STM32H743.svd"
         },
