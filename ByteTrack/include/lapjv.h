@@ -1,6 +1,8 @@
 #ifndef LAPJV_H
 #define LAPJV_H
 
+#include "stm32ipl_mem_alloc.h"
+
 #define LARGE 1000000
 
 #if !defined TRUE
@@ -10,8 +12,8 @@
 #define FALSE 0
 #endif
 
-#define NEW(x, t, n) if ((x = (t *)malloc(sizeof(t) * (n))) == 0) { return -1; }
-#define FREE(x) if (x != 0) { free(x); x = 0; }
+#define NEW(x, t, n) if ((x = (t *)xalloc(sizeof(t) * (n))) == 0) { return -1; }
+#define FREE(x) if (x != 0) { xfree(x); x = 0; }
 #define SWAP_INDICES(a, b) { int_t _temp_index = a; a = b; b = _temp_index; }
 
 #if 0
@@ -52,7 +54,7 @@
 
 typedef signed int int_t;
 typedef unsigned int uint_t;
-typedef double cost_t;
+typedef float cost_t;
 typedef char boolean;
 typedef enum fp_t { FP_1 = 1, FP_2 = 2, FP_DYNAMIC = 3 } fp_t;
 

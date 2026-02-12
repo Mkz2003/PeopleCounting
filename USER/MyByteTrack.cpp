@@ -31,7 +31,7 @@ extern "C"
 {
 #endif  // __cplusplus
 
-BYTETracker tracker(3, 300);
+BYTETracker tracker(3, 30);
 
 void get(array_t* inArray, array_t* outArray) {
     std::vector<Object> objects;
@@ -50,7 +50,7 @@ void get(array_t* inArray, array_t* outArray) {
         vector<float> tlwh = output_stracks[i].tlwh;
 
 
-        bool vertical = tlwh[2] / tlwh[3] > 1.6;
+        bool vertical = tlwh[2] / tlwh[3] > 1.6f;
         if (tlwh[2] * tlwh[3] > 20 && !vertical)
         {
             int id = output_stracks[i].track_id;
@@ -58,10 +58,10 @@ void get(array_t* inArray, array_t* outArray) {
 
             faceIDObject_t* faceID = (faceIDObject_t*)xalloc(sizeof(faceIDObject_t));
 
-            faceID->r.x = tlwh[0];
-            faceID->r.y = tlwh[1];
-            faceID->r.w = tlwh[2];
-            faceID->r.h = tlwh[3];
+            faceID->r.x = static_cast<int16_t>(tlwh[0]);
+            faceID->r.y = static_cast<int16_t>(tlwh[1]);
+            faceID->r.w = static_cast<int16_t>(tlwh[2]);
+            faceID->r.h = static_cast<int16_t>(tlwh[3]);
             faceID->id = id;
             faceID->color = color;
 

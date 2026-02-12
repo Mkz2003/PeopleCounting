@@ -3,22 +3,22 @@
 
 namespace byte_kalman
 {
-	const double KalmanFilter::chi2inv95[10] = {
-	0,
-	3.8415,
-	5.9915,
-	7.8147,
-	9.4877,
-	11.070,
-	12.592,
-	14.067,
-	15.507,
-	16.919
+	const float KalmanFilter::chi2inv95[10] = {
+	0.0f,
+	3.8415f,
+	5.9915f,
+	7.8147f,
+	9.4877f,
+	11.070f,
+	12.592f,
+	14.067f,
+	15.507f,
+	16.919f
 	};
 	KalmanFilter::KalmanFilter()
 	{
 		int ndim = 4;
-		double dt = 1.;
+		float dt = 1.0f;
 
 		_motion_mat = Eigen::MatrixXf::Identity(8, 8);
 		for (int i = 0; i < ndim; i++) {
@@ -26,8 +26,8 @@ namespace byte_kalman
 		}
 		_update_mat = Eigen::MatrixXf::Identity(4, 8);
 
-		this->_std_weight_position = 1. / 20;
-		this->_std_weight_velocity = 1. / 160;
+		this->_std_weight_position = 1.0f / 20.0f;
+		this->_std_weight_velocity = 1.0f / 160.0f;
 	}
 
 	KAL_DATA KalmanFilter::initiate(const DETECTBOX &measurement)
@@ -43,14 +43,14 @@ namespace byte_kalman
 		}
 
 		KAL_MEAN std;
-		std(0) = 2 * _std_weight_position * measurement[3];
-		std(1) = 2 * _std_weight_position * measurement[3];
-		std(2) = 1e-2;
-		std(3) = 2 * _std_weight_position * measurement[3];
-		std(4) = 10 * _std_weight_velocity * measurement[3];
-		std(5) = 10 * _std_weight_velocity * measurement[3];
-		std(6) = 1e-5;
-		std(7) = 10 * _std_weight_velocity * measurement[3];
+		std(0) = 2.0f * _std_weight_position * measurement[3];
+		std(1) = 2.0f * _std_weight_position * measurement[3];
+		std(2) = 1e-2f;
+		std(3) = 2.0f * _std_weight_position * measurement[3];
+		std(4) = 10.0f * _std_weight_velocity * measurement[3];
+		std(5) = 10.0f * _std_weight_velocity * measurement[3];
+		std(6) = 1e-5f;
+		std(7) = 10.0f * _std_weight_velocity * measurement[3];
 
 		KAL_MEAN tmp = std.array().square();
 		KAL_COVA var = tmp.asDiagonal();
@@ -63,12 +63,12 @@ namespace byte_kalman
 		DETECTBOX std_pos;
 		std_pos << _std_weight_position * mean(3),
 			_std_weight_position * mean(3),
-			1e-2,
+			1e-2f,
 			_std_weight_position * mean(3);
 		DETECTBOX std_vel;
 		std_vel << _std_weight_velocity * mean(3),
 			_std_weight_velocity * mean(3),
-			1e-5,
+			1e-5f,
 			_std_weight_velocity * mean(3);
 		KAL_MEAN tmp;
 		tmp.block<1, 4>(0, 0) = std_pos;
@@ -87,7 +87,7 @@ namespace byte_kalman
 	{
 		DETECTBOX std;
 		std << _std_weight_position * mean(3), _std_weight_position * mean(3),
-			1e-1, _std_weight_position * mean(3);
+			1e-1f, _std_weight_position * mean(3);
 		KAL_HMEAN mean1 = _update_mat * mean.transpose();
 		KAL_HCOVA covariance1 = _update_mat * covariance * (_update_mat.transpose());
 		Eigen::Matrix<float, 4, 4> diag = std.asDiagonal();

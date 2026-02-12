@@ -124,8 +124,8 @@ void STrack::static_tlwh()
 	tlwh[3] = mean[3];
 
 	tlwh[2] *= tlwh[3];
-	tlwh[0] -= tlwh[2] / 2;
-	tlwh[1] -= tlwh[3] / 2;
+	tlwh[0] -= tlwh[2] / 2.0f;
+	tlwh[1] -= tlwh[3] / 2.0f;
 }
 
 void STrack::static_tlbr()
@@ -139,8 +139,8 @@ void STrack::static_tlbr()
 vector<float> STrack::tlwh_to_xyah(vector<float> tlwh_tmp)
 {
 	vector<float> tlwh_output = tlwh_tmp;
-	tlwh_output[0] += tlwh_output[2] / 2;
-	tlwh_output[1] += tlwh_output[3] / 2;
+	tlwh_output[0] += tlwh_output[2] / 2.0f;
+	tlwh_output[1] += tlwh_output[3] / 2.0f;
 	tlwh_output[2] /= tlwh_output[3];
 	return tlwh_output;
 }
@@ -185,7 +185,7 @@ void STrack::multi_predict(vector<STrack*> &stracks, byte_kalman::KalmanFilter &
 	{
 		if (stracks[i]->state != TrackState::Tracked)
 		{
-			stracks[i]->mean[7] = 0;
+			stracks[i]->mean[7] = 0.0f;
 		}
 		kalman_filter.predict(stracks[i]->mean, stracks[i]->covariance);
 		stracks[i]->static_tlwh();

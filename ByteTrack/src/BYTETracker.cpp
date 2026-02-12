@@ -3,12 +3,12 @@
 
 BYTETracker::BYTETracker(int frame_rate, int track_buffer)
 {
-	track_thresh = 0.5;
-	high_thresh = 0.6;
-	match_thresh = 0.8;
+	track_thresh = 0.5f;
+	high_thresh = 0.6f;
+	match_thresh = 0.8f;
 
 	frame_id = 0;
-	max_time_lost = int(frame_rate / 30.0 * track_buffer);
+	max_time_lost = int(frame_rate / 30.0f * track_buffer);
 	// cout << "Init ByteTrack!" << endl;
 	puts("Init ByteTrack!\n");
 }
@@ -124,7 +124,7 @@ vector<STrack> BYTETracker::update(const vector<Object>& objects)
 	matches.clear();
 	u_track.clear();
 	u_detection.clear();
-	linear_assignment(dists, dist_size, dist_size_size, 0.5, matches, u_track, u_detection);
+	linear_assignment(dists, dist_size, dist_size_size, 0.5f, matches, u_track, u_detection);
 
 	for (int i = 0; i < matches.size(); i++)
 	{
@@ -162,7 +162,7 @@ vector<STrack> BYTETracker::update(const vector<Object>& objects)
 	matches.clear();
 	vector<int> u_unconfirmed;
 	u_detection.clear();
-	linear_assignment(dists, dist_size, dist_size_size, 0.7, matches, u_unconfirmed, u_detection);
+	linear_assignment(dists, dist_size, dist_size_size, 0.7f, matches, u_unconfirmed, u_detection);
 
 	for (int i = 0; i < matches.size(); i++)
 	{

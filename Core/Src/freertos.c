@@ -85,7 +85,7 @@ const osThreadAttr_t ImageProcess_attributes = {
 osThreadId_t ObjectDetectHandle;
 const osThreadAttr_t ObjectDetect_attributes = {
   .name = "ObjectDetect",
-  .stack_size = 8192 * 4,
+  .stack_size = 2048 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 
@@ -270,7 +270,7 @@ void LCDRefreshTask(void *argument)
     LCD_printf(1, 1, "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
     LCD_printf(2, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
     LCD_printf(3, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
-    LCD_printf(4, 1, "Face: %d, Eye: %d", faceCount, eyeCount);
+    LCD_printf(4, 1, "Face: %d", faceCount);
     LCD_printf(5, 1, "%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
     LCD_SPI_Transmit();
 
@@ -378,13 +378,13 @@ void ObjectDetectTask(void *argument)
       get(faces, faceIDs);
   
 
-      if(array_length(faceIDs) > 0) CDC_printf("%ds\n", xTaskGetTickCount() / 1000);
-      for(int i = 0; i < array_length(faceIDs); i++)
-      {
-        faceIDObject_t *f = array_at(faceIDs, i);
-        CDC_printf("id: %d, x: %d, y: %d, w: %d, h: %d\n", f->id, f->r.x, f->r.y, f->r.w, f->r.h);
-      }
-      if(array_length(faceIDs) > 0) CDC_printf("\n");
+      // if(array_length(faceIDs) > 0) CDC_printf("%ds\n", xTaskGetTickCount() / 1000);
+      // for(int i = 0; i < array_length(faceIDs); i++)
+      // {
+      //   faceIDObject_t *f = array_at(faceIDs, i);
+      //   CDC_printf("id: %d, x: %d, y: %d, w: %d, h: %d\n", f->id, f->r.x, f->r.y, f->r.w, f->r.h);
+      // }
+      // if(array_length(faceIDs) > 0) CDC_printf("\n");
 
     }
     else
