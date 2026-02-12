@@ -31,7 +31,7 @@ extern "C"
 {
 #endif  // __cplusplus
 
-BYTETracker tracker(3, 30);
+BYTETracker tracker(30, 30);
 
 void get(array_t* inArray, array_t* outArray) {
     std::vector<Object> objects;
