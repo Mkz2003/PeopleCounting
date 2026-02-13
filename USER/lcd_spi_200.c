@@ -623,32 +623,32 @@ void LCD_show_char(uint16_t row, uint16_t col, uint16_t chr)
         return;
     }
 
-    uint32_t Y = 0;
-    for (t = 0; t < 12; t++)
-    {
-        for (t1 = 0; t1 < 8; t1++)
-        {
-            /* check the corrdinate */
-            if ((x < 0) || (x > (LCD_Height - 1)) || (y < 0) || (y > (LCD_Width - 1)))
-            {
-                continue;
-            }
-            Y += LCD_GetY565(LCD_Buff[LCD_Height - 1 - x][y]);
-            y++;
-            if ((y - y0) == 12)
-            {
-                y = y0;
-                x++;
-                break;
-            }
-        }
-    }
-    Y /= 6 * 12;
-    uint16_t color = Y >= 170 ? 0x0000 : 0xffff;
+    // uint32_t Y = 0;
+    // for (t = 0; t < 12; t++)
+    // {
+    //     for (t1 = 0; t1 < 8; t1++)
+    //     {
+    //         /* check the corrdinate */
+    //         if ((x < 0) || (x > (LCD_Height - 1)) || (y < 0) || (y > (LCD_Width - 1)))
+    //         {
+    //             continue;
+    //         }
+    //         Y += LCD_GetY565(LCD_Buff[LCD_Height - 1 - x][y]);
+    //         y++;
+    //         if ((y - y0) == 12)
+    //         {
+    //             y = y0;
+    //             x++;
+    //             break;
+    //         }
+    //     }
+    // }
+    // Y /= 6 * 12;
+    // uint16_t color = Y >= 170 ? 0x0000 : 0xffff;
 
-    x = col * 6;
-    y = row * 12;
-    y0 = row * 12;
+    // x = col * 6;
+    // y = row * 12;
+    // y0 = row * 12;
 
     for (t = 0; t < 12; t++)
     {
@@ -663,7 +663,8 @@ void LCD_show_char(uint16_t row, uint16_t col, uint16_t chr)
                 {
                     continue;
                 }
-                LCD_Buff[LCD_Height - 1 - x][y] = color;
+                // LCD_Buff[LCD_Height - 1 - x][y] = color;
+                LCD_Buff[LCD_Height - 1 - x][y] = LCD.Color;
             }
             temp <<= 1;
             y++;

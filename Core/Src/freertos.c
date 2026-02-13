@@ -212,7 +212,6 @@ void LCDRefreshTask(void *argument)
   extern uint16_t LCD_Buff[LCD_Height][LCD_Width];
   uint16_t thickness = 2;		// Set the thickness of the rectangle (pixels).
 	bool fill = false;			// Avoid to fill the rectangle.
-  uint32_t faceCount, eyeCount;
 
   __attribute__((section(".ram_d3_bss"))) __IO static uint16_t adcval[3] = {0};
 
@@ -252,8 +251,7 @@ void LCDRefreshTask(void *argument)
     STM32Ipl_Init(&dstImg, LCD_Width, LCD_Height, IMAGE_BPP_RGB565, (uint8_t*)LCD_Buff);
     STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
 
-    faceCount = (faceIDs != NULL ? array_length(faceIDs) : 0);
-    for (int i = 0; i < faceCount; i++)
+    for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
     {
         faceIDObject_t *f = array_at(faceIDs, i);
         // Draw the bounding box around each detected face.
@@ -263,18 +261,19 @@ void LCDRefreshTask(void *argument)
                                 f->r.w * LCD_Width / Display_Width, 
                                 f->r.h * LCD_Height / Display_Height, 
                                 f->color, thickness, fill);
+        LCD_printf(f->r.x / 12, (LCD_Height - f->r.y - f->r.h) / 6, "%d", f->id);                        
     }   
     // LCD_Clear();
     // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
-    LCD_printf(1, 1, "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
-    LCD_printf(2, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
-    LCD_printf(3, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
-    LCD_printf(4, 1, "Face: %d", faceCount);
-    LCD_printf(5, 1, "%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
+    LCD_printf(15, 1, "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
+    LCD_printf(16, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
+    LCD_printf(17, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
+    LCD_printf(18, 1, "Face: %d", array_length(faceIDs));
+    LCD_printf(19, 1, "%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
     LCD_SPI_Transmit();
 
-    osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
+    // osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
   }
   /* USER CODE END LCDRefreshTask */
 }

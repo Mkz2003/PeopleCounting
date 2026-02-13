@@ -1,7 +1,7 @@
 #include "JPEGEncode.h"
 
+#include "cmsis_os2.h"
 #include "MyCode.h"
-#include "stm32h7xx_hal_jpeg.h"
 
 #define YCBCR_420_BLOCK_SIZE       384     /* YCbCr 4:2:0 MCU : 4 8x8 blocks of Y + 1 8x8 block of Cb + 1 8x8 block of Cr   */
 #define YCBCR_422_BLOCK_SIZE       256     /* YCbCr 4:2:2 MCU : 2 8x8 blocks of Y + 1 8x8 block of Cb + 1 8x8 block of Cr   */
@@ -55,7 +55,12 @@ uint32_t JPEGEncode(uint8_t* srcImage, uint32_t srcSize)
     numberMCU = jpeg_RGBToYCbCr_Convert_Function(srcImage, (uint8_t*)MCU, 0, srcSize, &ConvertedDataCount);
     mcuCount += CHUNC_SINGLE_MCU_CONVERTION;    
     HAL_JPEG_Encode_DMA(&hjpeg, (uint8_t*)MCU, CHUNC_SINGLE_MCU_CONVERTION * BLOCK_SIZE, jpeg_buffer, sizeof(jpeg_buffer));
-    while(Jpeg_HWEncodingEnd != 1);
+    while(Jpeg_HWEncodingEnd != 1)
+    {
+        #ifdef CMSIS_OS2_H_
+        osThreadYield();  // 让出CPU时间片
+        #endif
+    }
     return length;
 }
 

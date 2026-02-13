@@ -10,6 +10,8 @@
 #include "stm32ipl_imlib.h"
 #include "stm32ipl_mem_alloc.h"
 
+#ifdef __cplusplus
+
 void* operator new(std::size_t size) {
     return (xalloc(size));
 }
@@ -26,12 +28,14 @@ void operator delete[](void* ptr) {
     return (xfree(ptr));
 }
 
+#endif  // __cplusplus
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif  // __cplusplus
 
-BYTETracker tracker(30, 30);
+BYTETracker tracker(15, 30);
 
 void get(array_t* inArray, array_t* outArray) {
     std::vector<Object> objects;
@@ -51,7 +55,7 @@ void get(array_t* inArray, array_t* outArray) {
 
 
         bool vertical = tlwh[2] / tlwh[3] > 1.6f;
-        if (tlwh[2] * tlwh[3] > 20 && !vertical)
+        if (tlwh[2] * tlwh[3] > 20.0f && !vertical)
         {
             int id = output_stracks[i].track_id;
             uint32_t color = tracker.get_color(id);
