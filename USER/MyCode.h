@@ -32,6 +32,7 @@
 #include "qspi_w25q64.h"
 #include "JPEGEncode.h"
 #include "MyByteTrack.h"
+#include "stedgeai_app_main.h"
 
 void Setup(void);
 void CDC_printf(const char* fmt, ...);

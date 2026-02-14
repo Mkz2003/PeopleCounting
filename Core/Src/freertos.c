@@ -273,7 +273,7 @@ void LCDRefreshTask(void *argument)
     LCD_printf(19, 1, "%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
     LCD_SPI_Transmit();
 
-    // osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
+    osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
   }
   /* USER CODE END LCDRefreshTask */
 }
@@ -356,6 +356,14 @@ void ObjectDetectTask(void *argument)
   array_alloc(&eyes, xfree);
   array_alloc(&faceIDs, xfree);
 
+  extern uint8_t activations_1[STAI_NETWORK_ACTIVATION_1_SIZE_BYTES];
+  extern stai_ptr m_inputs[STAI_NETWORK_IN_NUM];
+  extern stai_ptr m_outputs[STAI_NETWORK_OUT_NUM];
+
+  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t midImage[STAI_NETWORK_IN_1_HEIGHT][STAI_NETWORK_IN_1_WIDTH];
+
+  aiInit();
+
   /* Infinite loop */
   for(;;)
   {
@@ -370,11 +378,21 @@ void ObjectDetectTask(void *argument)
 
       // 这里可以对图像数据进行处理，例如人脸识别、目标检测等
       // 将摄像头数据指向srcImg，进行目标检测
-      image_t srcImg;
+      image_t srcImg, midImg;
       STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
-      CascadeDetection(&srcImg, faces, FACE, Rotation90);
+      STM32Ipl_Init(&midImg, STAI_NETWORK_IN_1_WIDTH, STAI_NETWORK_IN_1_HEIGHT, IMAGE_BPP_RGB565, midImage);
+      STM32Ipl_Resize(&srcImg, &midImg, RESIZE_NEAREST);
+      DMA2D_FormatConvert(midImage, m_inputs[0], STAI_NETWORK_IN_1_WIDTH, STAI_NETWORK_IN_1_HEIGHT, 0, 0, DMA2D_INPUT_RGB565, DMA2D_OUTPUT_RGB888);
+      // CascadeDetection(&srcImg, faces, FACE, Rotation90);
       // CascadeDetection(&srcImg, &eyes, EYE, Rotation270);
-      get(faces, faceIDs);
+
+
+      uint32_t a = aiRun();
+      CDC_printf("%d", a);
+
+
+
+      // get(faces, faceIDs);
   
 
       // if(array_length(faceIDs) > 0) CDC_printf("%ds\n", xTaskGetTickCount() / 1000);

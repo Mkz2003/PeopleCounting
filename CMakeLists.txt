@@ -55,6 +55,10 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/USER/DMA2DProcess.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/qspi_w25q64.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/JPEGEncode.c
+    ${CMAKE_CURRENT_LIST_DIR}/USER/stedgeai_app_main.c
+
+    ${CMAKE_CURRENT_LIST_DIR}/st_yololcv1_256_int8_object_detection/network_data.c
+    ${CMAKE_CURRENT_LIST_DIR}/st_yololcv1_256_int8_object_detection/network.c
 
     ${CMAKE_CURRENT_LIST_DIR}/USER/MyByteTrack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/BYTETracker.cpp
@@ -132,6 +136,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Inc/
     ${CMAKE_CURRENT_LIST_DIR}/eigen
     ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/include
+    ${CMAKE_CURRENT_LIST_DIR}/st_yololcv1_256_int8_object_detection
+    ${CMAKE_CURRENT_LIST_DIR}/st_yololcv1_256_int8_object_detection/Inc
 )
 
 # Add project symbols (macros)
@@ -148,6 +154,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
 
     # Add user defined libraries
+    ${CMAKE_CURRENT_LIST_DIR}/st_yololcv1_256_int8_object_detection/Lib/NetworkRuntime1100_CM7_GCC.a
 )
 
 
