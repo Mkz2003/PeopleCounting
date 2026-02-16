@@ -119,3 +119,33 @@ void DMA2D_MemCopy(void * pSrc, void * pDst, int width, int height, int offsetSr
     /* 等待DMA2D传输完成 */
     while (DMA2D->CR & DMA2D_CR_START);
 }
+
+/**
+ * @brief Fill a rectangular area with a fixed color using DMA2D (R2M mode).
+ * @param pDst: Pointer to the destination image data.
+ * @param width: Width of the area in pixels.
+ * @param height: Height of the area in pixels.
+ * @param offsetDst: Destination line offset (in pixels).
+ * @param pixelFormat: Output pixel format (e.g., DMA2D_OUTPUT_RGB565).
+ * @param color: Color value to fill, formatted according to pixelFormat.
+ * @return none
+ */
+void DMA2D_Fill(void * pDst, int width, int height, int offsetDst, uint32_t pixelFormat, uint32_t color)
+{
+    /* Wait for DMA2D to be ready */
+    while (DMA2D->CR & DMA2D_CR_START);
+
+    /* Configure DMA2D in Register-to-Memory mode */
+    DMA2D->CR      = DMA2D_R2M;                /* R2M mode */
+    DMA2D->OMAR    = (uint32_t)pDst;            /* Destination address */
+    DMA2D->OOR     = offsetDst;                  /* Output line offset (pixels) */
+    DMA2D->OPFCCR  = pixelFormat;                 /* Output pixel format */
+    DMA2D->OCOLR   = color;                        /* Fill color */
+    DMA2D->NLR     = (uint32_t)(width << 16) | (uint16_t)height; /* Number of pixels per line and lines */
+
+    /* Start the transfer */
+    DMA2D->CR |= DMA2D_CR_START;
+
+    /* Wait for transfer completion */
+    while (DMA2D->CR & DMA2D_CR_START);
+}

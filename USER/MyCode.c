@@ -48,7 +48,7 @@ void CDC_printf(const char* fmt, ...)
     static va_list ap;
     va_start(ap, fmt);
 
-    vsprintf(BUF, fmt, ap);
+    vsnprintf(BUF, sizeof(BUF), fmt, ap);
 
     va_end(ap);
 

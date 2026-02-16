@@ -37,5 +37,9 @@
 void Setup(void);
 void CDC_printf(const char* fmt, ...);
 
+static inline float fast_sigmoid(float x)
+{
+    return 0.5f * (x / (1.0f + fabsf(x))) + 0.5f;
+}
 
 #endif /* __MYCODE_H */

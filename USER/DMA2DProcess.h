@@ -14,4 +14,6 @@ void DMA2D_FormatConvert(void *pSrc, void *pDst, int width, int height,
 
 void DMA2D_MemCopy(void * pSrc, void * pDst, int width, int height, int offsetSrc, int offseteDst, uint32_t pixelFormat);
 
+void DMA2D_Fill(void * pDst, int width, int height, int offsetDst, uint32_t pixelFormat, uint32_t color);
+
 #endif /* __DMA2DPROCESS_H */

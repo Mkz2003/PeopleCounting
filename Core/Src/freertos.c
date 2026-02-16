@@ -360,9 +360,11 @@ void ObjectDetectTask(void *argument)
   extern stai_ptr m_inputs[STAI_NETWORK_IN_NUM];
   extern stai_ptr m_outputs[STAI_NETWORK_OUT_NUM];
 
-  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t midImage[STAI_NETWORK_IN_1_HEIGHT][STAI_NETWORK_IN_1_WIDTH];
+  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[STAI_NETWORK_IN_1_WIDTH][STAI_NETWORK_IN_1_HEIGHT];
 
   aiInit();
+
+  CHANNEL* channel = (CHANNEL*)m_outputs[0];
 
   /* Infinite loop */
   for(;;)
@@ -378,18 +380,44 @@ void ObjectDetectTask(void *argument)
 
       // 这里可以对图像数据进行处理，例如人脸识别、目标检测等
       // 将摄像头数据指向srcImg，进行目标检测
-      image_t srcImg, midImg;
+      image_t srcImg, resizedImg;
       STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
-      STM32Ipl_Init(&midImg, STAI_NETWORK_IN_1_WIDTH, STAI_NETWORK_IN_1_HEIGHT, IMAGE_BPP_RGB565, midImage);
-      STM32Ipl_Resize(&srcImg, &midImg, RESIZE_NEAREST);
-      DMA2D_FormatConvert(midImage, m_inputs[0], STAI_NETWORK_IN_1_WIDTH, STAI_NETWORK_IN_1_HEIGHT, 0, 0, DMA2D_INPUT_RGB565, DMA2D_OUTPUT_RGB888);
-      // CascadeDetection(&srcImg, faces, FACE, Rotation90);
-      // CascadeDetection(&srcImg, &eyes, EYE, Rotation270);
 
+      STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
+      // STM32Ipl_Init(&resizedImg, Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height, STAI_NETWORK_IN_1_HEIGHT, IMAGE_BPP_RGB565, resizedImage);
+      // STM32Ipl_Init(&dstImg, Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height, STAI_NETWORK_IN_1_HEIGHT, IMAGE_BPP_RGB565, dstImage);
+      
+      STM32Ipl_Resize(&srcImg, &resizedImg, RESIZE_NEAREST);
+      STM32Ipl_Rotation90(&resizedImg, &resizedImg);
+      DMA2D_FormatConvert(resizedImage, 
+                            (uint8_t*)m_inputs[0], 
+                            STAI_NETWORK_IN_1_WIDTH, 
+                            STAI_NETWORK_IN_1_HEIGHT, 
+                            0, 
+                            0, 
+                            DMA2D_INPUT_RGB565, 
+                            DMA2D_OUTPUT_RGB888);
 
       uint32_t a = aiRun();
-      CDC_printf("%d", a);
-
+      
+      for(int i = 0; i < STAI_NETWORK_OUT_1_SIZE; i++)
+      {
+        *((float32_t*)m_outputs[0] + i) = fast_sigmoid(*((float32_t*)m_outputs[0] + i));
+      }
+      for(int i = 0; i < STAI_NETWORK_OUT_1_HEIGHT; i++)
+        for(int j = 0; j < STAI_NETWORK_OUT_1_WIDTH; j++)
+          for(int k = 0; k < STAI_NETWORK_OUT_1_CHANNEL / 6; k++)
+            if(channel->box[i][j][k].object > 0.5f) 
+              printf("%02d %02d %02d %.6f %.6f %.6f %.6f %.6f %.6f\n", i, 
+                                                                        j, 
+                                                                        k, 
+                                                                        channel->box[i][j][k].x * STAI_NETWORK_IN_1_WIDTH, 
+                                                                        channel->box[i][j][k].y * STAI_NETWORK_IN_1_HEIGHT, 
+                                                                        channel->box[i][j][k].w * STAI_NETWORK_IN_1_WIDTH, 
+                                                                        channel->box[i][j][k].h * STAI_NETWORK_IN_1_HEIGHT, 
+                                                                        channel->box[i][j][k].object, 
+                                                                        channel->box[i][j][k].class);
+      puts("\n");
 
 
       // get(faces, faceIDs);

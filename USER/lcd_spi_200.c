@@ -730,17 +730,17 @@ void LCD_show_string(uint16_t row, uint16_t col, uint8_t *chr)
   */
 void LCD_printf(uint16_t row, uint16_t col, const char *fmt,...)
 {
-    static uint8_t LCD_BUF[128] = {0};
+    static char LCD_BUF[128] = {0};
     static va_list ap;
     va_start(ap, fmt);
 
-    vsprintf((char *)LCD_BUF, fmt, ap);
+    vsnprintf(LCD_BUF, sizeof(LCD_BUF), fmt, ap);
 
     va_end(ap);
 
     LCD_BUF[127] = '\0';
 
-    LCD_show_string(row, col, LCD_BUF);
+    LCD_show_string(row, col, (uint8_t*)LCD_BUF);
 }
 
 /**
