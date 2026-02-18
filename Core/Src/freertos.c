@@ -19,6 +19,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
+#include "array.h"
+#include "lcd_spi_200.h"
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
@@ -260,7 +262,8 @@ void LCDRefreshTask(void *argument)
                                 f->r.y * LCD_Height / Display_Height, 
                                 f->r.w * LCD_Width / Display_Width, 
                                 f->r.h * LCD_Height / Display_Height, 
-                                f->color, thickness, fill);
+                                f->color, thickness, fill
+                              );
         LCD_printf(f->r.x / 12, (LCD_Height - f->r.y - f->r.h) / 6, "%d", f->id);                        
     }   
     // LCD_Clear();
@@ -360,11 +363,15 @@ void ObjectDetectTask(void *argument)
   extern stai_ptr m_inputs[STAI_NETWORK_IN_NUM];
   extern stai_ptr m_outputs[STAI_NETWORK_OUT_NUM];
 
-  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[STAI_NETWORK_IN_1_WIDTH][STAI_NETWORK_IN_1_HEIGHT];
+  #define ResizeHeight  (STAI_NETWORK_IN_1_WIDTH)
+  #define ResizeWidth   (Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height)
+
+  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[ResizeHeight][ResizeWidth];
+  // __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[STAI_NETWORK_IN_1_WIDTH][STAI_NETWORK_IN_1_HEIGHT];
 
   aiInit();
 
-  CHANNEL* channel = (CHANNEL*)m_outputs[0];
+  CHANNEL* outData = (CHANNEL*)m_outputs[0];
 
   /* Infinite loop */
   for(;;)
@@ -383,45 +390,58 @@ void ObjectDetectTask(void *argument)
       image_t srcImg, resizedImg;
       STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
 
-      STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
-      // STM32Ipl_Init(&resizedImg, Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height, STAI_NETWORK_IN_1_HEIGHT, IMAGE_BPP_RGB565, resizedImage);
-      // STM32Ipl_Init(&dstImg, Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height, STAI_NETWORK_IN_1_HEIGHT, IMAGE_BPP_RGB565, dstImage);
+      STM32Ipl_Init(&resizedImg, ResizeWidth, ResizeHeight, IMAGE_BPP_RGB565, resizedImage);
+      // STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
       
       STM32Ipl_Resize(&srcImg, &resizedImg, RESIZE_NEAREST);
       STM32Ipl_Rotation90(&resizedImg, &resizedImg);
+
+      const size_t offset = (sizeof(STAI_FORMAT) * 3) * STAI_NETWORK_IN_1_WIDTH * (STAI_NETWORK_IN_1_HEIGHT - ResizeWidth) / 2;
+      // const size_t offset = 0;
+      DMA2D_Fill((uint8_t*)m_inputs[0], 
+                  STAI_NETWORK_IN_1_WIDTH, 
+                  STAI_NETWORK_IN_1_HEIGHT, 
+                  0,
+                  DMA2D_OUTPUT_RGB888, 
+                  0x00111111
+                );
       DMA2D_FormatConvert(resizedImage, 
-                            (uint8_t*)m_inputs[0], 
-                            STAI_NETWORK_IN_1_WIDTH, 
-                            STAI_NETWORK_IN_1_HEIGHT, 
+                            (uint8_t*)m_inputs[0] + offset, 
+                            resizedImg.w, 
+                            resizedImg.h, 
                             0, 
                             0, 
                             DMA2D_INPUT_RGB565, 
-                            DMA2D_OUTPUT_RGB888);
+                            DMA2D_OUTPUT_RGB888
+                          );
 
+      // 转换图像为int8
+      for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((int8_t*)m_inputs[0] + offset + i) = ai_float_32_To_ai_i8(*((uint8_t*)m_inputs[0] + offset + i) / 255.0f);
+                        
       uint32_t a = aiRun();
       
-      for(int i = 0; i < STAI_NETWORK_OUT_1_SIZE; i++)
+      if(a == 0)
       {
-        *((float32_t*)m_outputs[0] + i) = fast_sigmoid(*((float32_t*)m_outputs[0] + i));
+        array_clear(faces);
+        int32_t label = 0;
+        for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
+        {
+          if(ai_i8_To_ai_float(outData->object[label][i]) < 0.1f) continue;
+
+          faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
+
+          f->rect.x = LCD_Height * (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2) - (LCD_Height - LCD_Width) / 2;
+          f->rect.y = LCD_Height * (1.0f - ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
+          f->rect.width = LCD_Height * ai_i8_To_ai_float(outData->h[i]);
+          f->rect.height = LCD_Height * ai_i8_To_ai_float(outData->w[i]);
+          f->label = label;
+          f->prob = ai_i8_To_ai_float(outData->object[label][i]);
+
+          array_push_back(faces, f);
+        }
       }
-      for(int i = 0; i < STAI_NETWORK_OUT_1_HEIGHT; i++)
-        for(int j = 0; j < STAI_NETWORK_OUT_1_WIDTH; j++)
-          for(int k = 0; k < STAI_NETWORK_OUT_1_CHANNEL / 6; k++)
-            if(channel->box[i][j][k].object > 0.5f) 
-              printf("%02d %02d %02d %.6f %.6f %.6f %.6f %.6f %.6f\n", i, 
-                                                                        j, 
-                                                                        k, 
-                                                                        channel->box[i][j][k].x * STAI_NETWORK_IN_1_WIDTH, 
-                                                                        channel->box[i][j][k].y * STAI_NETWORK_IN_1_HEIGHT, 
-                                                                        channel->box[i][j][k].w * STAI_NETWORK_IN_1_WIDTH, 
-                                                                        channel->box[i][j][k].h * STAI_NETWORK_IN_1_HEIGHT, 
-                                                                        channel->box[i][j][k].object, 
-                                                                        channel->box[i][j][k].class);
-      puts("\n");
 
-
-      // get(faces, faceIDs);
-  
+      get(faces, faceIDs);
 
       // if(array_length(faceIDs) > 0) CDC_printf("%ds\n", xTaskGetTickCount() / 1000);
       // for(int i = 0; i < array_length(faceIDs); i++)

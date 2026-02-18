@@ -26,7 +26,6 @@
 #include "dma2d.h"
 #include "fatfs.h"
 #include "jpeg.h"
-#include "libjpeg.h"
 #include "mdma.h"
 #include "quadspi.h"
 #include "rtc.h"
@@ -130,7 +129,6 @@ int main(void)
   MX_JPEG_Init();
   MX_FATFS_Init();
   MX_RTC_Init();
-  MX_LIBJPEG_Init();
   /* USER CODE BEGIN 2 */
 
   Setup();

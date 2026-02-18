@@ -10,7 +10,6 @@
 #include "dma2d.h"
 #include "fatfs.h"
 #include "jpeg.h"
-#include "libjpeg.h"
 #include "mdma.h"
 #include "quadspi.h"
 #include "rtc.h"
@@ -33,6 +32,9 @@
 #include "JPEGEncode.h"
 #include "MyByteTrack.h"
 #include "stedgeai_app_main.h"
+#include "array.h"
+#include "stm32ipl_imlib.h"
+#include "stm32ipl_mem_alloc.h"
 
 void Setup(void);
 void CDC_printf(const char* fmt, ...);

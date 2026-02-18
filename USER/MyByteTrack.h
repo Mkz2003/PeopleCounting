@@ -13,6 +13,15 @@ void get(array_t* inArray, array_t* outArray);
 
 typedef struct
 {
+    struct {
+		float x, y, width, height;
+	} rect;
+    int label;
+    float prob;
+}faceObject_t;
+
+typedef struct
+{
     rectangle_t r;
     int id;
     uint32_t color;
