@@ -260,7 +260,8 @@ void LCDRefreshTask(void *argument)
                                 f->r.y * LCD_Height / Display_Height, 
                                 f->r.w * LCD_Width / Display_Width, 
                                 f->r.h * LCD_Height / Display_Height, 
-                                f->color, thickness, fill);
+                                f->color, thickness, fill
+                              );
         LCD_printf(f->r.x / 12, (LCD_Height - f->r.y - f->r.h) / 6, "%d", f->id);                        
     }   
     // LCD_Clear();
@@ -360,11 +361,15 @@ void ObjectDetectTask(void *argument)
   extern stai_ptr m_inputs[STAI_NETWORK_IN_NUM];
   extern stai_ptr m_outputs[STAI_NETWORK_OUT_NUM];
 
-  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[STAI_NETWORK_IN_1_WIDTH][STAI_NETWORK_IN_1_HEIGHT];
+  #define ResizeHeight  (STAI_NETWORK_IN_1_WIDTH)
+  #define ResizeWidth   (Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height)
+
+  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[ResizeHeight][ResizeWidth];
+  // __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[STAI_NETWORK_IN_1_WIDTH][STAI_NETWORK_IN_1_HEIGHT];
 
   aiInit();
 
-  CHANNEL* channel = (CHANNEL*)m_outputs[0];
+  CHANNEL* outData = (CHANNEL*)m_outputs[0];
 
   /* Infinite loop */
   for(;;)
@@ -383,41 +388,46 @@ void ObjectDetectTask(void *argument)
       image_t srcImg, resizedImg;
       STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
 
-      STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
-      // STM32Ipl_Init(&resizedImg, Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height, STAI_NETWORK_IN_1_HEIGHT, IMAGE_BPP_RGB565, resizedImage);
-      // STM32Ipl_Init(&dstImg, Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height, STAI_NETWORK_IN_1_HEIGHT, IMAGE_BPP_RGB565, dstImage);
+      STM32Ipl_Init(&resizedImg, ResizeWidth, ResizeHeight, IMAGE_BPP_RGB565, resizedImage);
+      // STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
       
       STM32Ipl_Resize(&srcImg, &resizedImg, RESIZE_NEAREST);
       STM32Ipl_Rotation90(&resizedImg, &resizedImg);
+
+      const size_t offset = (sizeof(STAI_FORMAT) * 3) * STAI_NETWORK_IN_1_WIDTH * (STAI_NETWORK_IN_1_HEIGHT - ResizeWidth) / 2;
+      // const size_t offset = 0;
+      DMA2D_Fill((uint8_t*)m_inputs[0], 
+                  STAI_NETWORK_IN_1_WIDTH, 
+                  STAI_NETWORK_IN_1_HEIGHT, 
+                  0,
+                  DMA2D_OUTPUT_RGB888, 
+                  0x00111111
+                );
       DMA2D_FormatConvert(resizedImage, 
-                            (uint8_t*)m_inputs[0], 
-                            STAI_NETWORK_IN_1_WIDTH, 
-                            STAI_NETWORK_IN_1_HEIGHT, 
+                            (uint8_t*)m_inputs[0] + offset, 
+                            resizedImg.w, 
+                            resizedImg.h, 
                             0, 
                             0, 
                             DMA2D_INPUT_RGB565, 
-                            DMA2D_OUTPUT_RGB888);
+                            DMA2D_OUTPUT_RGB888
+                          );
 
+      // 转换图像为int8
+      for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((int8_t*)m_inputs[0] + offset + i) = float32Toint8(*((uint8_t*)m_inputs[0] + offset + i) / 255.0f);
+                        
       uint32_t a = aiRun();
       
-      for(int i = 0; i < STAI_NETWORK_OUT_1_SIZE; i++)
+      if(a == 0)
       {
-        *((float32_t*)m_outputs[0] + i) = fast_sigmoid(*((float32_t*)m_outputs[0] + i));
+        for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
+        {
+          if(outData->object[0][i] >= -100){
+            printf("%d %.3f %.3f %.3f %.3f %.3f\n", i, int8Tofloat32(outData->x[i]), int8Tofloat32(outData->y[i]), int8Tofloat32(outData->w[i]), int8Tofloat32(outData->h[i]), int8Tofloat32(outData->object[0][i]));
+          }
+        }
+
       }
-      for(int i = 0; i < STAI_NETWORK_OUT_1_HEIGHT; i++)
-        for(int j = 0; j < STAI_NETWORK_OUT_1_WIDTH; j++)
-          for(int k = 0; k < STAI_NETWORK_OUT_1_CHANNEL / 6; k++)
-            if(channel->box[i][j][k].object > 0.5f) 
-              printf("%02d %02d %02d %.6f %.6f %.6f %.6f %.6f %.6f\n", i, 
-                                                                        j, 
-                                                                        k, 
-                                                                        channel->box[i][j][k].x * STAI_NETWORK_IN_1_WIDTH, 
-                                                                        channel->box[i][j][k].y * STAI_NETWORK_IN_1_HEIGHT, 
-                                                                        channel->box[i][j][k].w * STAI_NETWORK_IN_1_WIDTH, 
-                                                                        channel->box[i][j][k].h * STAI_NETWORK_IN_1_HEIGHT, 
-                                                                        channel->box[i][j][k].object, 
-                                                                        channel->box[i][j][k].class);
-      puts("\n");
 
 
       // get(faces, faceIDs);

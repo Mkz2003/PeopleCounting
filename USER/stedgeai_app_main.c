@@ -28,7 +28,7 @@
 STAI_NETWORK_CONTEXT_DECLARE(m_network, STAI_NETWORK_CONTEXT_SIZE)
 
 /* Array to store the data of the activation buffers */
-__attribute__((section(".ram_bss"), aligned(32)))
+__attribute__((section(".ram_bss")))
 STAI_ALIGNED(STAI_NETWORK_ACTIVATION_1_ALIGNMENT)
 uint8_t activations_1[STAI_NETWORK_ACTIVATION_1_SIZE_BYTES];
 /* Array to store the data of the activation buffers */

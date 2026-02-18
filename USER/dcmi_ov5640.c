@@ -24,11 +24,9 @@
 #include "dcmi_ov5640_cfg.h" 
 
 #include "cmsis_os.h"
-#include "jpeglib.h"
 #include "lcd_spi_200.h"
 #include "main.h"
 #include "DMA2DProcess.h"
-#include "stm32h7xx_hal_dma.h"
 
 #include <stdio.h>
 #include <string.h>

@@ -10,7 +10,6 @@
 #include "dma2d.h"
 #include "fatfs.h"
 #include "jpeg.h"
-#include "libjpeg.h"
 #include "mdma.h"
 #include "quadspi.h"
 #include "rtc.h"
