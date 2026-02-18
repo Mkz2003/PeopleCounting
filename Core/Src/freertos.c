@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
 #include "array.h"
+#include "dcmi_ov5640.h"
 #include "lcd_spi_200.h"
 #include "task.h"
 #include "main.h"
@@ -264,7 +265,7 @@ void LCDRefreshTask(void *argument)
                                 f->r.h * LCD_Height / Display_Height, 
                                 f->color, thickness, fill
                               );
-        LCD_printf(f->r.x / 12, (LCD_Height - f->r.y - f->r.h) / 6, "%d", f->id);                        
+        LCD_printf(f->r.x * LCD_Width / Display_Width / 12, (LCD_Height - ((f->r.y + f->r.h) * LCD_Height / Display_Height)) / 6, "%d", f->id);                        
     }   
     // LCD_Clear();
     // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
@@ -430,10 +431,10 @@ void ObjectDetectTask(void *argument)
 
           faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
 
-          f->rect.x = LCD_Height * (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2) - (LCD_Height - LCD_Width) / 2;
-          f->rect.y = LCD_Height * (1.0f - ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
-          f->rect.width = LCD_Height * ai_i8_To_ai_float(outData->h[i]);
-          f->rect.height = LCD_Height * ai_i8_To_ai_float(outData->w[i]);
+          f->rect.x = Display_Height * (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2) - (Display_Height - Display_Width) / 2;
+          f->rect.y = Display_Height * (1.0f - ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
+          f->rect.width = Display_Height * ai_i8_To_ai_float(outData->h[i]);
+          f->rect.height = Display_Height * ai_i8_To_ai_float(outData->w[i]);
           f->label = label;
           f->prob = ai_i8_To_ai_float(outData->object[label][i]);
 

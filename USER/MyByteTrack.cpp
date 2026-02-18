@@ -9,6 +9,7 @@
 #include "Eigen/Dense"
 #include "ByteTracker.h"
 #include "array.h"
+#include "dcmi_ov5640.h"
 #include "stm32ipl_imlib.h"
 #include "stm32ipl_mem_alloc.h"
 
@@ -35,13 +36,13 @@ float compute_iou(const Object& a, const Object& b) {
     // 转换为边界坐标（左上角 + 右下角）
     float ax1 = a.rect.x;
     float ay1 = a.rect.y;
-    float ax2 = a.rect.x + a.rect.width;
-    float ay2 = a.rect.y + a.rect.height;
+    float ax2 = (a.rect.x + a.rect.width);
+    float ay2 = (a.rect.y + a.rect.height);
 
     float bx1 = b.rect.x;
     float by1 = b.rect.y;
-    float bx2 = b.rect.x + b.rect.width;
-    float by2 = b.rect.y + b.rect.height;
+    float bx2 = (b.rect.x + b.rect.width);
+    float by2 = (b.rect.y + b.rect.height);
 
     // 计算交集区域
     float inter_x1 = std::max(ax1, bx1);
@@ -119,7 +120,7 @@ extern "C"
 {
 #endif  // __cplusplus
 
-BYTETracker tracker(15, 30);
+BYTETracker tracker(1, 120);
 
 void get(array_t* inArray, array_t* outArray) {
     std::vector<Object> raw_objects;
@@ -130,8 +131,8 @@ void get(array_t* inArray, array_t* outArray) {
         raw_objects.push_back({{f->rect.x, f->rect.y, f->rect.width, f->rect.height}, f->label, f->prob});
     }
 
-    // std::vector<Object> objects = nms(raw_objects, 0.8f, true);
-    std::vector<Object> objects = raw_objects;
+    std::vector<Object> objects = nms(raw_objects, 0.5f, true);
+    // std::vector<Object> objects = raw_objects;
     vector<STrack> output_stracks = tracker.update(objects);
     
     array_clear(outArray);
