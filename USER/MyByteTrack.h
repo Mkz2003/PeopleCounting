@@ -22,7 +22,9 @@ typedef struct
 
 typedef struct
 {
-    rectangle_t r;
+    struct {
+		float x, y, width, height;
+	} r;
     int id;
     uint32_t color;
 }faceIDObject_t;

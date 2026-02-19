@@ -4,46 +4,46 @@ Creating c (debug) info json file network_c_info.json
 E: gemm_142_bias_0_conversion layer - number of I/O tensor is not coherent: 0/1
 E: gemm_138_bias_0_2_gemm_138_conversion layer - number of I/O tensor is not coherent: 0/1
  Exec/report summary (generate)
- ---------------------------------------------------------------------------------------------------------------------------------
- model file         :   yolo11n_full_integer_quant.tflite               
- type               :   tflite                                                                                                    
- c_name             :   network                                                                                                   
- compression        :   lossless                                                                                                  
- options            :   allocate-inputs, allocate-outputs, use-lite-runtime, use-st-ai                                            
- optimization       :   time                                                                                                      
- target/series      :   stm32f4                                                                                                   
- workspace dir      :   workspace                                       
- output dir         :   output                                          
- model_fmt          :   sa/sa per tensor                                                                                          
- model_name         :   yolo11n_full_integer_quant                                                                                
- model_hash         :   0x670478931eb5a415973e14385f43ca02                                                                        
- params #           :   2,619,401 items (2.52 MiB)                                                                                
- ---------------------------------------------------------------------------------------------------------------------------------
- input 1/1          :   'serving_default_images0', int8(1x160x160x3), 75.00 KBytes, QLinear(0.003921569,-128,int8), activations   
- output 1/1         :   'concat_347', int8(1x84x525), 43.07 KBytes, QLinear(0.005972388,-127,int8), activations                   
- macc               :   221,499,238                                                                                               
- weights (ro)       :   2,647,668 B (2.53 MiB) (1 segment) / -7,829,936(-74.7%) vs float model                                    
- activations (rw)   :   272,052 B (265.68 KiB) (1 segment) *                                                                      
- ram (total)        :   272,052 B (265.68 KiB) = 272,052 + 0 + 0                                                                  
- ---------------------------------------------------------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------------------------------------------------------------
+ model file         :   yolo11n_full_integer_quant.tflite                
+ type               :   tflite                                                                                                     
+ c_name             :   network                                                                                                    
+ compression        :   lossless                                                                                                   
+ options            :   allocate-inputs, allocate-outputs, use-lite-runtime, use-st-ai                                             
+ optimization       :   time                                                                                                       
+ target/series      :   stm32f4                                                                                                    
+ workspace dir      :   workspace                                        
+ output dir         :   output                                           
+ model_fmt          :   sa/sa per tensor                                                                                           
+ model_name         :   yolo11n_full_integer_quant                                                                                 
+ model_hash         :   0x668a78d26ff568d0a7185167142ff60d                                                                         
+ params #           :   2,620,787 items (2.52 MiB)                                                                                 
+ ----------------------------------------------------------------------------------------------------------------------------------
+ input 1/1          :   'serving_default_images0', int8(1x192x192x3), 108.00 KBytes, QLinear(0.003921569,-128,int8), activations   
+ output 1/1         :   'concat_347', int8(1x84x756), 62.02 KBytes, QLinear(0.005790205,-127,int8), activations                    
+ macc               :   328,550,645                                                                                                
+ weights (ro)       :   2,649,052 B (2.53 MiB) (1 segment) / -7,834,096(-74.7%) vs float model                                     
+ activations (rw)   :   387,764 B (378.68 KiB) (1 segment) *                                                                       
+ ram (total)        :   387,764 B (378.68 KiB) = 387,764 + 0 + 0                                                                   
+ ----------------------------------------------------------------------------------------------------------------------------------
  (*) 'input'/'output' buffers are allocated in the activations buffer
 Computing AI RT data/code size (target=stm32f4)..
  Requested memory size by section - "stm32f4" target
  ------------------------------ --------- ----------- -------- ---------
  module                              text      rodata     data       bss
  ------------------------------ --------- ----------- -------- ---------
- network.o                         54,538      61,390   52,040     1,912
+ network.o                         54,562      61,390   52,040     1,912
  NetworkRuntime1100_CM4_GCC.a      56,192          16        0         0
  lib (toolchain)*                   2,188           0        0         0
  ------------------------------ --------- ----------- -------- ---------
- RT total**                       112,918      61,406   52,040     1,912
+ RT total**                       112,942      61,406   52,040     1,912
  ------------------------------ --------- ----------- -------- ---------
- weights                                0   2,647,672        0         0
- activations                            0           0        0   272,052
+ weights                                0   2,649,056        0         0
+ activations                            0           0        0   387,764
  states                                 0           0        0         0
  io                                     0           0        0         0
  ------------------------------ --------- ----------- -------- ---------
- TOTAL                            112,918   2,709,078   52,040   273,964
+ TOTAL                            112,942   2,710,462   52,040   389,676
  ------------------------------ --------- ----------- -------- ---------
  *  toolchain objects (libm/libgcc*)
  ** RT AI runtime objects (kernels+infrastructure)
@@ -51,9 +51,9 @@ Computing AI RT data/code size (target=stm32f4)..
   --------------------------------------------------
                FLASH (ro)     %*   RAM (rw)       %
   --------------------------------------------------
-  RT total        226,364   7.9%     53,952   16.5%
+  RT total        226,388   7.9%     53,952   12.2%
   --------------------------------------------------
-  TOTAL         2,874,036           326,004
+  TOTAL         2,875,444           441,716
   --------------------------------------------------
   *  rt/total
  Generated files (5)
@@ -64,4 +64,4 @@ Computing AI RT data/code size (target=stm32f4)..
  network.c
  network_details.h
 Creating txt report file network_generate_report.txt
-elapsed time (GENERATE): 53.365s
+elapsed time (GENERATE): 52.443s

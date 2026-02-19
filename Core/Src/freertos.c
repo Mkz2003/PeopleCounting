@@ -258,14 +258,13 @@ void LCDRefreshTask(void *argument)
     {
         faceIDObject_t *f = array_at(faceIDs, i);
         // Draw the bounding box around each detected face.
-        STM32Ipl_DrawRectangle(&dstImg, 
-                                f->r.x * LCD_Width / Display_Width, 
-                                f->r.y * LCD_Height / Display_Height, 
-                                f->r.w * LCD_Width / Display_Width, 
-                                f->r.h * LCD_Height / Display_Height, 
-                                f->color, thickness, fill
-                              );
-        LCD_printf(f->r.x * LCD_Width / Display_Width / 12, (LCD_Height - ((f->r.y + f->r.h) * LCD_Height / Display_Height)) / 6, "%d", f->id);                        
+        uint16_t x = f->r.x * LCD_Height - (LCD_Height - LCD_Width) / 2;
+        uint16_t y = f->r.y * LCD_Height;
+        uint16_t w = f->r.width * LCD_Height;
+        uint16_t h = f->r.height * LCD_Height;
+        stm32ipl_color_t color = f->color;
+        STM32Ipl_DrawRectangle(&dstImg, x, y, w, h, color, thickness, fill);
+        LCD_printf(x / 12, (LCD_Height - (y + h)) / 6, "%d", f->id);
     }   
     // LCD_Clear();
     // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
@@ -427,14 +426,25 @@ void ObjectDetectTask(void *argument)
         int32_t label = 0;
         for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
         {
-          if(ai_i8_To_ai_float(outData->object[label][i]) < 0.1f) continue;
+          // 找认定label类为最大概率的检测框
+          uint8_t flag = 0;
+          for(int j = 0; j < STAI_NETWORK_OUT_1_HEIGHT - 4; j++)
+          {
+            if(j != label && ai_i8_To_ai_float(outData->object[label][i]) <= ai_i8_To_ai_float(outData->object[j][i]))
+            {
+              flag = 1;
+              break;
+            }
+          }
+          if(flag || ai_i8_To_ai_float(outData->object[label][i]) <= 0.05f) continue;
 
+          // 存入归一化数据
           faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
 
-          f->rect.x = Display_Height * (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2) - (Display_Height - Display_Width) / 2;
-          f->rect.y = Display_Height * (1.0f - ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
-          f->rect.width = Display_Height * ai_i8_To_ai_float(outData->h[i]);
-          f->rect.height = Display_Height * ai_i8_To_ai_float(outData->w[i]);
+          f->rect.x = (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2);
+          f->rect.y = (1.0f - ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
+          f->rect.width =  ai_i8_To_ai_float(outData->h[i]);
+          f->rect.height = ai_i8_To_ai_float(outData->w[i]);
           f->label = label;
           f->prob = ai_i8_To_ai_float(outData->object[label][i]);
 

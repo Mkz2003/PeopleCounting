@@ -142,17 +142,17 @@ void get(array_t* inArray, array_t* outArray) {
 
 
         bool vertical = tlwh[2] / tlwh[3] > 1.6f;
-        if (tlwh[2] * tlwh[3] > 20.0f && !vertical)
+        if((tlwh[2] * tlwh[3] > 20.0f && !vertical) || 1)
         {
             int id = output_stracks[i].track_id;
             uint32_t color = tracker.get_color(id);
 
             faceIDObject_t* faceID = (faceIDObject_t*)xalloc(sizeof(faceIDObject_t));
 
-            faceID->r.x = static_cast<int16_t>(tlwh[0]);
-            faceID->r.y = static_cast<int16_t>(tlwh[1]);
-            faceID->r.w = static_cast<int16_t>(tlwh[2]);
-            faceID->r.h = static_cast<int16_t>(tlwh[3]);
+            faceID->r.x = (tlwh[0]);
+            faceID->r.y = (tlwh[1]);
+            faceID->r.width = (tlwh[2]);
+            faceID->r.height = (tlwh[3]);
             faceID->id = id;
             faceID->color = color;
 
