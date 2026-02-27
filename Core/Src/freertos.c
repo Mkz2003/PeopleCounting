@@ -267,17 +267,17 @@ void LCDRefreshTask(void *argument)
     // LCD_Clear();
     // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
-    LCD_printf(15, 1, "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
-    LCD_printf(16, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
-    LCD_printf(17, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
+    // LCD_printf(15, 1,"%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
+    // LCD_printf(16, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
+    // LCD_printf(17, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
     LCD_printf(18, 1, "Face: %d", array_length(faceIDs));
-    LCD_printf(19, 1, "%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
+    LCD_printf(19, 1,  "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
     LCD_SPI_Transmit();
 
     // uint32_t dstSize = JPEGEncode((uint8_t*)LCD_Buff, LCD_Height * LCD_Width * 2);
     // CDC_Transmit_FS(jpeg_buffer, dstSize);
 
-    osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
+    osDelayUntil(LCD_Tick_End + 1000 / 10); // ~10fps
   }
   /* USER CODE END LCDRefreshTask */
 }
@@ -360,19 +360,7 @@ void ObjectDetectTask(void *argument)
   array_alloc(&eyes, xfree);
   array_alloc(&faceIDs, xfree);
 
-  extern uint8_t activations_1[STAI_NETWORK_ACTIVATION_1_SIZE_BYTES];
-  extern stai_ptr m_inputs[STAI_NETWORK_IN_NUM];
-  extern stai_ptr m_outputs[STAI_NETWORK_OUT_NUM];
-
-  #define ResizeHeight  (STAI_NETWORK_IN_1_WIDTH)
-  #define ResizeWidth   (Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height)
-
-  __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[ResizeHeight][ResizeWidth];
-  // __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[STAI_NETWORK_IN_1_WIDTH][STAI_NETWORK_IN_1_HEIGHT];
-
-  aiInit();
-
-  CHANNEL* outData = (CHANNEL*)m_outputs[0];
+  STM32CubeAI_Studio_AI_Init();
 
   /* Infinite loop */
   for(;;)
@@ -386,83 +374,7 @@ void ObjectDetectTask(void *argument)
 			DetectObject_FPS = 1000.0f / (DetectObject_Tick_End - DetectObject_Tick_Start);
 			DetectObject_Tick_Start = DetectObject_Tick_End;
 
-      // 这里可以对图像数据进行处理，例如人脸识别、目标检测等
-      // 将摄像头数据指向srcImg，进行目标检测
-      image_t srcImg, resizedImg;
-      STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
-
-      STM32Ipl_Init(&resizedImg, ResizeWidth, ResizeHeight, IMAGE_BPP_RGB565, resizedImage);
-      // STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
-      
-      STM32Ipl_Resize(&srcImg, &resizedImg, RESIZE_NEAREST);
-      STM32Ipl_Rotation90(&resizedImg, &resizedImg);
-
-      const size_t offset = (sizeof(STAI_FORMAT) * 3) * STAI_NETWORK_IN_1_WIDTH * (STAI_NETWORK_IN_1_HEIGHT - ResizeWidth) / 2;
-      // const size_t offset = 0;
-      DMA2D_Fill((uint8_t*)m_inputs[0], 
-                  STAI_NETWORK_IN_1_WIDTH, 
-                  STAI_NETWORK_IN_1_HEIGHT, 
-                  0,
-                  DMA2D_OUTPUT_RGB888, 
-                  0x00111111
-                );
-      DMA2D_FormatConvert(resizedImage, 
-                            (uint8_t*)m_inputs[0] + offset, 
-                            resizedImg.w, 
-                            resizedImg.h, 
-                            0, 
-                            0, 
-                            DMA2D_INPUT_RGB565, 
-                            DMA2D_OUTPUT_RGB888
-                          );
-
-      // 转换图像为int8
-      // for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((ai_i8*)m_inputs[0] + offset + i) = rgb888_To_ai_i8(*((uint8_t*)m_inputs[0] + offset + i));
-      for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((int8_t*)m_inputs[0] + offset + i) = ai_float_32_To_ai_i8(*((uint8_t*)m_inputs[0] + offset + i) / 255.0f);
-                        
-      uint32_t a = aiRun();
-      
-      if(a == 0)
-      {
-        array_clear(faces);
-        int32_t label = 0;
-        for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
-        {
-          // 找认定label类为最大概率的检测框
-          uint8_t flag = 0;
-          for(int j = 0; j < STAI_NETWORK_OUT_1_HEIGHT - 4; j++)
-          {
-            if(j != label && ai_i8_To_ai_float(outData->object[label][i]) <= ai_i8_To_ai_float(outData->object[j][i]))
-            {
-              flag = 1;
-              break;
-            }
-          }
-          if(flag || ai_i8_To_ai_float(outData->object[label][i]) <= 0.1f) continue;
-
-          // 存入归一化数据
-          faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
-
-          f->rect.x = (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2);
-          f->rect.y = (1.0f - ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
-          f->rect.width =  ai_i8_To_ai_float(outData->h[i]);
-          f->rect.height = ai_i8_To_ai_float(outData->w[i]);
-          f->label = label;
-          f->prob = ai_i8_To_ai_float(outData->object[label][i]);
-
-          array_push_back(faces, f);
-        }
-      }
-
-      get(faces, faceIDs);
-
-      // if(array_length(faceIDs) > 0) CDC_printf("%ds\n", xTaskGetTickCount() / 1000);
-      // for(int i = 0; i < array_length(faceIDs); i++)
-      // {
-      //   faceIDObject_t *f = array_at(faceIDs, i);
-      //   CDC_printf("id: %d, x: %d, y: %d, w: %d, h: %d\n", f->id, f->r.x, f->r.y, f->r.w, f->r.h);
-      // }
-      // if(array_length(faceIDs) > 0) CDC_printf("\n");
+      STM32CubeAI_Studio_AI_Process();
 
     }
     else

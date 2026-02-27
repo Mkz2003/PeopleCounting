@@ -55,10 +55,10 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/USER/DMA2DProcess.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/qspi_w25q64.c
     ${CMAKE_CURRENT_LIST_DIR}/USER/JPEGEncode.c
-    ${CMAKE_CURRENT_LIST_DIR}/USER/stedgeai_app_main.c
 
-    ${CMAKE_CURRENT_LIST_DIR}/Network/network_data.c
-    ${CMAKE_CURRENT_LIST_DIR}/Network/network.c
+    ${CMAKE_CURRENT_LIST_DIR}/model-network-code/AI/App/app_x-cube-ai.c
+    ${CMAKE_CURRENT_LIST_DIR}/model-network-code/generated/network_data.c
+    ${CMAKE_CURRENT_LIST_DIR}/model-network-code/generated/network.c
 
     ${CMAKE_CURRENT_LIST_DIR}/USER/MyByteTrack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/BYTETracker.cpp
@@ -136,8 +136,9 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/stm32-mw-ipl/Inc/
     ${CMAKE_CURRENT_LIST_DIR}/eigen
     ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/include
-    ${CMAKE_CURRENT_LIST_DIR}/Network/
-    ${CMAKE_CURRENT_LIST_DIR}/Network/Inc
+    ${CMAKE_CURRENT_LIST_DIR}/model-network-code/AI/App/
+    ${CMAKE_CURRENT_LIST_DIR}/model-network-code/generated/
+    ${CMAKE_CURRENT_LIST_DIR}/model-network-code/Middlewares/ST/AI/Inc
 )
 
 # Add project symbols (macros)
@@ -154,7 +155,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
 
     # Add user defined libraries
-    ${CMAKE_CURRENT_LIST_DIR}/Network/Lib/NetworkRuntime1100_CM7_GCC.a
+    ${CMAKE_CURRENT_LIST_DIR}/model-network-code/Middlewares/ST/AI/Lib/NetworkRuntime1200_CM7_GCC.a
 )
 
 

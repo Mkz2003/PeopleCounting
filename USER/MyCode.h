@@ -31,7 +31,7 @@
 #include "qspi_w25q64.h"
 #include "JPEGEncode.h"
 #include "MyByteTrack.h"
-#include "stedgeai_app_main.h"
+#include "app_x-cube-ai.h"
 #include "array.h"
 #include "stm32ipl_imlib.h"
 #include "stm32ipl_mem_alloc.h"

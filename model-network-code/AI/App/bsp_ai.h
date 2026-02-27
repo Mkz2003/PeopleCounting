@@ -1,23 +1,33 @@
 /**
   ******************************************************************************
-  * @file    network_data.h
-  * @author  AST Embedded Analytics Research Platform
-  * @date    2026-02-23T18:01:16+0000
-  * @brief   AI Tool Automatic Code Generator for Embedded NN computing
+  * @file    bsp_ai.h
+  * @author  X-CUBE-AI C code generator
+  * @brief   AI BSP dependencies
   ******************************************************************************
-  * Copyright (c) 2026 STMicroelectronics.
+  * @attention
+  *
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
   ******************************************************************************
   */
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef BSP_H
+#define BSP_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
+#include "main.h"
+#include "stm32h7xx.h"
+#include "app_x-cube-ai.h"
 
-#ifndef STAI_NETWORK_DATA_H
-#define STAI_NETWORK_DATA_H
-#include "stai.h"
-STAI_ALIGNED(8)
-extern const uint64_t g_network_weights_array[326578];
-#endif  /* STAI_NETWORK_DATA_H */
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* BSP_H */
