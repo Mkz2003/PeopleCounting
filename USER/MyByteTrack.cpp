@@ -146,6 +146,7 @@ void get(array_t* inArray, array_t* outArray) {
         {
             int id = output_stracks[i].track_id;
             uint32_t color = tracker.get_color(id);
+            float score = output_stracks[i].score;
 
             faceIDObject_t* faceID = (faceIDObject_t*)xalloc(sizeof(faceIDObject_t));
 
@@ -155,6 +156,7 @@ void get(array_t* inArray, array_t* outArray) {
             faceID->r.height = (tlwh[3]);
             faceID->id = id;
             faceID->color = color;
+            faceID->score = score;
 
             array_push_back(outArray, faceID);
         }

@@ -19,9 +19,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
-#include "array.h"
-#include "dcmi_ov5640.h"
-#include "lcd_spi_200.h"
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
@@ -265,6 +262,7 @@ void LCDRefreshTask(void *argument)
         stm32ipl_color_t color = f->color;
         STM32Ipl_DrawRectangle(&dstImg, x, y, w, h, color, thickness, fill);
         LCD_printf(x / 12, (LCD_Height - (y + h)) / 6, "%d", f->id);
+        LCD_printf((x + w) / 12, (LCD_Height - (y + h)) / 6, "%.2f", f->score);
     }   
     // LCD_Clear();
     // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
@@ -275,6 +273,9 @@ void LCDRefreshTask(void *argument)
     LCD_printf(18, 1, "Face: %d", array_length(faceIDs));
     LCD_printf(19, 1, "%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
     LCD_SPI_Transmit();
+
+    // uint32_t dstSize = JPEGEncode((uint8_t*)LCD_Buff, LCD_Height * LCD_Width * 2);
+    // CDC_Transmit_FS(jpeg_buffer, dstSize);
 
     osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
   }
@@ -416,6 +417,7 @@ void ObjectDetectTask(void *argument)
                           );
 
       // 转换图像为int8
+      // for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((ai_i8*)m_inputs[0] + offset + i) = rgb888_To_ai_i8(*((uint8_t*)m_inputs[0] + offset + i));
       for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((int8_t*)m_inputs[0] + offset + i) = ai_float_32_To_ai_i8(*((uint8_t*)m_inputs[0] + offset + i) / 255.0f);
                         
       uint32_t a = aiRun();
@@ -436,7 +438,7 @@ void ObjectDetectTask(void *argument)
               break;
             }
           }
-          if(flag || ai_i8_To_ai_float(outData->object[label][i]) <= 0.05f) continue;
+          if(flag || ai_i8_To_ai_float(outData->object[label][i]) <= 0.1f) continue;
 
           // 存入归一化数据
           faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));

@@ -27,6 +27,7 @@ typedef struct
 	} r;
     int id;
     uint32_t color;
+    float score;
 }faceIDObject_t;
 
 

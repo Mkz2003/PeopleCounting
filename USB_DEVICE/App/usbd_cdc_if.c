@@ -342,7 +342,7 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 	uint32_t timeStart = HAL_GetTick();
 	while(hcdc->TxState == USBD_BUSY)
 	{
-		if(HAL_GetTick() - timeStart > 2)
+		if(HAL_GetTick() - timeStart > 10)
 			return (USBD_BUSY);
 	}
   USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
