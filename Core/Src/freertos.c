@@ -277,7 +277,7 @@ void LCDRefreshTask(void *argument)
     // uint32_t dstSize = JPEGEncode((uint8_t*)LCD_Buff, LCD_Height * LCD_Width * 2);
     // CDC_Transmit_FS(jpeg_buffer, dstSize);
 
-    osDelayUntil(LCD_Tick_End + 1000 / 30); // ~30fps
+    osDelayUntil(LCD_Tick_End + 1000 / 10); // ~10fps
   }
   /* USER CODE END LCDRefreshTask */
 }
@@ -360,7 +360,6 @@ void ObjectDetectTask(void *argument)
   array_alloc(&eyes, xfree);
   array_alloc(&faceIDs, xfree);
 
-  extern uint8_t activations_1[STAI_NETWORK_ACTIVATION_1_SIZE_BYTES];
   extern stai_ptr m_inputs[STAI_NETWORK_IN_NUM];
   extern stai_ptr m_outputs[STAI_NETWORK_OUT_NUM];
 
