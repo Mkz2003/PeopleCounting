@@ -48,6 +48,7 @@
 /* USER CODE BEGIN includes */
 
 #include "MyCode.h"
+#include "network_data.h"
 
 /* USER CODE END includes */
 
@@ -201,19 +202,26 @@ int aiRun() {
 int acquire_and_process_data()
 {
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
+  extern OV5640_FrameState ov5640_FrameState;
 
   #define ResizeHeight  (STAI_NETWORK_IN_1_WIDTH)
   #define ResizeWidth   (Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height)
 
   __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[ResizeHeight][ResizeWidth];
   // __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[STAI_NETWORK_IN_1_WIDTH][STAI_NETWORK_IN_1_HEIGHT];
-  image_t srcImg, resizedImg;
-  STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
+  image_t srcImg, resizedImg; 
+  // 检测缓冲区是否切换，同时储存图像
+  do
+  {
+    ov5640_FrameState.objectDetectState = 0;
+    STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
 
-  STM32Ipl_Init(&resizedImg, ResizeWidth, ResizeHeight, IMAGE_BPP_RGB565, resizedImage);
-  // STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
+    STM32Ipl_Init(&resizedImg, ResizeWidth, ResizeHeight, IMAGE_BPP_RGB565, resizedImage);
+    // STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
 
-  STM32Ipl_Resize(&srcImg, &resizedImg, RESIZE_NEAREST);
+    STM32Ipl_Resize(&srcImg, &resizedImg, RESIZE_NEAREST);
+  } while(ov5640_FrameState.objectDetectState);
+
   STM32Ipl_Rotation90(&resizedImg, &resizedImg);
 
   const size_t offset = (sizeof(STAI_FORMAT) * 3) * STAI_NETWORK_IN_1_WIDTH * (STAI_NETWORK_IN_1_HEIGHT - ResizeWidth) / 2;
@@ -306,6 +314,7 @@ void main_loop() {
 void STM32CubeAI_Studio_AI_Init(void)
 {
     /* USER CODE BEGIN 5 */
+    memcpy(g_network_weights_array, _g_network_weights_array, sizeof(g_network_weights_array));
     aiInit();
     /* USER CODE END 5 */
 }

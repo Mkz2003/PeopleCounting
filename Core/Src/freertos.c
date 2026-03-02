@@ -21,7 +21,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
-#include "cmsis_os.h"
+#include "FreeRTOS.h"
+#include "cmsis_os2.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -352,7 +353,6 @@ void ObjectDetectTask(void *argument)
 
   extern OV5640_FrameState ov5640_FrameState;
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
-  extern OV5640_FrameState ov5640_FrameState;
   extern void xfree(void *mem);
 
   STM32IPL_MemInit();

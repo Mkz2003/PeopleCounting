@@ -327,7 +327,7 @@ void DMA2D_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles USB On The Go FS global interrupt.
+  * @brief This function handles USB OTG FS global interrupt.
   */
 void OTG_FS_IRQHandler(void)
 {

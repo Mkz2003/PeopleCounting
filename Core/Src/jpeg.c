@@ -153,3 +153,4 @@ void HAL_JPEG_MspDeInit(JPEG_HandleTypeDef* jpegHandle)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
+
