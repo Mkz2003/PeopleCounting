@@ -232,7 +232,8 @@ int acquire_and_process_data()
                         0, 
                         0, 
                         DMA2D_INPUT_RGB565, 
-                        DMA2D_OUTPUT_RGB888
+                        DMA2D_OUTPUT_RGB888,
+                        1
                       );
 
   // 转换图像为int8

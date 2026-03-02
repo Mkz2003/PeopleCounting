@@ -10,7 +10,7 @@ void DMA2D_BlendColors(void* pForeground, void* pBackground, void* pDestination,
 
 void DMA2D_FormatConvert(void *pSrc, void *pDst, int width, int height, 
                          int offsetSrc, int offsetDst, 
-                         uint32_t sourcePixelFormat, uint32_t destPixelFormat);
+                         uint32_t sourcePixelFormat, uint32_t destPixelFormat, uint8_t swapRB);
 
 void DMA2D_MemCopy(void * pSrc, void * pDst, int width, int height, int offsetSrc, int offseteDst, uint32_t pixelFormat);
 

@@ -1,6 +1,7 @@
 #include "DMA2DProcess.h"
 
 #include "main.h"
+#include "stm32h7xx_hal_dma2d.h"
 
 /**
  * @brief Blend colors using DMA2D.
@@ -66,7 +67,7 @@ void DMA2D_BlendColors(void* pForeground, void* pBackground, void* pDestination,
   */
 void DMA2D_FormatConvert(void *pSrc, void *pDst, int width, int height, 
                          int offsetSrc, int offsetDst, 
-                         uint32_t sourcePixelFormat, uint32_t destPixelFormat)
+                         uint32_t sourcePixelFormat, uint32_t destPixelFormat, uint8_t swapRB)
 {
     /* 等待DMA2D传输完成 */
     while (DMA2D->CR & DMA2D_CR_START);
@@ -80,6 +81,23 @@ void DMA2D_FormatConvert(void *pSrc, void *pDst, int width, int height,
     DMA2D->FGPFCCR = sourcePixelFormat;                  /* 前景像素格式控制 */
     DMA2D->OPFCCR  = destPixelFormat;                    /* 输出像素格式控制 */
     DMA2D->NLR     = (uint32_t)(width << 16) | (uint16_t)height; /* 行数和每行像素数 */
+
+    /* 处理RB反转：仅在存在RGB888时有效 */
+    if (swapRB)
+    {
+        // 检查源格式是否为RGB888（假设低5位为像素格式）
+        if ((sourcePixelFormat & 0x1F) == DMA2D_INPUT_RGB888)
+        {
+            DMA2D->FGPFCCR |= 0x1000;   // 源端使能字节交换（R<->B）
+        }
+        // 否则检查目标格式是否为RGB888（避免双重交换）
+        else if ((destPixelFormat & 0x1F) == DMA2D_OUTPUT_RGB888)
+        {
+            DMA2D->OPFCCR |= 0x1000;    // 目标端使能字节交换
+        }
+        // 其他情况：无RGB888，忽略swapRB
+    }
+
 
     /* 启动传输 */
     DMA2D->CR   |= DMA2D_CR_START;
