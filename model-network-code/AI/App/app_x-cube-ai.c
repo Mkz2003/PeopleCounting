@@ -204,8 +204,8 @@ int acquire_and_process_data()
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
   extern OV5640_FrameState ov5640_FrameState;
 
-  #define ResizeHeight  (STAI_NETWORK_IN_1_WIDTH)
-  #define ResizeWidth   (Display_Width * STAI_NETWORK_IN_1_HEIGHT / Display_Height)
+  #define ResizeWidth  (STAI_NETWORK_IN_1_WIDTH)
+  #define ResizeHeight   (Display_Height * STAI_NETWORK_IN_1_HEIGHT / Display_Width)
 
   __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[ResizeHeight][ResizeWidth];
   // __attribute__((section(".sdram_bss"), aligned(32))) static uint16_t resizedImage[STAI_NETWORK_IN_1_WIDTH][STAI_NETWORK_IN_1_HEIGHT];
@@ -220,11 +220,11 @@ int acquire_and_process_data()
     // STM32Ipl_Init(&resizedImg, STAI_NETWORK_IN_1_HEIGHT, STAI_NETWORK_IN_1_WIDTH, IMAGE_BPP_RGB565, resizedImage);
 
     STM32Ipl_Resize(&srcImg, &resizedImg, RESIZE_NEAREST);
-  } while(ov5640_FrameState.objectDetectState);
+  } while(ov5640_FrameState.objectDetectState && 0);
 
-  STM32Ipl_Rotation90(&resizedImg, &resizedImg);
+  // STM32Ipl_Rotation90(&resizedImg, &resizedImg);
 
-  const size_t offset = (sizeof(STAI_FORMAT) * 3) * STAI_NETWORK_IN_1_WIDTH * (STAI_NETWORK_IN_1_HEIGHT - ResizeWidth) / 2;
+  const size_t offset = (sizeof(STAI_FORMAT) * 3) * STAI_NETWORK_IN_1_WIDTH * (STAI_NETWORK_IN_1_HEIGHT - ResizeHeight) / 2;
   // const size_t offset = 0;
   DMA2D_Fill((uint8_t*)stai_input[0], 
               STAI_NETWORK_IN_1_WIDTH, 
@@ -277,10 +277,10 @@ int post_process()
     // 存入归一化数据
     faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
 
-    f->rect.x = (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2);
-    f->rect.y = (1.0f - ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
-    f->rect.width =  ai_i8_To_ai_float(outData->h[i]);
-    f->rect.height = ai_i8_To_ai_float(outData->w[i]);
+    f->rect.x = (ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
+    f->rect.y = (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2);
+    f->rect.width =  ai_i8_To_ai_float(outData->w[i]);
+    f->rect.height = ai_i8_To_ai_float(outData->h[i]);
     f->label = label;
     f->prob = ai_i8_To_ai_float(outData->object[label][i]);
 

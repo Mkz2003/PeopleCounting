@@ -31,6 +31,7 @@
 #include "quadspi.h"
 #include "rtc.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
@@ -130,6 +131,7 @@ int main(void)
   MX_JPEG_Init();
   MX_FATFS_Init();
   MX_RTC_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
   Setup();

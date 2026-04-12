@@ -249,17 +249,21 @@ void LCDRefreshTask(void *argument)
 
     image_t srcImg, dstImg;
     STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
-    STM32Ipl_Init(&dstImg, LCD_Width, LCD_Height, IMAGE_BPP_RGB565, (uint8_t*)LCD_Buff);
-    STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
+    STM32Ipl_Init(&dstImg, LCD_Height, LCD_Width, IMAGE_BPP_RGB565, (uint8_t*)LCD_Buff);
+    STM32Ipl_Rotation270(&dstImg, &srcImg);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
 
     for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
     {
         faceIDObject_t *f = array_at(faceIDs, i);
         // Draw the bounding box around each detected face.
-        uint16_t x = f->r.x * LCD_Height - (LCD_Height - LCD_Width) / 2;
-        uint16_t y = f->r.y * LCD_Height;
-        uint16_t w = f->r.width * LCD_Height;
-        uint16_t h = f->r.height * LCD_Height;
+        // uint16_t x = f->r.x * LCD_Height - (LCD_Height - LCD_Width) / 2;
+        // uint16_t y = f->r.y * LCD_Height;
+        // uint16_t w = f->r.width * LCD_Height;
+        // uint16_t h = f->r.height * LCD_Height;
+        uint16_t x = f->r.y * LCD_Height - (LCD_Height - LCD_Width) / 2;
+        uint16_t y = (1.0f - f->r.x - f->r.width) * LCD_Height;
+        uint16_t w = f->r.height * LCD_Height;
+        uint16_t h = f->r.width * LCD_Height;
         stm32ipl_color_t color = f->color;
         STM32Ipl_DrawRectangle(&dstImg, x, y, w, h, color, thickness, fill);
         LCD_printf(x / 12, (LCD_Height - (y + h)) / 6, "%d", f->id);
@@ -329,8 +333,8 @@ void ImageProcessTask(void *argument)
     if(ov5640_FrameState.imageProcessState)  // 等待一帧数据传输完成
     {
       ov5640_FrameState.imageProcessState = 0;
-      // uint32_t dstSize = JPEGEncode((uint8_t*)pCamera_Image, Display_Height * Display_Width * 2);
-      // CDC_Transmit_FS(jpeg_buffer, dstSize);
+      uint32_t dstSize = JPEGEncode((uint8_t*)pCamera_Image, Display_Height * Display_Width * 2);
+      while(CDC_Transmit_FS(jpeg_buffer, dstSize) != USBD_OK) osThreadYield();
     }
     else
     {

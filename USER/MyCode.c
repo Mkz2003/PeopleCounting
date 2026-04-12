@@ -20,6 +20,7 @@ void Setup(void)
 		printf ("\r\n内存映射错误！！  错误代码:%d\r\n",QSPI_Status);
 		while (1);
 	}
+    // HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 }
 
 #ifdef __GNUC__
