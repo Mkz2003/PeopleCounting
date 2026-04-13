@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    network_data.c
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-03-03T01:33:31+0800
+  * @date    2026-04-13T19:59:33+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * Copyright (c) 2026 STMicroelectronics.
@@ -16,7 +16,8 @@
 
 #include "network_data.h"
 STAI_ALIGNED(8)
-__attribute__((section(".quadspi"))) const uint64_t _g_network_weights_array[305667] = {
+__attribute__((section(".quadspi")))
+const uint64_t _g_network_weights_array[305667] = {
   0xba00000008U, 0xca000000ffU, 0x7f0000007fU, 0xe2d5c8bbaea19487U,
   0x4b3e31231609fcefU, 0xaea194877f726558U, 0x1609fcefe2d5c8bbU, 0x7f7265584b3e3123U,
   0xe2d5c8bbaea19487U, 0x4b3e31231609fcefU, 0xaea194877f726558U, 0x1609fcefe2d5c8bbU,
@@ -76437,4 +76438,5 @@ __attribute__((section(".quadspi"))) const uint64_t _g_network_weights_array[305
 };
 
 STAI_ALIGNED(8)
-__attribute__((section(".sdram_bss"))) typeof(_g_network_weights_array) g_network_weights_array;
+__attribute__((section(".sdram_bss")))
+typeof(_g_network_weights_array) g_network_weights_array;

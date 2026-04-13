@@ -246,7 +246,7 @@ int acquire_and_process_data()
 
   // 转换图像为int8
   // for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((ai_i8*)stai_input[0] + offset + i) = rgb888_To_ai_i8(*((uint8_t*)stai_input[0] + offset + i));
-  for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((int8_t*)stai_input[0] + offset + i) = ai_float_32_To_ai_i8(*((uint8_t*)stai_input[0] + offset + i) / 255.0f);
+  // for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((int8_t*)stai_input[0] + offset + i) = ai_float_32_To_ai_i8(*((uint8_t*)stai_input[0] + offset + i) / 255.0f);
 
   #undef ResizeHeight
   #undef ResizeWidth 
@@ -266,23 +266,23 @@ int post_process()
     uint8_t flag = 0;
     for(int j = 0; j < STAI_NETWORK_OUT_1_HEIGHT - 4; j++)
     {
-      if(j != label && ai_i8_To_ai_float(outData->object[label][i]) <= ai_i8_To_ai_float(outData->object[j][i]))
+      if(j != label && outData->object[label][i] <= outData->object[j][i])
       {
         flag = 1;
         break;
       }
     }
-    if(flag || ai_i8_To_ai_float(outData->object[label][i]) <= 0.1f) continue;
+    if(flag || outData->object[label][i] <= 0.1f) continue;
 
     // 存入归一化数据
     faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
 
-    f->rect.x = (ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
-    f->rect.y = (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2);
-    f->rect.width =  ai_i8_To_ai_float(outData->w[i]);
-    f->rect.height = ai_i8_To_ai_float(outData->h[i]);
+    f->rect.x = (outData->midx[i] - outData->w[i] / 2);
+    f->rect.y = (outData->midy[i] - outData->h[i] / 2);
+    f->rect.width =  outData->w[i];
+    f->rect.height = outData->h[i];
     f->label = label;
-    f->prob = ai_i8_To_ai_float(outData->object[label][i]);
+    f->prob = outData->object[label][i];
 
     array_push_back(faces, f);
   }

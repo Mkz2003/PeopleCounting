@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    network.h
-  * @date    2026-03-03T01:33:31+0800
+  * @date    2026-04-13T19:59:33+0800
   * @brief   ST.AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -21,12 +21,13 @@
 #include "layers.h"
 
 const stai_network_details g_network_details = {
-  .tensors = (const stai_tensor[447]) {
-   { .size_bytes = 76801, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {4, (const int32_t[4]){1, 160, 160, 3}}, .scale = {1, (const float[1]){0.003921568859368563}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "serving_default_images0_output" },
+  .tensors = (const stai_tensor[449]) {
+   { .size_bytes = 76800, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_U8, .shape = {4, (const int32_t[4]){1, 160, 160, 3}}, .scale = {1, (const float[1]){0.003921568859368563}}, .zeropoint = {1, (const int16_t[1]){0}}, .name = "serving_default_images0_output" },
    { .size_bytes = 4, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_FLOAT32, .shape = {2, (const int32_t[2]){1, 1}}, .scale = {0, NULL}, .zeropoint = {0, NULL}, .name = "gemm_324_bias_0_conversion_output" },
    { .size_bytes = 4, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_FLOAT32, .shape = {2, (const int32_t[2]){1, 1}}, .scale = {0, NULL}, .zeropoint = {0, NULL}, .name = "gemm_320_bias_0_2_gemm_320_conversion_output" },
    { .size_bytes = 4, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_FLOAT32, .shape = {2, (const int32_t[2]){1, 1}}, .scale = {0, NULL}, .zeropoint = {0, NULL}, .name = "gemm_141_bias_0_2_gemm_141_conversion_output" },
    { .size_bytes = 4, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_FLOAT32, .shape = {2, (const int32_t[2]){1, 1}}, .scale = {0, NULL}, .zeropoint = {0, NULL}, .name = "gemm_137_bias_0_2_gemm_137_conversion_output" },
+   { .size_bytes = 76801, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {4, (const int32_t[4]){1, 160, 160, 3}}, .scale = {1, (const float[1]){0.003921568859368563}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "serving_default_images0_0_conversion_output" },
    { .size_bytes = 102400, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {4, (const int32_t[4]){1, 80, 80, 16}}, .scale = {1, (const float[1]){0.4893190264701843}}, .zeropoint = {1, (const int16_t[1]){0}}, .name = "conv2d_1_output" },
    { .size_bytes = 102400, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {4, (const int32_t[4]){1, 80, 80, 16}}, .scale = {1, (const float[1]){0.00390625}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "nl_2_output" },
    { .size_bytes = 102400, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {4, (const int32_t[4]){1, 80, 80, 16}}, .scale = {1, (const float[1]){0.2450842410326004}}, .zeropoint = {1, (const int16_t[1]){-127}}, .name = "eltwise_3_output" },
@@ -467,458 +468,461 @@ const stai_network_details g_network_details = {
    { .size_bytes = 1050, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {3, (const int32_t[3]){1, 2, 525}}, .scale = {1, (const float[1]){0.004324581008404493}}, .zeropoint = {1, (const int16_t[1]){-100}}, .name = "eltwise_390_output" },
    { .size_bytes = 1050, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {3, (const int32_t[3]){1, 2, 525}}, .scale = {1, (const float[1]){0.007935614325106144}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "eltwise_395_output" },
    { .size_bytes = 1050, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {3, (const int32_t[3]){1, 2, 525}}, .scale = {1, (const float[1]){0.009908311069011688}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "eltwise_393_output" },
-   { .size_bytes = 1050, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {3, (const int32_t[3]){1, 2, 525}}, .scale = {1, (const float[1]){0.007935614325106144}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "eltwise_394_output" },
-   { .size_bytes = 44100, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {3, (const int32_t[3]){1, 84, 525}}, .scale = {1, (const float[1]){0.007935614325106144}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "concat_396_output" }
+   { .size_bytes = 1050, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {3, (const int32_t[3]){1, 2, 525}}, .scale = {1, (const float[1]){0.00390625}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "eltwise_394_output" },
+   { .size_bytes = 44100, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_S8, .shape = {3, (const int32_t[3]){1, 84, 525}}, .scale = {1, (const float[1]){0.00390625}}, .zeropoint = {1, (const int16_t[1]){-128}}, .name = "concat_396_output" },
+   { .size_bytes = 176400, .flags = (STAI_FLAG_HAS_BATCH|STAI_FLAG_CHANNEL_LAST), .format = STAI_FORMAT_FLOAT32, .shape = {3, (const int32_t[3]){1, 84, 525}}, .scale = {0, NULL}, .zeropoint = {0, NULL}, .name = "concat_396_0_conversion_output" }
   },
-  .nodes = (const stai_node_details[446]){
+  .nodes = (const stai_node_details[448]){
     {.id = 324, .type = AI_LAYER_NL_TYPE, .input_tensors = {0, NULL}, .output_tensors = {1, (const int32_t[1]){1}} }, /* gemm_324_bias_0_conversion */
     {.id = 320, .type = AI_LAYER_NL_TYPE, .input_tensors = {0, NULL}, .output_tensors = {1, (const int32_t[1]){2}} }, /* gemm_320_bias_0_2_gemm_320_conversion */
     {.id = 141, .type = AI_LAYER_NL_TYPE, .input_tensors = {0, NULL}, .output_tensors = {1, (const int32_t[1]){3}} }, /* gemm_141_bias_0_2_gemm_141_conversion */
     {.id = 137, .type = AI_LAYER_NL_TYPE, .input_tensors = {0, NULL}, .output_tensors = {1, (const int32_t[1]){4}} }, /* gemm_137_bias_0_2_gemm_137_conversion */
-    {.id = 0, .type = AI_LAYER_OPTIMIZED_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){0}}, .output_tensors = {1, (const int32_t[1]){5}} }, /* conv2d_1 */
-    {.id = 2, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){5}}, .output_tensors = {1, (const int32_t[1]){6}} }, /* nl_2 */
-    {.id = 3, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){5, 6}}, .output_tensors = {1, (const int32_t[1]){7}} }, /* eltwise_3 */
-    {.id = 4, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){7}}, .output_tensors = {1, (const int32_t[1]){8}} }, /* pad_4 */
-    {.id = 5, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){8}}, .output_tensors = {1, (const int32_t[1]){9}} }, /* conv2d_5 */
-    {.id = 6, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){9}}, .output_tensors = {1, (const int32_t[1]){10}} }, /* nl_6 */
-    {.id = 7, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){9, 10}}, .output_tensors = {1, (const int32_t[1]){11}} }, /* eltwise_7 */
-    {.id = 8, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){11}}, .output_tensors = {1, (const int32_t[1]){12}} }, /* conv2d_8 */
-    {.id = 9, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){12}}, .output_tensors = {1, (const int32_t[1]){13}} }, /* nl_9 */
-    {.id = 10, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){12, 13}}, .output_tensors = {1, (const int32_t[1]){14}} }, /* eltwise_10 */
-    {.id = 19, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){14}}, .output_tensors = {1, (const int32_t[1]){15}} }, /* slice_19 */
-    {.id = 11, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){14}}, .output_tensors = {1, (const int32_t[1]){16}} }, /* slice_11 */
-    {.id = 12, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){16}}, .output_tensors = {1, (const int32_t[1]){17}} }, /* conv2d_12_pad_before */
-    {.id = 12, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){17}}, .output_tensors = {1, (const int32_t[1]){18}} }, /* conv2d_12 */
-    {.id = 13, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){18}}, .output_tensors = {1, (const int32_t[1]){19}} }, /* nl_13 */
-    {.id = 14, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){18, 19}}, .output_tensors = {1, (const int32_t[1]){20}} }, /* eltwise_14 */
-    {.id = 15, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){20}}, .output_tensors = {1, (const int32_t[1]){21}} }, /* conv2d_15 */
-    {.id = 16, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){21}}, .output_tensors = {1, (const int32_t[1]){22}} }, /* nl_16 */
-    {.id = 17, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){21, 22}}, .output_tensors = {1, (const int32_t[1]){23}} }, /* eltwise_17 */
-    {.id = 18, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){16, 23}}, .output_tensors = {1, (const int32_t[1]){24}} }, /* eltwise_18 */
-    {.id = 20, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){15, 16, 24}}, .output_tensors = {1, (const int32_t[1]){25}} }, /* concat_20 */
-    {.id = 21, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){25}}, .output_tensors = {1, (const int32_t[1]){26}} }, /* conv2d_21 */
-    {.id = 22, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){26}}, .output_tensors = {1, (const int32_t[1]){27}} }, /* nl_22 */
-    {.id = 23, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){26, 27}}, .output_tensors = {1, (const int32_t[1]){28}} }, /* eltwise_23 */
-    {.id = 24, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){28}}, .output_tensors = {1, (const int32_t[1]){29}} }, /* pad_24 */
-    {.id = 25, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){29}}, .output_tensors = {1, (const int32_t[1]){30}} }, /* conv2d_25 */
-    {.id = 26, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){30}}, .output_tensors = {1, (const int32_t[1]){31}} }, /* nl_26 */
-    {.id = 27, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){30, 31}}, .output_tensors = {1, (const int32_t[1]){32}} }, /* eltwise_27 */
-    {.id = 28, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){32}}, .output_tensors = {1, (const int32_t[1]){33}} }, /* conv2d_28 */
-    {.id = 29, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){33}}, .output_tensors = {1, (const int32_t[1]){34}} }, /* nl_29 */
-    {.id = 30, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){33, 34}}, .output_tensors = {1, (const int32_t[1]){35}} }, /* eltwise_30 */
-    {.id = 32, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){35}}, .output_tensors = {1, (const int32_t[1]){36}} }, /* slice_32 */
-    {.id = 33, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){36}}, .output_tensors = {1, (const int32_t[1]){37}} }, /* conv2d_33_pad_before */
-    {.id = 33, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){37}}, .output_tensors = {1, (const int32_t[1]){38}} }, /* conv2d_33 */
-    {.id = 34, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){38}}, .output_tensors = {1, (const int32_t[1]){39}} }, /* nl_34 */
-    {.id = 35, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){38, 39}}, .output_tensors = {1, (const int32_t[1]){40}} }, /* eltwise_35 */
-    {.id = 36, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){40}}, .output_tensors = {1, (const int32_t[1]){41}} }, /* conv2d_36_pad_before */
-    {.id = 36, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){41}}, .output_tensors = {1, (const int32_t[1]){42}} }, /* conv2d_36 */
-    {.id = 37, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){42}}, .output_tensors = {1, (const int32_t[1]){43}} }, /* nl_37 */
-    {.id = 38, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){42, 43}}, .output_tensors = {1, (const int32_t[1]){44}} }, /* eltwise_38 */
-    {.id = 39, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){36, 44}}, .output_tensors = {1, (const int32_t[1]){45}} }, /* eltwise_39 */
-    {.id = 31, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){35}}, .output_tensors = {1, (const int32_t[1]){46}} }, /* slice_31 */
-    {.id = 40, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){46, 36, 45}}, .output_tensors = {1, (const int32_t[1]){47}} }, /* concat_40 */
-    {.id = 41, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){47}}, .output_tensors = {1, (const int32_t[1]){48}} }, /* conv2d_41 */
-    {.id = 42, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){48}}, .output_tensors = {1, (const int32_t[1]){49}} }, /* nl_42 */
-    {.id = 43, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){48, 49}}, .output_tensors = {1, (const int32_t[1]){50}} }, /* eltwise_43 */
-    {.id = 44, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){50}}, .output_tensors = {1, (const int32_t[1]){51}} }, /* pad_44 */
-    {.id = 45, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){51}}, .output_tensors = {1, (const int32_t[1]){52}} }, /* conv2d_45 */
-    {.id = 46, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){52}}, .output_tensors = {1, (const int32_t[1]){53}} }, /* nl_46 */
-    {.id = 47, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){52, 53}}, .output_tensors = {1, (const int32_t[1]){54}} }, /* eltwise_47 */
-    {.id = 48, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){54}}, .output_tensors = {1, (const int32_t[1]){55}} }, /* conv2d_48 */
-    {.id = 49, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){55}}, .output_tensors = {1, (const int32_t[1]){56}} }, /* nl_49 */
-    {.id = 50, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){55, 56}}, .output_tensors = {1, (const int32_t[1]){57}} }, /* eltwise_50 */
-    {.id = 52, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){57}}, .output_tensors = {1, (const int32_t[1]){58}} }, /* slice_52 */
-    {.id = 70, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){58}}, .output_tensors = {1, (const int32_t[1]){59}} }, /* conv2d_70 */
-    {.id = 71, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){59}}, .output_tensors = {1, (const int32_t[1]){60}} }, /* nl_71 */
-    {.id = 72, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){59, 60}}, .output_tensors = {1, (const int32_t[1]){61}} }, /* eltwise_72 */
-    {.id = 53, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){58}}, .output_tensors = {1, (const int32_t[1]){62}} }, /* conv2d_53 */
-    {.id = 54, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){62}}, .output_tensors = {1, (const int32_t[1]){63}} }, /* nl_54 */
-    {.id = 55, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){62, 63}}, .output_tensors = {1, (const int32_t[1]){64}} }, /* eltwise_55 */
-    {.id = 56, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){64}}, .output_tensors = {1, (const int32_t[1]){65}} }, /* conv2d_56_pad_before */
-    {.id = 56, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){65}}, .output_tensors = {1, (const int32_t[1]){66}} }, /* conv2d_56 */
-    {.id = 57, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){66}}, .output_tensors = {1, (const int32_t[1]){67}} }, /* nl_57 */
-    {.id = 58, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){66, 67}}, .output_tensors = {1, (const int32_t[1]){68}} }, /* eltwise_58 */
-    {.id = 59, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){68}}, .output_tensors = {1, (const int32_t[1]){69}} }, /* conv2d_59_pad_before */
-    {.id = 59, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){69}}, .output_tensors = {1, (const int32_t[1]){70}} }, /* conv2d_59 */
-    {.id = 60, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){70}}, .output_tensors = {1, (const int32_t[1]){71}} }, /* nl_60 */
-    {.id = 61, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){70, 71}}, .output_tensors = {1, (const int32_t[1]){72}} }, /* eltwise_61 */
-    {.id = 62, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){64, 72}}, .output_tensors = {1, (const int32_t[1]){73}} }, /* eltwise_62 */
-    {.id = 63, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){73}}, .output_tensors = {1, (const int32_t[1]){74}} }, /* conv2d_63_pad_before */
-    {.id = 63, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){74}}, .output_tensors = {1, (const int32_t[1]){75}} }, /* conv2d_63 */
-    {.id = 64, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){75}}, .output_tensors = {1, (const int32_t[1]){76}} }, /* nl_64 */
-    {.id = 65, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){75, 76}}, .output_tensors = {1, (const int32_t[1]){77}} }, /* eltwise_65 */
-    {.id = 66, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){77}}, .output_tensors = {1, (const int32_t[1]){78}} }, /* conv2d_66_pad_before */
-    {.id = 66, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){78}}, .output_tensors = {1, (const int32_t[1]){79}} }, /* conv2d_66 */
-    {.id = 67, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){79}}, .output_tensors = {1, (const int32_t[1]){80}} }, /* nl_67 */
-    {.id = 68, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){79, 80}}, .output_tensors = {1, (const int32_t[1]){81}} }, /* eltwise_68 */
-    {.id = 69, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){73, 81}}, .output_tensors = {1, (const int32_t[1]){82}} }, /* eltwise_69 */
-    {.id = 73, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){82, 61}}, .output_tensors = {1, (const int32_t[1]){83}} }, /* concat_73 */
-    {.id = 74, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){83}}, .output_tensors = {1, (const int32_t[1]){84}} }, /* conv2d_74 */
-    {.id = 75, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){84}}, .output_tensors = {1, (const int32_t[1]){85}} }, /* nl_75 */
-    {.id = 76, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){84, 85}}, .output_tensors = {1, (const int32_t[1]){86}} }, /* eltwise_76 */
-    {.id = 51, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){57}}, .output_tensors = {1, (const int32_t[1]){87}} }, /* slice_51 */
-    {.id = 77, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){87, 58, 86}}, .output_tensors = {1, (const int32_t[1]){88}} }, /* concat_77 */
-    {.id = 78, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){88}}, .output_tensors = {1, (const int32_t[1]){89}} }, /* conv2d_78 */
-    {.id = 79, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){89}}, .output_tensors = {1, (const int32_t[1]){90}} }, /* nl_79 */
-    {.id = 80, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){89, 90}}, .output_tensors = {1, (const int32_t[1]){91}} }, /* eltwise_80 */
-    {.id = 81, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){91}}, .output_tensors = {1, (const int32_t[1]){92}} }, /* pad_81 */
-    {.id = 82, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){92}}, .output_tensors = {1, (const int32_t[1]){93}} }, /* conv2d_82 */
-    {.id = 83, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){93}}, .output_tensors = {1, (const int32_t[1]){94}} }, /* nl_83 */
-    {.id = 84, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){93, 94}}, .output_tensors = {1, (const int32_t[1]){95}} }, /* eltwise_84 */
-    {.id = 85, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){95}}, .output_tensors = {1, (const int32_t[1]){96}} }, /* conv2d_85 */
-    {.id = 86, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){96}}, .output_tensors = {1, (const int32_t[1]){97}} }, /* nl_86 */
-    {.id = 87, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){96, 97}}, .output_tensors = {1, (const int32_t[1]){98}} }, /* eltwise_87 */
-    {.id = 89, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){98}}, .output_tensors = {1, (const int32_t[1]){99}} }, /* slice_89 */
-    {.id = 107, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){99}}, .output_tensors = {1, (const int32_t[1]){100}} }, /* conv2d_107 */
-    {.id = 108, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){100}}, .output_tensors = {1, (const int32_t[1]){101}} }, /* nl_108 */
-    {.id = 109, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){100, 101}}, .output_tensors = {1, (const int32_t[1]){102}} }, /* eltwise_109 */
-    {.id = 90, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){99}}, .output_tensors = {1, (const int32_t[1]){103}} }, /* conv2d_90 */
-    {.id = 91, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){103}}, .output_tensors = {1, (const int32_t[1]){104}} }, /* nl_91 */
-    {.id = 92, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){103, 104}}, .output_tensors = {1, (const int32_t[1]){105}} }, /* eltwise_92 */
-    {.id = 93, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){105}}, .output_tensors = {1, (const int32_t[1]){106}} }, /* conv2d_93_pad_before */
-    {.id = 93, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){106}}, .output_tensors = {1, (const int32_t[1]){107}} }, /* conv2d_93 */
-    {.id = 94, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){107}}, .output_tensors = {1, (const int32_t[1]){108}} }, /* nl_94 */
-    {.id = 95, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){107, 108}}, .output_tensors = {1, (const int32_t[1]){109}} }, /* eltwise_95 */
-    {.id = 96, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){109}}, .output_tensors = {1, (const int32_t[1]){110}} }, /* conv2d_96_pad_before */
-    {.id = 96, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){110}}, .output_tensors = {1, (const int32_t[1]){111}} }, /* conv2d_96 */
-    {.id = 97, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){111}}, .output_tensors = {1, (const int32_t[1]){112}} }, /* nl_97 */
-    {.id = 98, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){111, 112}}, .output_tensors = {1, (const int32_t[1]){113}} }, /* eltwise_98 */
-    {.id = 99, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){105, 113}}, .output_tensors = {1, (const int32_t[1]){114}} }, /* eltwise_99 */
-    {.id = 100, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){114}}, .output_tensors = {1, (const int32_t[1]){115}} }, /* conv2d_100_pad_before */
-    {.id = 100, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){115}}, .output_tensors = {1, (const int32_t[1]){116}} }, /* conv2d_100 */
-    {.id = 101, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){116}}, .output_tensors = {1, (const int32_t[1]){117}} }, /* nl_101 */
-    {.id = 102, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){116, 117}}, .output_tensors = {1, (const int32_t[1]){118}} }, /* eltwise_102 */
-    {.id = 103, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){118}}, .output_tensors = {1, (const int32_t[1]){119}} }, /* conv2d_103_pad_before */
-    {.id = 103, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){119}}, .output_tensors = {1, (const int32_t[1]){120}} }, /* conv2d_103 */
-    {.id = 104, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){120}}, .output_tensors = {1, (const int32_t[1]){121}} }, /* nl_104 */
-    {.id = 105, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){120, 121}}, .output_tensors = {1, (const int32_t[1]){122}} }, /* eltwise_105 */
-    {.id = 106, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){114, 122}}, .output_tensors = {1, (const int32_t[1]){123}} }, /* eltwise_106 */
-    {.id = 110, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){123, 102}}, .output_tensors = {1, (const int32_t[1]){124}} }, /* concat_110 */
-    {.id = 111, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){124}}, .output_tensors = {1, (const int32_t[1]){125}} }, /* conv2d_111 */
-    {.id = 112, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){125}}, .output_tensors = {1, (const int32_t[1]){126}} }, /* nl_112 */
-    {.id = 113, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){125, 126}}, .output_tensors = {1, (const int32_t[1]){127}} }, /* eltwise_113 */
-    {.id = 88, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){98}}, .output_tensors = {1, (const int32_t[1]){128}} }, /* slice_88 */
-    {.id = 114, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){128, 99, 127}}, .output_tensors = {1, (const int32_t[1]){129}} }, /* concat_114 */
-    {.id = 115, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){129}}, .output_tensors = {1, (const int32_t[1]){130}} }, /* conv2d_115 */
-    {.id = 116, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){130}}, .output_tensors = {1, (const int32_t[1]){131}} }, /* nl_116 */
-    {.id = 117, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){130, 131}}, .output_tensors = {1, (const int32_t[1]){132}} }, /* eltwise_117 */
-    {.id = 118, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){132}}, .output_tensors = {1, (const int32_t[1]){133}} }, /* conv2d_118 */
-    {.id = 119, .type = AI_LAYER_POOL_TYPE, .input_tensors = {1, (const int32_t[1]){133}}, .output_tensors = {1, (const int32_t[1]){134}} }, /* pool_119 */
-    {.id = 120, .type = AI_LAYER_POOL_TYPE, .input_tensors = {1, (const int32_t[1]){134}}, .output_tensors = {1, (const int32_t[1]){135}} }, /* pool_120 */
-    {.id = 121, .type = AI_LAYER_POOL_TYPE, .input_tensors = {1, (const int32_t[1]){135}}, .output_tensors = {1, (const int32_t[1]){136}} }, /* pool_121 */
-    {.id = 122, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {4, (const int32_t[4]){133, 134, 135, 136}}, .output_tensors = {1, (const int32_t[1]){137}} }, /* concat_122 */
-    {.id = 123, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){137}}, .output_tensors = {1, (const int32_t[1]){138}} }, /* conv2d_123 */
-    {.id = 124, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){138}}, .output_tensors = {1, (const int32_t[1]){139}} }, /* nl_124 */
-    {.id = 125, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){138, 139}}, .output_tensors = {1, (const int32_t[1]){140}} }, /* eltwise_125 */
-    {.id = 126, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){140, 132}}, .output_tensors = {1, (const int32_t[1]){141}} }, /* eltwise_126 */
-    {.id = 127, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){141}}, .output_tensors = {1, (const int32_t[1]){142}} }, /* conv2d_127 */
-    {.id = 128, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){142}}, .output_tensors = {1, (const int32_t[1]){143}} }, /* nl_128 */
-    {.id = 129, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){142, 143}}, .output_tensors = {1, (const int32_t[1]){144}} }, /* eltwise_129 */
-    {.id = 131, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){144}}, .output_tensors = {1, (const int32_t[1]){145}} }, /* slice_131 */
-    {.id = 132, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){145}}, .output_tensors = {1, (const int32_t[1]){146}} }, /* conv2d_132 */
-    {.id = 133, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){146}}, .output_tensors = {1, (const int32_t[1]){147}} }, /* transpose_133 */
-    {.id = 140, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){147}}, .output_tensors = {1, (const int32_t[1]){148}} }, /* slice_140 */
-    {.id = 140, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){148}}, .output_tensors = {1, (const int32_t[1]){149}} }, /* slice_140_0_0_gemm_141_conversion */
-    {.id = 145, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){148}}, .output_tensors = {1, (const int32_t[1]){150}} }, /* transpose_145 */
-    {.id = 146, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){150}}, .output_tensors = {1, (const int32_t[1]){151}} }, /* conv2d_146_pad_before */
-    {.id = 146, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){151}}, .output_tensors = {1, (const int32_t[1]){152}} }, /* conv2d_146_pad_before_0_0_conv2d_146_conversion */
-    {.id = 146, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){152}}, .output_tensors = {1, (const int32_t[1]){153}} }, /* conv2d_146 */
-    {.id = 146, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){153}}, .output_tensors = {1, (const int32_t[1]){154}} }, /* conv2d_146_0_1_eltwise_147_conversion */
-    {.id = 136, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){147}}, .output_tensors = {1, (const int32_t[1]){155}} }, /* slice_136 */
-    {.id = 136, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){155}}, .output_tensors = {1, (const int32_t[1]){156}} }, /* slice_136_0_1_gemm_137_conversion */
-    {.id = 135, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){147}}, .output_tensors = {1, (const int32_t[1]){157}} }, /* slice_135 */
-    {.id = 137, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){157}}, .output_tensors = {1, (const int32_t[1]){158}} }, /* transpose_agemm_137_out */
-    {.id = 137, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){158}}, .output_tensors = {1, (const int32_t[1]){159}} }, /* transpose_agemm_137_out_0_0_gemm_137_conversion */
-    {.id = 137, .type = AI_LAYER_MATMUL_TYPE, .input_tensors = {3, (const int32_t[3]){159, 156, 4}}, .output_tensors = {1, (const int32_t[1]){160}} }, /* gemm_137 */
-    {.id = 137, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){160}}, .output_tensors = {1, (const int32_t[1]){161}} }, /* gemm_137_0_0_eltwise_138_conversion */
-    {.id = 138, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){161}}, .output_tensors = {1, (const int32_t[1]){162}} }, /* eltwise_138 */
-    {.id = 139, .type = AI_LAYER_SM_TYPE, .input_tensors = {1, (const int32_t[1]){162}}, .output_tensors = {1, (const int32_t[1]){163}} }, /* nl_139 */
-    {.id = 141, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){163}}, .output_tensors = {1, (const int32_t[1]){164}} }, /* transpose_bgemm_141_out */
-    {.id = 141, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){164}}, .output_tensors = {1, (const int32_t[1]){165}} }, /* transpose_bgemm_141_out_0_1_gemm_141_conversion */
-    {.id = 141, .type = AI_LAYER_MATMUL_TYPE, .input_tensors = {3, (const int32_t[3]){149, 165, 3}}, .output_tensors = {1, (const int32_t[1]){166}} }, /* gemm_141 */
-    {.id = 141, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){166}}, .output_tensors = {1, (const int32_t[1]){167}} }, /* gemm_141_0_0_transpose_143_conversion */
-    {.id = 143, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){167}}, .output_tensors = {1, (const int32_t[1]){168}} }, /* transpose_143 */
-    {.id = 147, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){168, 154}}, .output_tensors = {1, (const int32_t[1]){169}} }, /* eltwise_147 */
-    {.id = 148, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){169}}, .output_tensors = {1, (const int32_t[1]){170}} }, /* conv2d_148 */
-    {.id = 149, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){145, 170}}, .output_tensors = {1, (const int32_t[1]){171}} }, /* eltwise_149 */
-    {.id = 150, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){171}}, .output_tensors = {1, (const int32_t[1]){172}} }, /* conv2d_150 */
-    {.id = 151, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){172}}, .output_tensors = {1, (const int32_t[1]){173}} }, /* nl_151 */
-    {.id = 152, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){172, 173}}, .output_tensors = {1, (const int32_t[1]){174}} }, /* eltwise_152 */
-    {.id = 153, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){174}}, .output_tensors = {1, (const int32_t[1]){175}} }, /* conv2d_153 */
-    {.id = 154, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){171, 175}}, .output_tensors = {1, (const int32_t[1]){176}} }, /* eltwise_154 */
-    {.id = 130, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){144}}, .output_tensors = {1, (const int32_t[1]){177}} }, /* slice_130 */
-    {.id = 155, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){177, 176}}, .output_tensors = {1, (const int32_t[1]){178}} }, /* concat_155 */
-    {.id = 156, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){178}}, .output_tensors = {1, (const int32_t[1]){179}} }, /* conv2d_156 */
-    {.id = 157, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){179}}, .output_tensors = {1, (const int32_t[1]){180}} }, /* nl_157 */
-    {.id = 158, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){179, 180}}, .output_tensors = {1, (const int32_t[1]){181}} }, /* eltwise_158 */
-    {.id = 159, .type = AI_LAYER_UPSAMPLE_TYPE, .input_tensors = {1, (const int32_t[1]){181}}, .output_tensors = {1, (const int32_t[1]){182}} }, /* resize_159 */
-    {.id = 160, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){182, 91}}, .output_tensors = {1, (const int32_t[1]){183}} }, /* concat_160 */
-    {.id = 161, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){183}}, .output_tensors = {1, (const int32_t[1]){184}} }, /* conv2d_161 */
-    {.id = 162, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){184}}, .output_tensors = {1, (const int32_t[1]){185}} }, /* nl_162 */
-    {.id = 163, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){184, 185}}, .output_tensors = {1, (const int32_t[1]){186}} }, /* eltwise_163 */
-    {.id = 165, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){186}}, .output_tensors = {1, (const int32_t[1]){187}} }, /* slice_165 */
-    {.id = 183, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){187}}, .output_tensors = {1, (const int32_t[1]){188}} }, /* conv2d_183 */
-    {.id = 184, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){188}}, .output_tensors = {1, (const int32_t[1]){189}} }, /* nl_184 */
-    {.id = 185, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){188, 189}}, .output_tensors = {1, (const int32_t[1]){190}} }, /* eltwise_185 */
-    {.id = 166, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){187}}, .output_tensors = {1, (const int32_t[1]){191}} }, /* conv2d_166 */
-    {.id = 167, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){191}}, .output_tensors = {1, (const int32_t[1]){192}} }, /* nl_167 */
-    {.id = 168, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){191, 192}}, .output_tensors = {1, (const int32_t[1]){193}} }, /* eltwise_168 */
-    {.id = 169, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){193}}, .output_tensors = {1, (const int32_t[1]){194}} }, /* conv2d_169_pad_before */
-    {.id = 169, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){194}}, .output_tensors = {1, (const int32_t[1]){195}} }, /* conv2d_169 */
-    {.id = 170, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){195}}, .output_tensors = {1, (const int32_t[1]){196}} }, /* nl_170 */
-    {.id = 171, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){195, 196}}, .output_tensors = {1, (const int32_t[1]){197}} }, /* eltwise_171 */
-    {.id = 172, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){197}}, .output_tensors = {1, (const int32_t[1]){198}} }, /* conv2d_172_pad_before */
-    {.id = 172, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){198}}, .output_tensors = {1, (const int32_t[1]){199}} }, /* conv2d_172 */
-    {.id = 173, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){199}}, .output_tensors = {1, (const int32_t[1]){200}} }, /* nl_173 */
-    {.id = 174, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){199, 200}}, .output_tensors = {1, (const int32_t[1]){201}} }, /* eltwise_174 */
-    {.id = 175, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){193, 201}}, .output_tensors = {1, (const int32_t[1]){202}} }, /* eltwise_175 */
-    {.id = 176, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){202}}, .output_tensors = {1, (const int32_t[1]){203}} }, /* conv2d_176_pad_before */
-    {.id = 176, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){203}}, .output_tensors = {1, (const int32_t[1]){204}} }, /* conv2d_176 */
-    {.id = 177, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){204}}, .output_tensors = {1, (const int32_t[1]){205}} }, /* nl_177 */
-    {.id = 178, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){204, 205}}, .output_tensors = {1, (const int32_t[1]){206}} }, /* eltwise_178 */
-    {.id = 179, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){206}}, .output_tensors = {1, (const int32_t[1]){207}} }, /* conv2d_179_pad_before */
-    {.id = 179, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){207}}, .output_tensors = {1, (const int32_t[1]){208}} }, /* conv2d_179 */
-    {.id = 180, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){208}}, .output_tensors = {1, (const int32_t[1]){209}} }, /* nl_180 */
-    {.id = 181, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){208, 209}}, .output_tensors = {1, (const int32_t[1]){210}} }, /* eltwise_181 */
-    {.id = 182, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){202, 210}}, .output_tensors = {1, (const int32_t[1]){211}} }, /* eltwise_182 */
-    {.id = 186, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){211, 190}}, .output_tensors = {1, (const int32_t[1]){212}} }, /* concat_186 */
-    {.id = 187, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){212}}, .output_tensors = {1, (const int32_t[1]){213}} }, /* conv2d_187 */
-    {.id = 188, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){213}}, .output_tensors = {1, (const int32_t[1]){214}} }, /* nl_188 */
-    {.id = 189, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){213, 214}}, .output_tensors = {1, (const int32_t[1]){215}} }, /* eltwise_189 */
-    {.id = 164, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){186}}, .output_tensors = {1, (const int32_t[1]){216}} }, /* slice_164 */
-    {.id = 190, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){216, 187, 215}}, .output_tensors = {1, (const int32_t[1]){217}} }, /* concat_190 */
-    {.id = 191, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){217}}, .output_tensors = {1, (const int32_t[1]){218}} }, /* conv2d_191 */
-    {.id = 192, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){218}}, .output_tensors = {1, (const int32_t[1]){219}} }, /* nl_192 */
-    {.id = 193, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){218, 219}}, .output_tensors = {1, (const int32_t[1]){220}} }, /* eltwise_193 */
-    {.id = 194, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){220}}, .output_tensors = {1, (const int32_t[1]){221}} }, /* conversion_194 */
-    {.id = 195, .type = AI_LAYER_UPSAMPLE_TYPE, .input_tensors = {1, (const int32_t[1]){221}}, .output_tensors = {1, (const int32_t[1]){222}} }, /* resize_195 */
-    {.id = 196, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){222, 50}}, .output_tensors = {1, (const int32_t[1]){223}} }, /* concat_196 */
-    {.id = 197, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){223}}, .output_tensors = {1, (const int32_t[1]){224}} }, /* conv2d_197 */
-    {.id = 198, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){224}}, .output_tensors = {1, (const int32_t[1]){225}} }, /* nl_198 */
-    {.id = 199, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){224, 225}}, .output_tensors = {1, (const int32_t[1]){226}} }, /* eltwise_199 */
-    {.id = 201, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){226}}, .output_tensors = {1, (const int32_t[1]){227}} }, /* slice_201 */
-    {.id = 219, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){227}}, .output_tensors = {1, (const int32_t[1]){228}} }, /* conv2d_219 */
-    {.id = 220, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){228}}, .output_tensors = {1, (const int32_t[1]){229}} }, /* nl_220 */
-    {.id = 221, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){228, 229}}, .output_tensors = {1, (const int32_t[1]){230}} }, /* eltwise_221 */
-    {.id = 202, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){227}}, .output_tensors = {1, (const int32_t[1]){231}} }, /* conv2d_202 */
-    {.id = 203, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){231}}, .output_tensors = {1, (const int32_t[1]){232}} }, /* nl_203 */
-    {.id = 204, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){231, 232}}, .output_tensors = {1, (const int32_t[1]){233}} }, /* eltwise_204 */
-    {.id = 205, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){233}}, .output_tensors = {1, (const int32_t[1]){234}} }, /* conv2d_205_pad_before */
-    {.id = 205, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){234}}, .output_tensors = {1, (const int32_t[1]){235}} }, /* conv2d_205 */
-    {.id = 206, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){235}}, .output_tensors = {1, (const int32_t[1]){236}} }, /* nl_206 */
-    {.id = 207, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){235, 236}}, .output_tensors = {1, (const int32_t[1]){237}} }, /* eltwise_207 */
-    {.id = 208, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){237}}, .output_tensors = {1, (const int32_t[1]){238}} }, /* conv2d_208_pad_before */
-    {.id = 208, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){238}}, .output_tensors = {1, (const int32_t[1]){239}} }, /* conv2d_208 */
-    {.id = 209, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){239}}, .output_tensors = {1, (const int32_t[1]){240}} }, /* nl_209 */
-    {.id = 210, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){239, 240}}, .output_tensors = {1, (const int32_t[1]){241}} }, /* eltwise_210 */
-    {.id = 211, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){233, 241}}, .output_tensors = {1, (const int32_t[1]){242}} }, /* eltwise_211 */
-    {.id = 212, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){242}}, .output_tensors = {1, (const int32_t[1]){243}} }, /* conv2d_212_pad_before */
-    {.id = 212, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){243}}, .output_tensors = {1, (const int32_t[1]){244}} }, /* conv2d_212 */
-    {.id = 213, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){244}}, .output_tensors = {1, (const int32_t[1]){245}} }, /* nl_213 */
-    {.id = 214, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){244, 245}}, .output_tensors = {1, (const int32_t[1]){246}} }, /* eltwise_214 */
-    {.id = 215, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){246}}, .output_tensors = {1, (const int32_t[1]){247}} }, /* conv2d_215_pad_before */
-    {.id = 215, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){247}}, .output_tensors = {1, (const int32_t[1]){248}} }, /* conv2d_215 */
-    {.id = 216, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){248}}, .output_tensors = {1, (const int32_t[1]){249}} }, /* nl_216 */
-    {.id = 217, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){248, 249}}, .output_tensors = {1, (const int32_t[1]){250}} }, /* eltwise_217 */
-    {.id = 218, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){242, 250}}, .output_tensors = {1, (const int32_t[1]){251}} }, /* eltwise_218 */
-    {.id = 222, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){251, 230}}, .output_tensors = {1, (const int32_t[1]){252}} }, /* concat_222 */
-    {.id = 223, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){252}}, .output_tensors = {1, (const int32_t[1]){253}} }, /* conv2d_223 */
-    {.id = 224, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){253}}, .output_tensors = {1, (const int32_t[1]){254}} }, /* nl_224 */
-    {.id = 225, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){253, 254}}, .output_tensors = {1, (const int32_t[1]){255}} }, /* eltwise_225 */
-    {.id = 200, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){226}}, .output_tensors = {1, (const int32_t[1]){256}} }, /* slice_200 */
-    {.id = 226, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){256, 227, 255}}, .output_tensors = {1, (const int32_t[1]){257}} }, /* concat_226 */
-    {.id = 227, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){257}}, .output_tensors = {1, (const int32_t[1]){258}} }, /* conv2d_227 */
-    {.id = 228, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){258}}, .output_tensors = {1, (const int32_t[1]){259}} }, /* nl_228 */
-    {.id = 229, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){258, 259}}, .output_tensors = {1, (const int32_t[1]){260}} }, /* eltwise_229 */
-    {.id = 230, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){260}}, .output_tensors = {1, (const int32_t[1]){261}} }, /* conv2d_230_pad_before */
-    {.id = 230, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){261}}, .output_tensors = {1, (const int32_t[1]){262}} }, /* conv2d_230 */
-    {.id = 231, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){262}}, .output_tensors = {1, (const int32_t[1]){263}} }, /* nl_231 */
-    {.id = 232, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){262, 263}}, .output_tensors = {1, (const int32_t[1]){264}} }, /* eltwise_232 */
-    {.id = 233, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){264}}, .output_tensors = {1, (const int32_t[1]){265}} }, /* conv2d_233 */
-    {.id = 234, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){265}}, .output_tensors = {1, (const int32_t[1]){266}} }, /* nl_234 */
-    {.id = 235, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){265, 266}}, .output_tensors = {1, (const int32_t[1]){267}} }, /* eltwise_235 */
-    {.id = 236, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){267}}, .output_tensors = {1, (const int32_t[1]){268}} }, /* conv2d_236_pad_before */
-    {.id = 236, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){268}}, .output_tensors = {1, (const int32_t[1]){269}} }, /* conv2d_236 */
-    {.id = 237, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){269}}, .output_tensors = {1, (const int32_t[1]){270}} }, /* nl_237 */
-    {.id = 238, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){269, 270}}, .output_tensors = {1, (const int32_t[1]){271}} }, /* eltwise_238 */
-    {.id = 239, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){271}}, .output_tensors = {1, (const int32_t[1]){272}} }, /* conv2d_239 */
-    {.id = 240, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){272}}, .output_tensors = {1, (const int32_t[1]){273}} }, /* nl_240 */
-    {.id = 241, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){272, 273}}, .output_tensors = {1, (const int32_t[1]){274}} }, /* eltwise_241 */
-    {.id = 242, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){274}}, .output_tensors = {1, (const int32_t[1]){275}} }, /* conv2d_242 */
-    {.id = 243, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){275}}, .output_tensors = {1, (const int32_t[1]){276}} }, /* transpose_243 */
-    {.id = 378, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){260}}, .output_tensors = {1, (const int32_t[1]){277}} }, /* conv2d_378_pad_before */
-    {.id = 378, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){277}}, .output_tensors = {1, (const int32_t[1]){278}} }, /* conv2d_378 */
-    {.id = 379, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){278}}, .output_tensors = {1, (const int32_t[1]){279}} }, /* nl_379 */
-    {.id = 380, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){278, 279}}, .output_tensors = {1, (const int32_t[1]){280}} }, /* eltwise_380 */
-    {.id = 381, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){280}}, .output_tensors = {1, (const int32_t[1]){281}} }, /* conv2d_381_pad_before */
-    {.id = 381, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){281}}, .output_tensors = {1, (const int32_t[1]){282}} }, /* conv2d_381 */
-    {.id = 382, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){282}}, .output_tensors = {1, (const int32_t[1]){283}} }, /* nl_382 */
-    {.id = 383, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){282, 283}}, .output_tensors = {1, (const int32_t[1]){284}} }, /* eltwise_383 */
-    {.id = 384, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){284}}, .output_tensors = {1, (const int32_t[1]){285}} }, /* conv2d_384 */
-    {.id = 385, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){285}}, .output_tensors = {1, (const int32_t[1]){286}} }, /* transpose_385 */
-    {.id = 245, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){260}}, .output_tensors = {1, (const int32_t[1]){287}} }, /* pad_245 */
-    {.id = 246, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){287}}, .output_tensors = {1, (const int32_t[1]){288}} }, /* conv2d_246 */
-    {.id = 247, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){288}}, .output_tensors = {1, (const int32_t[1]){289}} }, /* nl_247 */
-    {.id = 248, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){288, 289}}, .output_tensors = {1, (const int32_t[1]){290}} }, /* eltwise_248 */
-    {.id = 249, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){290, 220}}, .output_tensors = {1, (const int32_t[1]){291}} }, /* concat_249 */
-    {.id = 250, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){291}}, .output_tensors = {1, (const int32_t[1]){292}} }, /* conv2d_250 */
-    {.id = 251, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){292}}, .output_tensors = {1, (const int32_t[1]){293}} }, /* nl_251 */
-    {.id = 252, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){292, 293}}, .output_tensors = {1, (const int32_t[1]){294}} }, /* eltwise_252 */
-    {.id = 254, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){294}}, .output_tensors = {1, (const int32_t[1]){295}} }, /* slice_254 */
-    {.id = 272, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){295}}, .output_tensors = {1, (const int32_t[1]){296}} }, /* conv2d_272 */
-    {.id = 273, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){296}}, .output_tensors = {1, (const int32_t[1]){297}} }, /* nl_273 */
-    {.id = 274, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){296, 297}}, .output_tensors = {1, (const int32_t[1]){298}} }, /* eltwise_274 */
-    {.id = 255, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){295}}, .output_tensors = {1, (const int32_t[1]){299}} }, /* conv2d_255 */
-    {.id = 256, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){299}}, .output_tensors = {1, (const int32_t[1]){300}} }, /* nl_256 */
-    {.id = 257, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){299, 300}}, .output_tensors = {1, (const int32_t[1]){301}} }, /* eltwise_257 */
-    {.id = 258, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){301}}, .output_tensors = {1, (const int32_t[1]){302}} }, /* conv2d_258_pad_before */
-    {.id = 258, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){302}}, .output_tensors = {1, (const int32_t[1]){303}} }, /* conv2d_258 */
-    {.id = 259, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){303}}, .output_tensors = {1, (const int32_t[1]){304}} }, /* nl_259 */
-    {.id = 260, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){303, 304}}, .output_tensors = {1, (const int32_t[1]){305}} }, /* eltwise_260 */
-    {.id = 261, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){305}}, .output_tensors = {1, (const int32_t[1]){306}} }, /* conv2d_261_pad_before */
-    {.id = 261, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){306}}, .output_tensors = {1, (const int32_t[1]){307}} }, /* conv2d_261 */
-    {.id = 262, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){307}}, .output_tensors = {1, (const int32_t[1]){308}} }, /* nl_262 */
-    {.id = 263, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){307, 308}}, .output_tensors = {1, (const int32_t[1]){309}} }, /* eltwise_263 */
-    {.id = 264, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){301, 309}}, .output_tensors = {1, (const int32_t[1]){310}} }, /* eltwise_264 */
-    {.id = 265, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){310}}, .output_tensors = {1, (const int32_t[1]){311}} }, /* conv2d_265_pad_before */
-    {.id = 265, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){311}}, .output_tensors = {1, (const int32_t[1]){312}} }, /* conv2d_265 */
-    {.id = 266, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){312}}, .output_tensors = {1, (const int32_t[1]){313}} }, /* nl_266 */
-    {.id = 267, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){312, 313}}, .output_tensors = {1, (const int32_t[1]){314}} }, /* eltwise_267 */
-    {.id = 268, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){314}}, .output_tensors = {1, (const int32_t[1]){315}} }, /* conv2d_268_pad_before */
-    {.id = 268, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){315}}, .output_tensors = {1, (const int32_t[1]){316}} }, /* conv2d_268 */
-    {.id = 269, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){316}}, .output_tensors = {1, (const int32_t[1]){317}} }, /* nl_269 */
-    {.id = 270, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){316, 317}}, .output_tensors = {1, (const int32_t[1]){318}} }, /* eltwise_270 */
-    {.id = 271, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){310, 318}}, .output_tensors = {1, (const int32_t[1]){319}} }, /* eltwise_271 */
-    {.id = 275, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){319, 298}}, .output_tensors = {1, (const int32_t[1]){320}} }, /* concat_275 */
-    {.id = 276, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){320}}, .output_tensors = {1, (const int32_t[1]){321}} }, /* conv2d_276 */
-    {.id = 277, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){321}}, .output_tensors = {1, (const int32_t[1]){322}} }, /* nl_277 */
-    {.id = 278, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){321, 322}}, .output_tensors = {1, (const int32_t[1]){323}} }, /* eltwise_278 */
-    {.id = 253, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){294}}, .output_tensors = {1, (const int32_t[1]){324}} }, /* slice_253 */
-    {.id = 279, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){324, 295, 323}}, .output_tensors = {1, (const int32_t[1]){325}} }, /* concat_279 */
-    {.id = 280, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){325}}, .output_tensors = {1, (const int32_t[1]){326}} }, /* conv2d_280 */
-    {.id = 281, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){326}}, .output_tensors = {1, (const int32_t[1]){327}} }, /* nl_281 */
-    {.id = 282, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){326, 327}}, .output_tensors = {1, (const int32_t[1]){328}} }, /* eltwise_282 */
-    {.id = 283, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){328}}, .output_tensors = {1, (const int32_t[1]){329}} }, /* conv2d_283_pad_before */
-    {.id = 283, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){329}}, .output_tensors = {1, (const int32_t[1]){330}} }, /* conv2d_283 */
-    {.id = 284, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){330}}, .output_tensors = {1, (const int32_t[1]){331}} }, /* nl_284 */
-    {.id = 285, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){330, 331}}, .output_tensors = {1, (const int32_t[1]){332}} }, /* eltwise_285 */
-    {.id = 286, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){332}}, .output_tensors = {1, (const int32_t[1]){333}} }, /* conv2d_286 */
-    {.id = 287, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){333}}, .output_tensors = {1, (const int32_t[1]){334}} }, /* nl_287 */
-    {.id = 288, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){333, 334}}, .output_tensors = {1, (const int32_t[1]){335}} }, /* eltwise_288 */
-    {.id = 289, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){335}}, .output_tensors = {1, (const int32_t[1]){336}} }, /* conv2d_289_pad_before */
-    {.id = 289, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){336}}, .output_tensors = {1, (const int32_t[1]){337}} }, /* conv2d_289 */
-    {.id = 290, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){337}}, .output_tensors = {1, (const int32_t[1]){338}} }, /* nl_290 */
-    {.id = 291, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){337, 338}}, .output_tensors = {1, (const int32_t[1]){339}} }, /* eltwise_291 */
-    {.id = 292, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){339}}, .output_tensors = {1, (const int32_t[1]){340}} }, /* conv2d_292 */
-    {.id = 293, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){340}}, .output_tensors = {1, (const int32_t[1]){341}} }, /* nl_293 */
-    {.id = 294, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){340, 341}}, .output_tensors = {1, (const int32_t[1]){342}} }, /* eltwise_294 */
-    {.id = 295, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){342}}, .output_tensors = {1, (const int32_t[1]){343}} }, /* conv2d_295 */
-    {.id = 296, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){343}}, .output_tensors = {1, (const int32_t[1]){344}} }, /* transpose_296 */
-    {.id = 369, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){328}}, .output_tensors = {1, (const int32_t[1]){345}} }, /* conv2d_369_pad_before */
-    {.id = 369, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){345}}, .output_tensors = {1, (const int32_t[1]){346}} }, /* conv2d_369 */
-    {.id = 370, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){346}}, .output_tensors = {1, (const int32_t[1]){347}} }, /* nl_370 */
-    {.id = 371, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){346, 347}}, .output_tensors = {1, (const int32_t[1]){348}} }, /* eltwise_371 */
-    {.id = 372, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){348}}, .output_tensors = {1, (const int32_t[1]){349}} }, /* conv2d_372_pad_before */
-    {.id = 372, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){349}}, .output_tensors = {1, (const int32_t[1]){350}} }, /* conv2d_372 */
-    {.id = 373, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){350}}, .output_tensors = {1, (const int32_t[1]){351}} }, /* nl_373 */
-    {.id = 374, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){350, 351}}, .output_tensors = {1, (const int32_t[1]){352}} }, /* eltwise_374 */
-    {.id = 375, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){352}}, .output_tensors = {1, (const int32_t[1]){353}} }, /* conv2d_375 */
-    {.id = 376, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){353}}, .output_tensors = {1, (const int32_t[1]){354}} }, /* transpose_376 */
-    {.id = 298, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){328}}, .output_tensors = {1, (const int32_t[1]){355}} }, /* pad_298 */
-    {.id = 299, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){355}}, .output_tensors = {1, (const int32_t[1]){356}} }, /* conv2d_299 */
-    {.id = 300, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){356}}, .output_tensors = {1, (const int32_t[1]){357}} }, /* nl_300 */
-    {.id = 301, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){356, 357}}, .output_tensors = {1, (const int32_t[1]){358}} }, /* eltwise_301 */
-    {.id = 302, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){358, 181}}, .output_tensors = {1, (const int32_t[1]){359}} }, /* concat_302 */
-    {.id = 303, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){359}}, .output_tensors = {1, (const int32_t[1]){360}} }, /* conv2d_303 */
-    {.id = 304, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){360}}, .output_tensors = {1, (const int32_t[1]){361}} }, /* nl_304 */
-    {.id = 305, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){360, 361}}, .output_tensors = {1, (const int32_t[1]){362}} }, /* eltwise_305 */
-    {.id = 307, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){362}}, .output_tensors = {1, (const int32_t[1]){363}} }, /* slice_307 */
-    {.id = 308, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){363}}, .output_tensors = {1, (const int32_t[1]){364}} }, /* conv2d_308_pad_before */
-    {.id = 308, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){364}}, .output_tensors = {1, (const int32_t[1]){365}} }, /* conv2d_308 */
-    {.id = 309, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){365}}, .output_tensors = {1, (const int32_t[1]){366}} }, /* nl_309 */
-    {.id = 310, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){365, 366}}, .output_tensors = {1, (const int32_t[1]){367}} }, /* eltwise_310 */
-    {.id = 311, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){367}}, .output_tensors = {1, (const int32_t[1]){368}} }, /* conv2d_311_pad_before */
-    {.id = 311, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){368}}, .output_tensors = {1, (const int32_t[1]){369}} }, /* conv2d_311 */
-    {.id = 312, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){369}}, .output_tensors = {1, (const int32_t[1]){370}} }, /* nl_312 */
-    {.id = 313, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){369, 370}}, .output_tensors = {1, (const int32_t[1]){371}} }, /* eltwise_313 */
-    {.id = 314, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){363, 371}}, .output_tensors = {1, (const int32_t[1]){372}} }, /* eltwise_314 */
-    {.id = 315, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){372}}, .output_tensors = {1, (const int32_t[1]){373}} }, /* conv2d_315 */
-    {.id = 316, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){373}}, .output_tensors = {1, (const int32_t[1]){374}} }, /* transpose_316 */
-    {.id = 323, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){374}}, .output_tensors = {1, (const int32_t[1]){375}} }, /* slice_323 */
-    {.id = 323, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){375}}, .output_tensors = {1, (const int32_t[1]){376}} }, /* slice_323_0_0_gemm_324_conversion */
-    {.id = 328, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){375}}, .output_tensors = {1, (const int32_t[1]){377}} }, /* transpose_328 */
-    {.id = 329, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){377}}, .output_tensors = {1, (const int32_t[1]){378}} }, /* conv2d_329_pad_before */
-    {.id = 329, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){378}}, .output_tensors = {1, (const int32_t[1]){379}} }, /* conv2d_329_pad_before_0_0_conv2d_329_conversion */
-    {.id = 329, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){379}}, .output_tensors = {1, (const int32_t[1]){380}} }, /* conv2d_329 */
-    {.id = 329, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){380}}, .output_tensors = {1, (const int32_t[1]){381}} }, /* conv2d_329_0_1_eltwise_330_conversion */
-    {.id = 319, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){374}}, .output_tensors = {1, (const int32_t[1]){382}} }, /* slice_319 */
-    {.id = 319, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){382}}, .output_tensors = {1, (const int32_t[1]){383}} }, /* slice_319_0_1_gemm_320_conversion */
-    {.id = 318, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){374}}, .output_tensors = {1, (const int32_t[1]){384}} }, /* slice_318 */
-    {.id = 320, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){384}}, .output_tensors = {1, (const int32_t[1]){385}} }, /* transpose_agemm_320_out */
-    {.id = 320, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){385}}, .output_tensors = {1, (const int32_t[1]){386}} }, /* transpose_agemm_320_out_0_0_gemm_320_conversion */
-    {.id = 320, .type = AI_LAYER_MATMUL_TYPE, .input_tensors = {3, (const int32_t[3]){386, 383, 2}}, .output_tensors = {1, (const int32_t[1]){387}} }, /* gemm_320 */
-    {.id = 320, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){387}}, .output_tensors = {1, (const int32_t[1]){388}} }, /* gemm_320_0_0_eltwise_321_conversion */
-    {.id = 321, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){388}}, .output_tensors = {1, (const int32_t[1]){389}} }, /* eltwise_321 */
-    {.id = 322, .type = AI_LAYER_SM_TYPE, .input_tensors = {1, (const int32_t[1]){389}}, .output_tensors = {1, (const int32_t[1]){390}} }, /* nl_322 */
-    {.id = 324, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){390}}, .output_tensors = {1, (const int32_t[1]){391}} }, /* transpose_bgemm_324_out */
-    {.id = 324, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){391}}, .output_tensors = {1, (const int32_t[1]){392}} }, /* transpose_bgemm_324_out_0_1_gemm_324_conversion */
-    {.id = 324, .type = AI_LAYER_MATMUL_TYPE, .input_tensors = {3, (const int32_t[3]){376, 392, 1}}, .output_tensors = {1, (const int32_t[1]){393}} }, /* gemm_324 */
-    {.id = 324, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){393}}, .output_tensors = {1, (const int32_t[1]){394}} }, /* gemm_324_0_0_transpose_326_conversion */
-    {.id = 326, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){394}}, .output_tensors = {1, (const int32_t[1]){395}} }, /* transpose_326 */
-    {.id = 330, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){395, 381}}, .output_tensors = {1, (const int32_t[1]){396}} }, /* eltwise_330 */
-    {.id = 331, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){396}}, .output_tensors = {1, (const int32_t[1]){397}} }, /* conv2d_331 */
-    {.id = 332, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){372, 397}}, .output_tensors = {1, (const int32_t[1]){398}} }, /* eltwise_332 */
-    {.id = 333, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){398}}, .output_tensors = {1, (const int32_t[1]){399}} }, /* conv2d_333 */
-    {.id = 334, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){399}}, .output_tensors = {1, (const int32_t[1]){400}} }, /* nl_334 */
-    {.id = 335, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){399, 400}}, .output_tensors = {1, (const int32_t[1]){401}} }, /* eltwise_335 */
-    {.id = 336, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){401}}, .output_tensors = {1, (const int32_t[1]){402}} }, /* conv2d_336 */
-    {.id = 337, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){398, 402}}, .output_tensors = {1, (const int32_t[1]){403}} }, /* eltwise_337 */
-    {.id = 306, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){362}}, .output_tensors = {1, (const int32_t[1]){404}} }, /* slice_306 */
-    {.id = 338, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){404, 363, 403}}, .output_tensors = {1, (const int32_t[1]){405}} }, /* concat_338 */
-    {.id = 339, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){405}}, .output_tensors = {1, (const int32_t[1]){406}} }, /* conv2d_339 */
-    {.id = 340, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){406}}, .output_tensors = {1, (const int32_t[1]){407}} }, /* nl_340 */
-    {.id = 341, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){406, 407}}, .output_tensors = {1, (const int32_t[1]){408}} }, /* eltwise_341 */
-    {.id = 342, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){408}}, .output_tensors = {1, (const int32_t[1]){409}} }, /* conv2d_342_pad_before */
-    {.id = 342, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){409}}, .output_tensors = {1, (const int32_t[1]){410}} }, /* conv2d_342 */
-    {.id = 343, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){410}}, .output_tensors = {1, (const int32_t[1]){411}} }, /* nl_343 */
-    {.id = 344, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){410, 411}}, .output_tensors = {1, (const int32_t[1]){412}} }, /* eltwise_344 */
-    {.id = 345, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){412}}, .output_tensors = {1, (const int32_t[1]){413}} }, /* conv2d_345 */
-    {.id = 346, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){413}}, .output_tensors = {1, (const int32_t[1]){414}} }, /* nl_346 */
-    {.id = 347, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){413, 414}}, .output_tensors = {1, (const int32_t[1]){415}} }, /* eltwise_347 */
-    {.id = 348, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){415}}, .output_tensors = {1, (const int32_t[1]){416}} }, /* conv2d_348_pad_before */
-    {.id = 348, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){416}}, .output_tensors = {1, (const int32_t[1]){417}} }, /* conv2d_348 */
-    {.id = 349, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){417}}, .output_tensors = {1, (const int32_t[1]){418}} }, /* nl_349 */
-    {.id = 350, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){417, 418}}, .output_tensors = {1, (const int32_t[1]){419}} }, /* eltwise_350 */
-    {.id = 351, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){419}}, .output_tensors = {1, (const int32_t[1]){420}} }, /* conv2d_351 */
-    {.id = 352, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){420}}, .output_tensors = {1, (const int32_t[1]){421}} }, /* nl_352 */
-    {.id = 353, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){420, 421}}, .output_tensors = {1, (const int32_t[1]){422}} }, /* eltwise_353 */
-    {.id = 354, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){422}}, .output_tensors = {1, (const int32_t[1]){423}} }, /* conv2d_354 */
-    {.id = 355, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){423}}, .output_tensors = {1, (const int32_t[1]){424}} }, /* transpose_355 */
-    {.id = 357, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){276, 344, 424}}, .output_tensors = {1, (const int32_t[1]){425}} }, /* concat_357 */
-    {.id = 358, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){425}}, .output_tensors = {1, (const int32_t[1]){426}} }, /* nl_358 */
-    {.id = 360, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){408}}, .output_tensors = {1, (const int32_t[1]){427}} }, /* conv2d_360_pad_before */
-    {.id = 360, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){427}}, .output_tensors = {1, (const int32_t[1]){428}} }, /* conv2d_360 */
-    {.id = 361, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){428}}, .output_tensors = {1, (const int32_t[1]){429}} }, /* nl_361 */
-    {.id = 362, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){428, 429}}, .output_tensors = {1, (const int32_t[1]){430}} }, /* eltwise_362 */
-    {.id = 363, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){430}}, .output_tensors = {1, (const int32_t[1]){431}} }, /* conv2d_363_pad_before */
-    {.id = 363, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){431}}, .output_tensors = {1, (const int32_t[1]){432}} }, /* conv2d_363 */
-    {.id = 364, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){432}}, .output_tensors = {1, (const int32_t[1]){433}} }, /* nl_364 */
-    {.id = 365, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){432, 433}}, .output_tensors = {1, (const int32_t[1]){434}} }, /* eltwise_365 */
-    {.id = 366, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){434}}, .output_tensors = {1, (const int32_t[1]){435}} }, /* conv2d_366 */
-    {.id = 367, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){435}}, .output_tensors = {1, (const int32_t[1]){436}} }, /* transpose_367 */
-    {.id = 387, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){286, 354, 436}}, .output_tensors = {1, (const int32_t[1]){437}} }, /* concat_387 */
-    {.id = 388, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){437}}, .output_tensors = {1, (const int32_t[1]){438}} }, /* eltwise_388 */
-    {.id = 391, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){438}}, .output_tensors = {1, (const int32_t[1]){439}} }, /* slice_391 */
-    {.id = 392, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){439}}, .output_tensors = {1, (const int32_t[1]){440}} }, /* eltwise_392 */
-    {.id = 389, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){438}}, .output_tensors = {1, (const int32_t[1]){441}} }, /* slice_389 */
-    {.id = 390, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){441}}, .output_tensors = {1, (const int32_t[1]){442}} }, /* eltwise_390 */
-    {.id = 395, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){440, 442}}, .output_tensors = {1, (const int32_t[1]){443}} }, /* eltwise_395 */
-    {.id = 393, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){442, 440}}, .output_tensors = {1, (const int32_t[1]){444}} }, /* eltwise_393 */
-    {.id = 394, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){444}}, .output_tensors = {1, (const int32_t[1]){445}} }, /* eltwise_394 */
-    {.id = 396, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){445, 443, 426}}, .output_tensors = {1, (const int32_t[1]){446}} } /* concat_396 */
+    {.id = 0, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){0}}, .output_tensors = {1, (const int32_t[1]){5}} }, /* serving_default_images0_0_conversion */
+    {.id = 0, .type = AI_LAYER_OPTIMIZED_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){5}}, .output_tensors = {1, (const int32_t[1]){6}} }, /* conv2d_1 */
+    {.id = 2, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){6}}, .output_tensors = {1, (const int32_t[1]){7}} }, /* nl_2 */
+    {.id = 3, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){6, 7}}, .output_tensors = {1, (const int32_t[1]){8}} }, /* eltwise_3 */
+    {.id = 4, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){8}}, .output_tensors = {1, (const int32_t[1]){9}} }, /* pad_4 */
+    {.id = 5, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){9}}, .output_tensors = {1, (const int32_t[1]){10}} }, /* conv2d_5 */
+    {.id = 6, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){10}}, .output_tensors = {1, (const int32_t[1]){11}} }, /* nl_6 */
+    {.id = 7, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){10, 11}}, .output_tensors = {1, (const int32_t[1]){12}} }, /* eltwise_7 */
+    {.id = 8, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){12}}, .output_tensors = {1, (const int32_t[1]){13}} }, /* conv2d_8 */
+    {.id = 9, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){13}}, .output_tensors = {1, (const int32_t[1]){14}} }, /* nl_9 */
+    {.id = 10, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){13, 14}}, .output_tensors = {1, (const int32_t[1]){15}} }, /* eltwise_10 */
+    {.id = 19, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){15}}, .output_tensors = {1, (const int32_t[1]){16}} }, /* slice_19 */
+    {.id = 11, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){15}}, .output_tensors = {1, (const int32_t[1]){17}} }, /* slice_11 */
+    {.id = 12, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){17}}, .output_tensors = {1, (const int32_t[1]){18}} }, /* conv2d_12_pad_before */
+    {.id = 12, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){18}}, .output_tensors = {1, (const int32_t[1]){19}} }, /* conv2d_12 */
+    {.id = 13, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){19}}, .output_tensors = {1, (const int32_t[1]){20}} }, /* nl_13 */
+    {.id = 14, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){19, 20}}, .output_tensors = {1, (const int32_t[1]){21}} }, /* eltwise_14 */
+    {.id = 15, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){21}}, .output_tensors = {1, (const int32_t[1]){22}} }, /* conv2d_15 */
+    {.id = 16, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){22}}, .output_tensors = {1, (const int32_t[1]){23}} }, /* nl_16 */
+    {.id = 17, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){22, 23}}, .output_tensors = {1, (const int32_t[1]){24}} }, /* eltwise_17 */
+    {.id = 18, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){17, 24}}, .output_tensors = {1, (const int32_t[1]){25}} }, /* eltwise_18 */
+    {.id = 20, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){16, 17, 25}}, .output_tensors = {1, (const int32_t[1]){26}} }, /* concat_20 */
+    {.id = 21, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){26}}, .output_tensors = {1, (const int32_t[1]){27}} }, /* conv2d_21 */
+    {.id = 22, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){27}}, .output_tensors = {1, (const int32_t[1]){28}} }, /* nl_22 */
+    {.id = 23, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){27, 28}}, .output_tensors = {1, (const int32_t[1]){29}} }, /* eltwise_23 */
+    {.id = 24, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){29}}, .output_tensors = {1, (const int32_t[1]){30}} }, /* pad_24 */
+    {.id = 25, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){30}}, .output_tensors = {1, (const int32_t[1]){31}} }, /* conv2d_25 */
+    {.id = 26, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){31}}, .output_tensors = {1, (const int32_t[1]){32}} }, /* nl_26 */
+    {.id = 27, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){31, 32}}, .output_tensors = {1, (const int32_t[1]){33}} }, /* eltwise_27 */
+    {.id = 28, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){33}}, .output_tensors = {1, (const int32_t[1]){34}} }, /* conv2d_28 */
+    {.id = 29, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){34}}, .output_tensors = {1, (const int32_t[1]){35}} }, /* nl_29 */
+    {.id = 30, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){34, 35}}, .output_tensors = {1, (const int32_t[1]){36}} }, /* eltwise_30 */
+    {.id = 32, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){36}}, .output_tensors = {1, (const int32_t[1]){37}} }, /* slice_32 */
+    {.id = 33, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){37}}, .output_tensors = {1, (const int32_t[1]){38}} }, /* conv2d_33_pad_before */
+    {.id = 33, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){38}}, .output_tensors = {1, (const int32_t[1]){39}} }, /* conv2d_33 */
+    {.id = 34, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){39}}, .output_tensors = {1, (const int32_t[1]){40}} }, /* nl_34 */
+    {.id = 35, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){39, 40}}, .output_tensors = {1, (const int32_t[1]){41}} }, /* eltwise_35 */
+    {.id = 36, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){41}}, .output_tensors = {1, (const int32_t[1]){42}} }, /* conv2d_36_pad_before */
+    {.id = 36, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){42}}, .output_tensors = {1, (const int32_t[1]){43}} }, /* conv2d_36 */
+    {.id = 37, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){43}}, .output_tensors = {1, (const int32_t[1]){44}} }, /* nl_37 */
+    {.id = 38, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){43, 44}}, .output_tensors = {1, (const int32_t[1]){45}} }, /* eltwise_38 */
+    {.id = 39, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){37, 45}}, .output_tensors = {1, (const int32_t[1]){46}} }, /* eltwise_39 */
+    {.id = 31, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){36}}, .output_tensors = {1, (const int32_t[1]){47}} }, /* slice_31 */
+    {.id = 40, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){47, 37, 46}}, .output_tensors = {1, (const int32_t[1]){48}} }, /* concat_40 */
+    {.id = 41, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){48}}, .output_tensors = {1, (const int32_t[1]){49}} }, /* conv2d_41 */
+    {.id = 42, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){49}}, .output_tensors = {1, (const int32_t[1]){50}} }, /* nl_42 */
+    {.id = 43, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){49, 50}}, .output_tensors = {1, (const int32_t[1]){51}} }, /* eltwise_43 */
+    {.id = 44, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){51}}, .output_tensors = {1, (const int32_t[1]){52}} }, /* pad_44 */
+    {.id = 45, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){52}}, .output_tensors = {1, (const int32_t[1]){53}} }, /* conv2d_45 */
+    {.id = 46, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){53}}, .output_tensors = {1, (const int32_t[1]){54}} }, /* nl_46 */
+    {.id = 47, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){53, 54}}, .output_tensors = {1, (const int32_t[1]){55}} }, /* eltwise_47 */
+    {.id = 48, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){55}}, .output_tensors = {1, (const int32_t[1]){56}} }, /* conv2d_48 */
+    {.id = 49, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){56}}, .output_tensors = {1, (const int32_t[1]){57}} }, /* nl_49 */
+    {.id = 50, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){56, 57}}, .output_tensors = {1, (const int32_t[1]){58}} }, /* eltwise_50 */
+    {.id = 52, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){58}}, .output_tensors = {1, (const int32_t[1]){59}} }, /* slice_52 */
+    {.id = 70, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){59}}, .output_tensors = {1, (const int32_t[1]){60}} }, /* conv2d_70 */
+    {.id = 71, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){60}}, .output_tensors = {1, (const int32_t[1]){61}} }, /* nl_71 */
+    {.id = 72, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){60, 61}}, .output_tensors = {1, (const int32_t[1]){62}} }, /* eltwise_72 */
+    {.id = 53, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){59}}, .output_tensors = {1, (const int32_t[1]){63}} }, /* conv2d_53 */
+    {.id = 54, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){63}}, .output_tensors = {1, (const int32_t[1]){64}} }, /* nl_54 */
+    {.id = 55, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){63, 64}}, .output_tensors = {1, (const int32_t[1]){65}} }, /* eltwise_55 */
+    {.id = 56, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){65}}, .output_tensors = {1, (const int32_t[1]){66}} }, /* conv2d_56_pad_before */
+    {.id = 56, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){66}}, .output_tensors = {1, (const int32_t[1]){67}} }, /* conv2d_56 */
+    {.id = 57, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){67}}, .output_tensors = {1, (const int32_t[1]){68}} }, /* nl_57 */
+    {.id = 58, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){67, 68}}, .output_tensors = {1, (const int32_t[1]){69}} }, /* eltwise_58 */
+    {.id = 59, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){69}}, .output_tensors = {1, (const int32_t[1]){70}} }, /* conv2d_59_pad_before */
+    {.id = 59, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){70}}, .output_tensors = {1, (const int32_t[1]){71}} }, /* conv2d_59 */
+    {.id = 60, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){71}}, .output_tensors = {1, (const int32_t[1]){72}} }, /* nl_60 */
+    {.id = 61, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){71, 72}}, .output_tensors = {1, (const int32_t[1]){73}} }, /* eltwise_61 */
+    {.id = 62, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){65, 73}}, .output_tensors = {1, (const int32_t[1]){74}} }, /* eltwise_62 */
+    {.id = 63, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){74}}, .output_tensors = {1, (const int32_t[1]){75}} }, /* conv2d_63_pad_before */
+    {.id = 63, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){75}}, .output_tensors = {1, (const int32_t[1]){76}} }, /* conv2d_63 */
+    {.id = 64, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){76}}, .output_tensors = {1, (const int32_t[1]){77}} }, /* nl_64 */
+    {.id = 65, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){76, 77}}, .output_tensors = {1, (const int32_t[1]){78}} }, /* eltwise_65 */
+    {.id = 66, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){78}}, .output_tensors = {1, (const int32_t[1]){79}} }, /* conv2d_66_pad_before */
+    {.id = 66, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){79}}, .output_tensors = {1, (const int32_t[1]){80}} }, /* conv2d_66 */
+    {.id = 67, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){80}}, .output_tensors = {1, (const int32_t[1]){81}} }, /* nl_67 */
+    {.id = 68, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){80, 81}}, .output_tensors = {1, (const int32_t[1]){82}} }, /* eltwise_68 */
+    {.id = 69, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){74, 82}}, .output_tensors = {1, (const int32_t[1]){83}} }, /* eltwise_69 */
+    {.id = 73, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){83, 62}}, .output_tensors = {1, (const int32_t[1]){84}} }, /* concat_73 */
+    {.id = 74, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){84}}, .output_tensors = {1, (const int32_t[1]){85}} }, /* conv2d_74 */
+    {.id = 75, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){85}}, .output_tensors = {1, (const int32_t[1]){86}} }, /* nl_75 */
+    {.id = 76, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){85, 86}}, .output_tensors = {1, (const int32_t[1]){87}} }, /* eltwise_76 */
+    {.id = 51, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){58}}, .output_tensors = {1, (const int32_t[1]){88}} }, /* slice_51 */
+    {.id = 77, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){88, 59, 87}}, .output_tensors = {1, (const int32_t[1]){89}} }, /* concat_77 */
+    {.id = 78, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){89}}, .output_tensors = {1, (const int32_t[1]){90}} }, /* conv2d_78 */
+    {.id = 79, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){90}}, .output_tensors = {1, (const int32_t[1]){91}} }, /* nl_79 */
+    {.id = 80, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){90, 91}}, .output_tensors = {1, (const int32_t[1]){92}} }, /* eltwise_80 */
+    {.id = 81, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){92}}, .output_tensors = {1, (const int32_t[1]){93}} }, /* pad_81 */
+    {.id = 82, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){93}}, .output_tensors = {1, (const int32_t[1]){94}} }, /* conv2d_82 */
+    {.id = 83, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){94}}, .output_tensors = {1, (const int32_t[1]){95}} }, /* nl_83 */
+    {.id = 84, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){94, 95}}, .output_tensors = {1, (const int32_t[1]){96}} }, /* eltwise_84 */
+    {.id = 85, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){96}}, .output_tensors = {1, (const int32_t[1]){97}} }, /* conv2d_85 */
+    {.id = 86, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){97}}, .output_tensors = {1, (const int32_t[1]){98}} }, /* nl_86 */
+    {.id = 87, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){97, 98}}, .output_tensors = {1, (const int32_t[1]){99}} }, /* eltwise_87 */
+    {.id = 89, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){99}}, .output_tensors = {1, (const int32_t[1]){100}} }, /* slice_89 */
+    {.id = 107, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){100}}, .output_tensors = {1, (const int32_t[1]){101}} }, /* conv2d_107 */
+    {.id = 108, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){101}}, .output_tensors = {1, (const int32_t[1]){102}} }, /* nl_108 */
+    {.id = 109, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){101, 102}}, .output_tensors = {1, (const int32_t[1]){103}} }, /* eltwise_109 */
+    {.id = 90, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){100}}, .output_tensors = {1, (const int32_t[1]){104}} }, /* conv2d_90 */
+    {.id = 91, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){104}}, .output_tensors = {1, (const int32_t[1]){105}} }, /* nl_91 */
+    {.id = 92, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){104, 105}}, .output_tensors = {1, (const int32_t[1]){106}} }, /* eltwise_92 */
+    {.id = 93, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){106}}, .output_tensors = {1, (const int32_t[1]){107}} }, /* conv2d_93_pad_before */
+    {.id = 93, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){107}}, .output_tensors = {1, (const int32_t[1]){108}} }, /* conv2d_93 */
+    {.id = 94, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){108}}, .output_tensors = {1, (const int32_t[1]){109}} }, /* nl_94 */
+    {.id = 95, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){108, 109}}, .output_tensors = {1, (const int32_t[1]){110}} }, /* eltwise_95 */
+    {.id = 96, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){110}}, .output_tensors = {1, (const int32_t[1]){111}} }, /* conv2d_96_pad_before */
+    {.id = 96, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){111}}, .output_tensors = {1, (const int32_t[1]){112}} }, /* conv2d_96 */
+    {.id = 97, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){112}}, .output_tensors = {1, (const int32_t[1]){113}} }, /* nl_97 */
+    {.id = 98, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){112, 113}}, .output_tensors = {1, (const int32_t[1]){114}} }, /* eltwise_98 */
+    {.id = 99, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){106, 114}}, .output_tensors = {1, (const int32_t[1]){115}} }, /* eltwise_99 */
+    {.id = 100, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){115}}, .output_tensors = {1, (const int32_t[1]){116}} }, /* conv2d_100_pad_before */
+    {.id = 100, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){116}}, .output_tensors = {1, (const int32_t[1]){117}} }, /* conv2d_100 */
+    {.id = 101, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){117}}, .output_tensors = {1, (const int32_t[1]){118}} }, /* nl_101 */
+    {.id = 102, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){117, 118}}, .output_tensors = {1, (const int32_t[1]){119}} }, /* eltwise_102 */
+    {.id = 103, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){119}}, .output_tensors = {1, (const int32_t[1]){120}} }, /* conv2d_103_pad_before */
+    {.id = 103, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){120}}, .output_tensors = {1, (const int32_t[1]){121}} }, /* conv2d_103 */
+    {.id = 104, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){121}}, .output_tensors = {1, (const int32_t[1]){122}} }, /* nl_104 */
+    {.id = 105, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){121, 122}}, .output_tensors = {1, (const int32_t[1]){123}} }, /* eltwise_105 */
+    {.id = 106, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){115, 123}}, .output_tensors = {1, (const int32_t[1]){124}} }, /* eltwise_106 */
+    {.id = 110, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){124, 103}}, .output_tensors = {1, (const int32_t[1]){125}} }, /* concat_110 */
+    {.id = 111, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){125}}, .output_tensors = {1, (const int32_t[1]){126}} }, /* conv2d_111 */
+    {.id = 112, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){126}}, .output_tensors = {1, (const int32_t[1]){127}} }, /* nl_112 */
+    {.id = 113, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){126, 127}}, .output_tensors = {1, (const int32_t[1]){128}} }, /* eltwise_113 */
+    {.id = 88, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){99}}, .output_tensors = {1, (const int32_t[1]){129}} }, /* slice_88 */
+    {.id = 114, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){129, 100, 128}}, .output_tensors = {1, (const int32_t[1]){130}} }, /* concat_114 */
+    {.id = 115, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){130}}, .output_tensors = {1, (const int32_t[1]){131}} }, /* conv2d_115 */
+    {.id = 116, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){131}}, .output_tensors = {1, (const int32_t[1]){132}} }, /* nl_116 */
+    {.id = 117, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){131, 132}}, .output_tensors = {1, (const int32_t[1]){133}} }, /* eltwise_117 */
+    {.id = 118, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){133}}, .output_tensors = {1, (const int32_t[1]){134}} }, /* conv2d_118 */
+    {.id = 119, .type = AI_LAYER_POOL_TYPE, .input_tensors = {1, (const int32_t[1]){134}}, .output_tensors = {1, (const int32_t[1]){135}} }, /* pool_119 */
+    {.id = 120, .type = AI_LAYER_POOL_TYPE, .input_tensors = {1, (const int32_t[1]){135}}, .output_tensors = {1, (const int32_t[1]){136}} }, /* pool_120 */
+    {.id = 121, .type = AI_LAYER_POOL_TYPE, .input_tensors = {1, (const int32_t[1]){136}}, .output_tensors = {1, (const int32_t[1]){137}} }, /* pool_121 */
+    {.id = 122, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {4, (const int32_t[4]){134, 135, 136, 137}}, .output_tensors = {1, (const int32_t[1]){138}} }, /* concat_122 */
+    {.id = 123, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){138}}, .output_tensors = {1, (const int32_t[1]){139}} }, /* conv2d_123 */
+    {.id = 124, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){139}}, .output_tensors = {1, (const int32_t[1]){140}} }, /* nl_124 */
+    {.id = 125, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){139, 140}}, .output_tensors = {1, (const int32_t[1]){141}} }, /* eltwise_125 */
+    {.id = 126, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){141, 133}}, .output_tensors = {1, (const int32_t[1]){142}} }, /* eltwise_126 */
+    {.id = 127, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){142}}, .output_tensors = {1, (const int32_t[1]){143}} }, /* conv2d_127 */
+    {.id = 128, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){143}}, .output_tensors = {1, (const int32_t[1]){144}} }, /* nl_128 */
+    {.id = 129, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){143, 144}}, .output_tensors = {1, (const int32_t[1]){145}} }, /* eltwise_129 */
+    {.id = 131, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){145}}, .output_tensors = {1, (const int32_t[1]){146}} }, /* slice_131 */
+    {.id = 132, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){146}}, .output_tensors = {1, (const int32_t[1]){147}} }, /* conv2d_132 */
+    {.id = 133, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){147}}, .output_tensors = {1, (const int32_t[1]){148}} }, /* transpose_133 */
+    {.id = 140, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){148}}, .output_tensors = {1, (const int32_t[1]){149}} }, /* slice_140 */
+    {.id = 140, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){149}}, .output_tensors = {1, (const int32_t[1]){150}} }, /* slice_140_0_0_gemm_141_conversion */
+    {.id = 145, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){149}}, .output_tensors = {1, (const int32_t[1]){151}} }, /* transpose_145 */
+    {.id = 146, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){151}}, .output_tensors = {1, (const int32_t[1]){152}} }, /* conv2d_146_pad_before */
+    {.id = 146, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){152}}, .output_tensors = {1, (const int32_t[1]){153}} }, /* conv2d_146_pad_before_0_0_conv2d_146_conversion */
+    {.id = 146, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){153}}, .output_tensors = {1, (const int32_t[1]){154}} }, /* conv2d_146 */
+    {.id = 146, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){154}}, .output_tensors = {1, (const int32_t[1]){155}} }, /* conv2d_146_0_1_eltwise_147_conversion */
+    {.id = 136, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){148}}, .output_tensors = {1, (const int32_t[1]){156}} }, /* slice_136 */
+    {.id = 136, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){156}}, .output_tensors = {1, (const int32_t[1]){157}} }, /* slice_136_0_1_gemm_137_conversion */
+    {.id = 135, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){148}}, .output_tensors = {1, (const int32_t[1]){158}} }, /* slice_135 */
+    {.id = 137, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){158}}, .output_tensors = {1, (const int32_t[1]){159}} }, /* transpose_agemm_137_out */
+    {.id = 137, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){159}}, .output_tensors = {1, (const int32_t[1]){160}} }, /* transpose_agemm_137_out_0_0_gemm_137_conversion */
+    {.id = 137, .type = AI_LAYER_MATMUL_TYPE, .input_tensors = {3, (const int32_t[3]){160, 157, 4}}, .output_tensors = {1, (const int32_t[1]){161}} }, /* gemm_137 */
+    {.id = 137, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){161}}, .output_tensors = {1, (const int32_t[1]){162}} }, /* gemm_137_0_0_eltwise_138_conversion */
+    {.id = 138, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){162}}, .output_tensors = {1, (const int32_t[1]){163}} }, /* eltwise_138 */
+    {.id = 139, .type = AI_LAYER_SM_TYPE, .input_tensors = {1, (const int32_t[1]){163}}, .output_tensors = {1, (const int32_t[1]){164}} }, /* nl_139 */
+    {.id = 141, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){164}}, .output_tensors = {1, (const int32_t[1]){165}} }, /* transpose_bgemm_141_out */
+    {.id = 141, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){165}}, .output_tensors = {1, (const int32_t[1]){166}} }, /* transpose_bgemm_141_out_0_1_gemm_141_conversion */
+    {.id = 141, .type = AI_LAYER_MATMUL_TYPE, .input_tensors = {3, (const int32_t[3]){150, 166, 3}}, .output_tensors = {1, (const int32_t[1]){167}} }, /* gemm_141 */
+    {.id = 141, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){167}}, .output_tensors = {1, (const int32_t[1]){168}} }, /* gemm_141_0_0_transpose_143_conversion */
+    {.id = 143, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){168}}, .output_tensors = {1, (const int32_t[1]){169}} }, /* transpose_143 */
+    {.id = 147, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){169, 155}}, .output_tensors = {1, (const int32_t[1]){170}} }, /* eltwise_147 */
+    {.id = 148, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){170}}, .output_tensors = {1, (const int32_t[1]){171}} }, /* conv2d_148 */
+    {.id = 149, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){146, 171}}, .output_tensors = {1, (const int32_t[1]){172}} }, /* eltwise_149 */
+    {.id = 150, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){172}}, .output_tensors = {1, (const int32_t[1]){173}} }, /* conv2d_150 */
+    {.id = 151, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){173}}, .output_tensors = {1, (const int32_t[1]){174}} }, /* nl_151 */
+    {.id = 152, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){173, 174}}, .output_tensors = {1, (const int32_t[1]){175}} }, /* eltwise_152 */
+    {.id = 153, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){175}}, .output_tensors = {1, (const int32_t[1]){176}} }, /* conv2d_153 */
+    {.id = 154, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){172, 176}}, .output_tensors = {1, (const int32_t[1]){177}} }, /* eltwise_154 */
+    {.id = 130, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){145}}, .output_tensors = {1, (const int32_t[1]){178}} }, /* slice_130 */
+    {.id = 155, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){178, 177}}, .output_tensors = {1, (const int32_t[1]){179}} }, /* concat_155 */
+    {.id = 156, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){179}}, .output_tensors = {1, (const int32_t[1]){180}} }, /* conv2d_156 */
+    {.id = 157, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){180}}, .output_tensors = {1, (const int32_t[1]){181}} }, /* nl_157 */
+    {.id = 158, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){180, 181}}, .output_tensors = {1, (const int32_t[1]){182}} }, /* eltwise_158 */
+    {.id = 159, .type = AI_LAYER_UPSAMPLE_TYPE, .input_tensors = {1, (const int32_t[1]){182}}, .output_tensors = {1, (const int32_t[1]){183}} }, /* resize_159 */
+    {.id = 160, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){183, 92}}, .output_tensors = {1, (const int32_t[1]){184}} }, /* concat_160 */
+    {.id = 161, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){184}}, .output_tensors = {1, (const int32_t[1]){185}} }, /* conv2d_161 */
+    {.id = 162, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){185}}, .output_tensors = {1, (const int32_t[1]){186}} }, /* nl_162 */
+    {.id = 163, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){185, 186}}, .output_tensors = {1, (const int32_t[1]){187}} }, /* eltwise_163 */
+    {.id = 165, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){187}}, .output_tensors = {1, (const int32_t[1]){188}} }, /* slice_165 */
+    {.id = 183, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){188}}, .output_tensors = {1, (const int32_t[1]){189}} }, /* conv2d_183 */
+    {.id = 184, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){189}}, .output_tensors = {1, (const int32_t[1]){190}} }, /* nl_184 */
+    {.id = 185, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){189, 190}}, .output_tensors = {1, (const int32_t[1]){191}} }, /* eltwise_185 */
+    {.id = 166, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){188}}, .output_tensors = {1, (const int32_t[1]){192}} }, /* conv2d_166 */
+    {.id = 167, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){192}}, .output_tensors = {1, (const int32_t[1]){193}} }, /* nl_167 */
+    {.id = 168, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){192, 193}}, .output_tensors = {1, (const int32_t[1]){194}} }, /* eltwise_168 */
+    {.id = 169, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){194}}, .output_tensors = {1, (const int32_t[1]){195}} }, /* conv2d_169_pad_before */
+    {.id = 169, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){195}}, .output_tensors = {1, (const int32_t[1]){196}} }, /* conv2d_169 */
+    {.id = 170, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){196}}, .output_tensors = {1, (const int32_t[1]){197}} }, /* nl_170 */
+    {.id = 171, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){196, 197}}, .output_tensors = {1, (const int32_t[1]){198}} }, /* eltwise_171 */
+    {.id = 172, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){198}}, .output_tensors = {1, (const int32_t[1]){199}} }, /* conv2d_172_pad_before */
+    {.id = 172, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){199}}, .output_tensors = {1, (const int32_t[1]){200}} }, /* conv2d_172 */
+    {.id = 173, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){200}}, .output_tensors = {1, (const int32_t[1]){201}} }, /* nl_173 */
+    {.id = 174, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){200, 201}}, .output_tensors = {1, (const int32_t[1]){202}} }, /* eltwise_174 */
+    {.id = 175, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){194, 202}}, .output_tensors = {1, (const int32_t[1]){203}} }, /* eltwise_175 */
+    {.id = 176, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){203}}, .output_tensors = {1, (const int32_t[1]){204}} }, /* conv2d_176_pad_before */
+    {.id = 176, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){204}}, .output_tensors = {1, (const int32_t[1]){205}} }, /* conv2d_176 */
+    {.id = 177, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){205}}, .output_tensors = {1, (const int32_t[1]){206}} }, /* nl_177 */
+    {.id = 178, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){205, 206}}, .output_tensors = {1, (const int32_t[1]){207}} }, /* eltwise_178 */
+    {.id = 179, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){207}}, .output_tensors = {1, (const int32_t[1]){208}} }, /* conv2d_179_pad_before */
+    {.id = 179, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){208}}, .output_tensors = {1, (const int32_t[1]){209}} }, /* conv2d_179 */
+    {.id = 180, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){209}}, .output_tensors = {1, (const int32_t[1]){210}} }, /* nl_180 */
+    {.id = 181, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){209, 210}}, .output_tensors = {1, (const int32_t[1]){211}} }, /* eltwise_181 */
+    {.id = 182, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){203, 211}}, .output_tensors = {1, (const int32_t[1]){212}} }, /* eltwise_182 */
+    {.id = 186, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){212, 191}}, .output_tensors = {1, (const int32_t[1]){213}} }, /* concat_186 */
+    {.id = 187, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){213}}, .output_tensors = {1, (const int32_t[1]){214}} }, /* conv2d_187 */
+    {.id = 188, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){214}}, .output_tensors = {1, (const int32_t[1]){215}} }, /* nl_188 */
+    {.id = 189, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){214, 215}}, .output_tensors = {1, (const int32_t[1]){216}} }, /* eltwise_189 */
+    {.id = 164, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){187}}, .output_tensors = {1, (const int32_t[1]){217}} }, /* slice_164 */
+    {.id = 190, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){217, 188, 216}}, .output_tensors = {1, (const int32_t[1]){218}} }, /* concat_190 */
+    {.id = 191, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){218}}, .output_tensors = {1, (const int32_t[1]){219}} }, /* conv2d_191 */
+    {.id = 192, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){219}}, .output_tensors = {1, (const int32_t[1]){220}} }, /* nl_192 */
+    {.id = 193, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){219, 220}}, .output_tensors = {1, (const int32_t[1]){221}} }, /* eltwise_193 */
+    {.id = 194, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){221}}, .output_tensors = {1, (const int32_t[1]){222}} }, /* conversion_194 */
+    {.id = 195, .type = AI_LAYER_UPSAMPLE_TYPE, .input_tensors = {1, (const int32_t[1]){222}}, .output_tensors = {1, (const int32_t[1]){223}} }, /* resize_195 */
+    {.id = 196, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){223, 51}}, .output_tensors = {1, (const int32_t[1]){224}} }, /* concat_196 */
+    {.id = 197, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){224}}, .output_tensors = {1, (const int32_t[1]){225}} }, /* conv2d_197 */
+    {.id = 198, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){225}}, .output_tensors = {1, (const int32_t[1]){226}} }, /* nl_198 */
+    {.id = 199, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){225, 226}}, .output_tensors = {1, (const int32_t[1]){227}} }, /* eltwise_199 */
+    {.id = 201, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){227}}, .output_tensors = {1, (const int32_t[1]){228}} }, /* slice_201 */
+    {.id = 219, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){228}}, .output_tensors = {1, (const int32_t[1]){229}} }, /* conv2d_219 */
+    {.id = 220, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){229}}, .output_tensors = {1, (const int32_t[1]){230}} }, /* nl_220 */
+    {.id = 221, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){229, 230}}, .output_tensors = {1, (const int32_t[1]){231}} }, /* eltwise_221 */
+    {.id = 202, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){228}}, .output_tensors = {1, (const int32_t[1]){232}} }, /* conv2d_202 */
+    {.id = 203, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){232}}, .output_tensors = {1, (const int32_t[1]){233}} }, /* nl_203 */
+    {.id = 204, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){232, 233}}, .output_tensors = {1, (const int32_t[1]){234}} }, /* eltwise_204 */
+    {.id = 205, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){234}}, .output_tensors = {1, (const int32_t[1]){235}} }, /* conv2d_205_pad_before */
+    {.id = 205, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){235}}, .output_tensors = {1, (const int32_t[1]){236}} }, /* conv2d_205 */
+    {.id = 206, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){236}}, .output_tensors = {1, (const int32_t[1]){237}} }, /* nl_206 */
+    {.id = 207, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){236, 237}}, .output_tensors = {1, (const int32_t[1]){238}} }, /* eltwise_207 */
+    {.id = 208, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){238}}, .output_tensors = {1, (const int32_t[1]){239}} }, /* conv2d_208_pad_before */
+    {.id = 208, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){239}}, .output_tensors = {1, (const int32_t[1]){240}} }, /* conv2d_208 */
+    {.id = 209, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){240}}, .output_tensors = {1, (const int32_t[1]){241}} }, /* nl_209 */
+    {.id = 210, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){240, 241}}, .output_tensors = {1, (const int32_t[1]){242}} }, /* eltwise_210 */
+    {.id = 211, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){234, 242}}, .output_tensors = {1, (const int32_t[1]){243}} }, /* eltwise_211 */
+    {.id = 212, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){243}}, .output_tensors = {1, (const int32_t[1]){244}} }, /* conv2d_212_pad_before */
+    {.id = 212, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){244}}, .output_tensors = {1, (const int32_t[1]){245}} }, /* conv2d_212 */
+    {.id = 213, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){245}}, .output_tensors = {1, (const int32_t[1]){246}} }, /* nl_213 */
+    {.id = 214, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){245, 246}}, .output_tensors = {1, (const int32_t[1]){247}} }, /* eltwise_214 */
+    {.id = 215, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){247}}, .output_tensors = {1, (const int32_t[1]){248}} }, /* conv2d_215_pad_before */
+    {.id = 215, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){248}}, .output_tensors = {1, (const int32_t[1]){249}} }, /* conv2d_215 */
+    {.id = 216, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){249}}, .output_tensors = {1, (const int32_t[1]){250}} }, /* nl_216 */
+    {.id = 217, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){249, 250}}, .output_tensors = {1, (const int32_t[1]){251}} }, /* eltwise_217 */
+    {.id = 218, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){243, 251}}, .output_tensors = {1, (const int32_t[1]){252}} }, /* eltwise_218 */
+    {.id = 222, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){252, 231}}, .output_tensors = {1, (const int32_t[1]){253}} }, /* concat_222 */
+    {.id = 223, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){253}}, .output_tensors = {1, (const int32_t[1]){254}} }, /* conv2d_223 */
+    {.id = 224, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){254}}, .output_tensors = {1, (const int32_t[1]){255}} }, /* nl_224 */
+    {.id = 225, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){254, 255}}, .output_tensors = {1, (const int32_t[1]){256}} }, /* eltwise_225 */
+    {.id = 200, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){227}}, .output_tensors = {1, (const int32_t[1]){257}} }, /* slice_200 */
+    {.id = 226, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){257, 228, 256}}, .output_tensors = {1, (const int32_t[1]){258}} }, /* concat_226 */
+    {.id = 227, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){258}}, .output_tensors = {1, (const int32_t[1]){259}} }, /* conv2d_227 */
+    {.id = 228, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){259}}, .output_tensors = {1, (const int32_t[1]){260}} }, /* nl_228 */
+    {.id = 229, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){259, 260}}, .output_tensors = {1, (const int32_t[1]){261}} }, /* eltwise_229 */
+    {.id = 230, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){261}}, .output_tensors = {1, (const int32_t[1]){262}} }, /* conv2d_230_pad_before */
+    {.id = 230, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){262}}, .output_tensors = {1, (const int32_t[1]){263}} }, /* conv2d_230 */
+    {.id = 231, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){263}}, .output_tensors = {1, (const int32_t[1]){264}} }, /* nl_231 */
+    {.id = 232, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){263, 264}}, .output_tensors = {1, (const int32_t[1]){265}} }, /* eltwise_232 */
+    {.id = 233, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){265}}, .output_tensors = {1, (const int32_t[1]){266}} }, /* conv2d_233 */
+    {.id = 234, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){266}}, .output_tensors = {1, (const int32_t[1]){267}} }, /* nl_234 */
+    {.id = 235, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){266, 267}}, .output_tensors = {1, (const int32_t[1]){268}} }, /* eltwise_235 */
+    {.id = 236, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){268}}, .output_tensors = {1, (const int32_t[1]){269}} }, /* conv2d_236_pad_before */
+    {.id = 236, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){269}}, .output_tensors = {1, (const int32_t[1]){270}} }, /* conv2d_236 */
+    {.id = 237, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){270}}, .output_tensors = {1, (const int32_t[1]){271}} }, /* nl_237 */
+    {.id = 238, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){270, 271}}, .output_tensors = {1, (const int32_t[1]){272}} }, /* eltwise_238 */
+    {.id = 239, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){272}}, .output_tensors = {1, (const int32_t[1]){273}} }, /* conv2d_239 */
+    {.id = 240, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){273}}, .output_tensors = {1, (const int32_t[1]){274}} }, /* nl_240 */
+    {.id = 241, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){273, 274}}, .output_tensors = {1, (const int32_t[1]){275}} }, /* eltwise_241 */
+    {.id = 242, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){275}}, .output_tensors = {1, (const int32_t[1]){276}} }, /* conv2d_242 */
+    {.id = 243, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){276}}, .output_tensors = {1, (const int32_t[1]){277}} }, /* transpose_243 */
+    {.id = 378, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){261}}, .output_tensors = {1, (const int32_t[1]){278}} }, /* conv2d_378_pad_before */
+    {.id = 378, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){278}}, .output_tensors = {1, (const int32_t[1]){279}} }, /* conv2d_378 */
+    {.id = 379, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){279}}, .output_tensors = {1, (const int32_t[1]){280}} }, /* nl_379 */
+    {.id = 380, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){279, 280}}, .output_tensors = {1, (const int32_t[1]){281}} }, /* eltwise_380 */
+    {.id = 381, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){281}}, .output_tensors = {1, (const int32_t[1]){282}} }, /* conv2d_381_pad_before */
+    {.id = 381, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){282}}, .output_tensors = {1, (const int32_t[1]){283}} }, /* conv2d_381 */
+    {.id = 382, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){283}}, .output_tensors = {1, (const int32_t[1]){284}} }, /* nl_382 */
+    {.id = 383, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){283, 284}}, .output_tensors = {1, (const int32_t[1]){285}} }, /* eltwise_383 */
+    {.id = 384, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){285}}, .output_tensors = {1, (const int32_t[1]){286}} }, /* conv2d_384 */
+    {.id = 385, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){286}}, .output_tensors = {1, (const int32_t[1]){287}} }, /* transpose_385 */
+    {.id = 245, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){261}}, .output_tensors = {1, (const int32_t[1]){288}} }, /* pad_245 */
+    {.id = 246, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){288}}, .output_tensors = {1, (const int32_t[1]){289}} }, /* conv2d_246 */
+    {.id = 247, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){289}}, .output_tensors = {1, (const int32_t[1]){290}} }, /* nl_247 */
+    {.id = 248, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){289, 290}}, .output_tensors = {1, (const int32_t[1]){291}} }, /* eltwise_248 */
+    {.id = 249, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){291, 221}}, .output_tensors = {1, (const int32_t[1]){292}} }, /* concat_249 */
+    {.id = 250, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){292}}, .output_tensors = {1, (const int32_t[1]){293}} }, /* conv2d_250 */
+    {.id = 251, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){293}}, .output_tensors = {1, (const int32_t[1]){294}} }, /* nl_251 */
+    {.id = 252, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){293, 294}}, .output_tensors = {1, (const int32_t[1]){295}} }, /* eltwise_252 */
+    {.id = 254, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){295}}, .output_tensors = {1, (const int32_t[1]){296}} }, /* slice_254 */
+    {.id = 272, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){296}}, .output_tensors = {1, (const int32_t[1]){297}} }, /* conv2d_272 */
+    {.id = 273, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){297}}, .output_tensors = {1, (const int32_t[1]){298}} }, /* nl_273 */
+    {.id = 274, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){297, 298}}, .output_tensors = {1, (const int32_t[1]){299}} }, /* eltwise_274 */
+    {.id = 255, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){296}}, .output_tensors = {1, (const int32_t[1]){300}} }, /* conv2d_255 */
+    {.id = 256, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){300}}, .output_tensors = {1, (const int32_t[1]){301}} }, /* nl_256 */
+    {.id = 257, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){300, 301}}, .output_tensors = {1, (const int32_t[1]){302}} }, /* eltwise_257 */
+    {.id = 258, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){302}}, .output_tensors = {1, (const int32_t[1]){303}} }, /* conv2d_258_pad_before */
+    {.id = 258, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){303}}, .output_tensors = {1, (const int32_t[1]){304}} }, /* conv2d_258 */
+    {.id = 259, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){304}}, .output_tensors = {1, (const int32_t[1]){305}} }, /* nl_259 */
+    {.id = 260, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){304, 305}}, .output_tensors = {1, (const int32_t[1]){306}} }, /* eltwise_260 */
+    {.id = 261, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){306}}, .output_tensors = {1, (const int32_t[1]){307}} }, /* conv2d_261_pad_before */
+    {.id = 261, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){307}}, .output_tensors = {1, (const int32_t[1]){308}} }, /* conv2d_261 */
+    {.id = 262, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){308}}, .output_tensors = {1, (const int32_t[1]){309}} }, /* nl_262 */
+    {.id = 263, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){308, 309}}, .output_tensors = {1, (const int32_t[1]){310}} }, /* eltwise_263 */
+    {.id = 264, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){302, 310}}, .output_tensors = {1, (const int32_t[1]){311}} }, /* eltwise_264 */
+    {.id = 265, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){311}}, .output_tensors = {1, (const int32_t[1]){312}} }, /* conv2d_265_pad_before */
+    {.id = 265, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){312}}, .output_tensors = {1, (const int32_t[1]){313}} }, /* conv2d_265 */
+    {.id = 266, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){313}}, .output_tensors = {1, (const int32_t[1]){314}} }, /* nl_266 */
+    {.id = 267, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){313, 314}}, .output_tensors = {1, (const int32_t[1]){315}} }, /* eltwise_267 */
+    {.id = 268, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){315}}, .output_tensors = {1, (const int32_t[1]){316}} }, /* conv2d_268_pad_before */
+    {.id = 268, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){316}}, .output_tensors = {1, (const int32_t[1]){317}} }, /* conv2d_268 */
+    {.id = 269, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){317}}, .output_tensors = {1, (const int32_t[1]){318}} }, /* nl_269 */
+    {.id = 270, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){317, 318}}, .output_tensors = {1, (const int32_t[1]){319}} }, /* eltwise_270 */
+    {.id = 271, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){311, 319}}, .output_tensors = {1, (const int32_t[1]){320}} }, /* eltwise_271 */
+    {.id = 275, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){320, 299}}, .output_tensors = {1, (const int32_t[1]){321}} }, /* concat_275 */
+    {.id = 276, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){321}}, .output_tensors = {1, (const int32_t[1]){322}} }, /* conv2d_276 */
+    {.id = 277, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){322}}, .output_tensors = {1, (const int32_t[1]){323}} }, /* nl_277 */
+    {.id = 278, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){322, 323}}, .output_tensors = {1, (const int32_t[1]){324}} }, /* eltwise_278 */
+    {.id = 253, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){295}}, .output_tensors = {1, (const int32_t[1]){325}} }, /* slice_253 */
+    {.id = 279, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){325, 296, 324}}, .output_tensors = {1, (const int32_t[1]){326}} }, /* concat_279 */
+    {.id = 280, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){326}}, .output_tensors = {1, (const int32_t[1]){327}} }, /* conv2d_280 */
+    {.id = 281, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){327}}, .output_tensors = {1, (const int32_t[1]){328}} }, /* nl_281 */
+    {.id = 282, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){327, 328}}, .output_tensors = {1, (const int32_t[1]){329}} }, /* eltwise_282 */
+    {.id = 283, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){329}}, .output_tensors = {1, (const int32_t[1]){330}} }, /* conv2d_283_pad_before */
+    {.id = 283, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){330}}, .output_tensors = {1, (const int32_t[1]){331}} }, /* conv2d_283 */
+    {.id = 284, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){331}}, .output_tensors = {1, (const int32_t[1]){332}} }, /* nl_284 */
+    {.id = 285, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){331, 332}}, .output_tensors = {1, (const int32_t[1]){333}} }, /* eltwise_285 */
+    {.id = 286, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){333}}, .output_tensors = {1, (const int32_t[1]){334}} }, /* conv2d_286 */
+    {.id = 287, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){334}}, .output_tensors = {1, (const int32_t[1]){335}} }, /* nl_287 */
+    {.id = 288, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){334, 335}}, .output_tensors = {1, (const int32_t[1]){336}} }, /* eltwise_288 */
+    {.id = 289, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){336}}, .output_tensors = {1, (const int32_t[1]){337}} }, /* conv2d_289_pad_before */
+    {.id = 289, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){337}}, .output_tensors = {1, (const int32_t[1]){338}} }, /* conv2d_289 */
+    {.id = 290, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){338}}, .output_tensors = {1, (const int32_t[1]){339}} }, /* nl_290 */
+    {.id = 291, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){338, 339}}, .output_tensors = {1, (const int32_t[1]){340}} }, /* eltwise_291 */
+    {.id = 292, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){340}}, .output_tensors = {1, (const int32_t[1]){341}} }, /* conv2d_292 */
+    {.id = 293, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){341}}, .output_tensors = {1, (const int32_t[1]){342}} }, /* nl_293 */
+    {.id = 294, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){341, 342}}, .output_tensors = {1, (const int32_t[1]){343}} }, /* eltwise_294 */
+    {.id = 295, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){343}}, .output_tensors = {1, (const int32_t[1]){344}} }, /* conv2d_295 */
+    {.id = 296, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){344}}, .output_tensors = {1, (const int32_t[1]){345}} }, /* transpose_296 */
+    {.id = 369, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){329}}, .output_tensors = {1, (const int32_t[1]){346}} }, /* conv2d_369_pad_before */
+    {.id = 369, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){346}}, .output_tensors = {1, (const int32_t[1]){347}} }, /* conv2d_369 */
+    {.id = 370, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){347}}, .output_tensors = {1, (const int32_t[1]){348}} }, /* nl_370 */
+    {.id = 371, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){347, 348}}, .output_tensors = {1, (const int32_t[1]){349}} }, /* eltwise_371 */
+    {.id = 372, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){349}}, .output_tensors = {1, (const int32_t[1]){350}} }, /* conv2d_372_pad_before */
+    {.id = 372, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){350}}, .output_tensors = {1, (const int32_t[1]){351}} }, /* conv2d_372 */
+    {.id = 373, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){351}}, .output_tensors = {1, (const int32_t[1]){352}} }, /* nl_373 */
+    {.id = 374, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){351, 352}}, .output_tensors = {1, (const int32_t[1]){353}} }, /* eltwise_374 */
+    {.id = 375, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){353}}, .output_tensors = {1, (const int32_t[1]){354}} }, /* conv2d_375 */
+    {.id = 376, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){354}}, .output_tensors = {1, (const int32_t[1]){355}} }, /* transpose_376 */
+    {.id = 298, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){329}}, .output_tensors = {1, (const int32_t[1]){356}} }, /* pad_298 */
+    {.id = 299, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){356}}, .output_tensors = {1, (const int32_t[1]){357}} }, /* conv2d_299 */
+    {.id = 300, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){357}}, .output_tensors = {1, (const int32_t[1]){358}} }, /* nl_300 */
+    {.id = 301, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){357, 358}}, .output_tensors = {1, (const int32_t[1]){359}} }, /* eltwise_301 */
+    {.id = 302, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {2, (const int32_t[2]){359, 182}}, .output_tensors = {1, (const int32_t[1]){360}} }, /* concat_302 */
+    {.id = 303, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){360}}, .output_tensors = {1, (const int32_t[1]){361}} }, /* conv2d_303 */
+    {.id = 304, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){361}}, .output_tensors = {1, (const int32_t[1]){362}} }, /* nl_304 */
+    {.id = 305, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){361, 362}}, .output_tensors = {1, (const int32_t[1]){363}} }, /* eltwise_305 */
+    {.id = 307, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){363}}, .output_tensors = {1, (const int32_t[1]){364}} }, /* slice_307 */
+    {.id = 308, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){364}}, .output_tensors = {1, (const int32_t[1]){365}} }, /* conv2d_308_pad_before */
+    {.id = 308, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){365}}, .output_tensors = {1, (const int32_t[1]){366}} }, /* conv2d_308 */
+    {.id = 309, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){366}}, .output_tensors = {1, (const int32_t[1]){367}} }, /* nl_309 */
+    {.id = 310, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){366, 367}}, .output_tensors = {1, (const int32_t[1]){368}} }, /* eltwise_310 */
+    {.id = 311, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){368}}, .output_tensors = {1, (const int32_t[1]){369}} }, /* conv2d_311_pad_before */
+    {.id = 311, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){369}}, .output_tensors = {1, (const int32_t[1]){370}} }, /* conv2d_311 */
+    {.id = 312, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){370}}, .output_tensors = {1, (const int32_t[1]){371}} }, /* nl_312 */
+    {.id = 313, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){370, 371}}, .output_tensors = {1, (const int32_t[1]){372}} }, /* eltwise_313 */
+    {.id = 314, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){364, 372}}, .output_tensors = {1, (const int32_t[1]){373}} }, /* eltwise_314 */
+    {.id = 315, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){373}}, .output_tensors = {1, (const int32_t[1]){374}} }, /* conv2d_315 */
+    {.id = 316, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){374}}, .output_tensors = {1, (const int32_t[1]){375}} }, /* transpose_316 */
+    {.id = 323, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){375}}, .output_tensors = {1, (const int32_t[1]){376}} }, /* slice_323 */
+    {.id = 323, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){376}}, .output_tensors = {1, (const int32_t[1]){377}} }, /* slice_323_0_0_gemm_324_conversion */
+    {.id = 328, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){376}}, .output_tensors = {1, (const int32_t[1]){378}} }, /* transpose_328 */
+    {.id = 329, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){378}}, .output_tensors = {1, (const int32_t[1]){379}} }, /* conv2d_329_pad_before */
+    {.id = 329, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){379}}, .output_tensors = {1, (const int32_t[1]){380}} }, /* conv2d_329_pad_before_0_0_conv2d_329_conversion */
+    {.id = 329, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){380}}, .output_tensors = {1, (const int32_t[1]){381}} }, /* conv2d_329 */
+    {.id = 329, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){381}}, .output_tensors = {1, (const int32_t[1]){382}} }, /* conv2d_329_0_1_eltwise_330_conversion */
+    {.id = 319, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){375}}, .output_tensors = {1, (const int32_t[1]){383}} }, /* slice_319 */
+    {.id = 319, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){383}}, .output_tensors = {1, (const int32_t[1]){384}} }, /* slice_319_0_1_gemm_320_conversion */
+    {.id = 318, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){375}}, .output_tensors = {1, (const int32_t[1]){385}} }, /* slice_318 */
+    {.id = 320, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){385}}, .output_tensors = {1, (const int32_t[1]){386}} }, /* transpose_agemm_320_out */
+    {.id = 320, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){386}}, .output_tensors = {1, (const int32_t[1]){387}} }, /* transpose_agemm_320_out_0_0_gemm_320_conversion */
+    {.id = 320, .type = AI_LAYER_MATMUL_TYPE, .input_tensors = {3, (const int32_t[3]){387, 384, 2}}, .output_tensors = {1, (const int32_t[1]){388}} }, /* gemm_320 */
+    {.id = 320, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){388}}, .output_tensors = {1, (const int32_t[1]){389}} }, /* gemm_320_0_0_eltwise_321_conversion */
+    {.id = 321, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){389}}, .output_tensors = {1, (const int32_t[1]){390}} }, /* eltwise_321 */
+    {.id = 322, .type = AI_LAYER_SM_TYPE, .input_tensors = {1, (const int32_t[1]){390}}, .output_tensors = {1, (const int32_t[1]){391}} }, /* nl_322 */
+    {.id = 324, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){391}}, .output_tensors = {1, (const int32_t[1]){392}} }, /* transpose_bgemm_324_out */
+    {.id = 324, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){392}}, .output_tensors = {1, (const int32_t[1]){393}} }, /* transpose_bgemm_324_out_0_1_gemm_324_conversion */
+    {.id = 324, .type = AI_LAYER_MATMUL_TYPE, .input_tensors = {3, (const int32_t[3]){377, 393, 1}}, .output_tensors = {1, (const int32_t[1]){394}} }, /* gemm_324 */
+    {.id = 324, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){394}}, .output_tensors = {1, (const int32_t[1]){395}} }, /* gemm_324_0_0_transpose_326_conversion */
+    {.id = 326, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){395}}, .output_tensors = {1, (const int32_t[1]){396}} }, /* transpose_326 */
+    {.id = 330, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){396, 382}}, .output_tensors = {1, (const int32_t[1]){397}} }, /* eltwise_330 */
+    {.id = 331, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){397}}, .output_tensors = {1, (const int32_t[1]){398}} }, /* conv2d_331 */
+    {.id = 332, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){373, 398}}, .output_tensors = {1, (const int32_t[1]){399}} }, /* eltwise_332 */
+    {.id = 333, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){399}}, .output_tensors = {1, (const int32_t[1]){400}} }, /* conv2d_333 */
+    {.id = 334, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){400}}, .output_tensors = {1, (const int32_t[1]){401}} }, /* nl_334 */
+    {.id = 335, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){400, 401}}, .output_tensors = {1, (const int32_t[1]){402}} }, /* eltwise_335 */
+    {.id = 336, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){402}}, .output_tensors = {1, (const int32_t[1]){403}} }, /* conv2d_336 */
+    {.id = 337, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){399, 403}}, .output_tensors = {1, (const int32_t[1]){404}} }, /* eltwise_337 */
+    {.id = 306, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){363}}, .output_tensors = {1, (const int32_t[1]){405}} }, /* slice_306 */
+    {.id = 338, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){405, 364, 404}}, .output_tensors = {1, (const int32_t[1]){406}} }, /* concat_338 */
+    {.id = 339, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){406}}, .output_tensors = {1, (const int32_t[1]){407}} }, /* conv2d_339 */
+    {.id = 340, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){407}}, .output_tensors = {1, (const int32_t[1]){408}} }, /* nl_340 */
+    {.id = 341, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){407, 408}}, .output_tensors = {1, (const int32_t[1]){409}} }, /* eltwise_341 */
+    {.id = 342, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){409}}, .output_tensors = {1, (const int32_t[1]){410}} }, /* conv2d_342_pad_before */
+    {.id = 342, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){410}}, .output_tensors = {1, (const int32_t[1]){411}} }, /* conv2d_342 */
+    {.id = 343, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){411}}, .output_tensors = {1, (const int32_t[1]){412}} }, /* nl_343 */
+    {.id = 344, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){411, 412}}, .output_tensors = {1, (const int32_t[1]){413}} }, /* eltwise_344 */
+    {.id = 345, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){413}}, .output_tensors = {1, (const int32_t[1]){414}} }, /* conv2d_345 */
+    {.id = 346, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){414}}, .output_tensors = {1, (const int32_t[1]){415}} }, /* nl_346 */
+    {.id = 347, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){414, 415}}, .output_tensors = {1, (const int32_t[1]){416}} }, /* eltwise_347 */
+    {.id = 348, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){416}}, .output_tensors = {1, (const int32_t[1]){417}} }, /* conv2d_348_pad_before */
+    {.id = 348, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){417}}, .output_tensors = {1, (const int32_t[1]){418}} }, /* conv2d_348 */
+    {.id = 349, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){418}}, .output_tensors = {1, (const int32_t[1]){419}} }, /* nl_349 */
+    {.id = 350, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){418, 419}}, .output_tensors = {1, (const int32_t[1]){420}} }, /* eltwise_350 */
+    {.id = 351, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){420}}, .output_tensors = {1, (const int32_t[1]){421}} }, /* conv2d_351 */
+    {.id = 352, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){421}}, .output_tensors = {1, (const int32_t[1]){422}} }, /* nl_352 */
+    {.id = 353, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){421, 422}}, .output_tensors = {1, (const int32_t[1]){423}} }, /* eltwise_353 */
+    {.id = 354, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){423}}, .output_tensors = {1, (const int32_t[1]){424}} }, /* conv2d_354 */
+    {.id = 355, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){424}}, .output_tensors = {1, (const int32_t[1]){425}} }, /* transpose_355 */
+    {.id = 357, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){277, 345, 425}}, .output_tensors = {1, (const int32_t[1]){426}} }, /* concat_357 */
+    {.id = 358, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){426}}, .output_tensors = {1, (const int32_t[1]){427}} }, /* nl_358 */
+    {.id = 360, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){409}}, .output_tensors = {1, (const int32_t[1]){428}} }, /* conv2d_360_pad_before */
+    {.id = 360, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){428}}, .output_tensors = {1, (const int32_t[1]){429}} }, /* conv2d_360 */
+    {.id = 361, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){429}}, .output_tensors = {1, (const int32_t[1]){430}} }, /* nl_361 */
+    {.id = 362, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){429, 430}}, .output_tensors = {1, (const int32_t[1]){431}} }, /* eltwise_362 */
+    {.id = 363, .type = AI_LAYER_PAD_TYPE, .input_tensors = {1, (const int32_t[1]){431}}, .output_tensors = {1, (const int32_t[1]){432}} }, /* conv2d_363_pad_before */
+    {.id = 363, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){432}}, .output_tensors = {1, (const int32_t[1]){433}} }, /* conv2d_363 */
+    {.id = 364, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){433}}, .output_tensors = {1, (const int32_t[1]){434}} }, /* nl_364 */
+    {.id = 365, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){433, 434}}, .output_tensors = {1, (const int32_t[1]){435}} }, /* eltwise_365 */
+    {.id = 366, .type = AI_LAYER_CONV2D_TYPE, .input_tensors = {1, (const int32_t[1]){435}}, .output_tensors = {1, (const int32_t[1]){436}} }, /* conv2d_366 */
+    {.id = 367, .type = AI_LAYER_TRANSPOSE_TYPE, .input_tensors = {1, (const int32_t[1]){436}}, .output_tensors = {1, (const int32_t[1]){437}} }, /* transpose_367 */
+    {.id = 387, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){287, 355, 437}}, .output_tensors = {1, (const int32_t[1]){438}} }, /* concat_387 */
+    {.id = 388, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){438}}, .output_tensors = {1, (const int32_t[1]){439}} }, /* eltwise_388 */
+    {.id = 391, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){439}}, .output_tensors = {1, (const int32_t[1]){440}} }, /* slice_391 */
+    {.id = 392, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){440}}, .output_tensors = {1, (const int32_t[1]){441}} }, /* eltwise_392 */
+    {.id = 389, .type = AI_LAYER_SLICE_TYPE, .input_tensors = {1, (const int32_t[1]){439}}, .output_tensors = {1, (const int32_t[1]){442}} }, /* slice_389 */
+    {.id = 390, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){442}}, .output_tensors = {1, (const int32_t[1]){443}} }, /* eltwise_390 */
+    {.id = 395, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){441, 443}}, .output_tensors = {1, (const int32_t[1]){444}} }, /* eltwise_395 */
+    {.id = 393, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {2, (const int32_t[2]){443, 441}}, .output_tensors = {1, (const int32_t[1]){445}} }, /* eltwise_393 */
+    {.id = 394, .type = AI_LAYER_ELTWISE_INTEGER_TYPE, .input_tensors = {1, (const int32_t[1]){445}}, .output_tensors = {1, (const int32_t[1]){446}} }, /* eltwise_394 */
+    {.id = 396, .type = AI_LAYER_CONCAT_TYPE, .input_tensors = {3, (const int32_t[3]){446, 444, 427}}, .output_tensors = {1, (const int32_t[1]){447}} }, /* concat_396 */
+    {.id = 396, .type = AI_LAYER_NL_TYPE, .input_tensors = {1, (const int32_t[1]){447}}, .output_tensors = {1, (const int32_t[1]){448}} } /* concat_396_0_conversion */
   },
-  .n_nodes = 446
+  .n_nodes = 448
 };
 #endif
 
