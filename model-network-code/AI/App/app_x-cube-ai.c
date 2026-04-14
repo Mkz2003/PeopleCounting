@@ -85,7 +85,7 @@ STAI_NETWORK_CONTEXT_DECLARE(network_context, STAI_NETWORK_CONTEXT_SIZE)
 
 /* Activations buffers -------------------------------------------------------*/
 STAI_ALIGNED(32) 
-__attribute__((section(".ram_bss"))) static uint8_t heap_overlay_pool[STAI_NETWORK_ACTIVATION_1_SIZE_BYTES];
+__attribute__((section(".sdram_bss"))) static uint8_t heap_overlay_pool[STAI_NETWORK_ACTIVATION_1_SIZE_BYTES];
 
 
 /* Global c-array to handle the activations buffer */
@@ -246,7 +246,7 @@ int acquire_and_process_data()
 
   // 转换图像为int8
   // for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((ai_i8*)stai_input[0] + offset + i) = rgb888_To_ai_i8(*((uint8_t*)stai_input[0] + offset + i));
-  for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((int8_t*)stai_input[0] + offset + i) = ai_float_32_To_ai_i8(*((uint8_t*)stai_input[0] + offset + i) / 255.0f);
+  // for(size_t i = 0; i < ResizeHeight * ResizeWidth * 3; i++) *((int8_t*)stai_input[0] + offset + i) = ai_float_32_To_ai_i8(*((uint8_t*)stai_input[0] + offset + i) / 255.0f);
 
   #undef ResizeHeight
   #undef ResizeWidth 
@@ -257,37 +257,49 @@ int acquire_and_process_data()
 int post_process()
 {
   extern array_t* faces,  * eyes, * faceIDs;
-  CHANNEL* outData = (CHANNEL*)stai_output[0];
+  CHANNEL outData = {.code = (void*)stai_output[0],
+                      .score = (void*)stai_output[1]};
   array_clear(faces);
-  int32_t label = 0;
+  // int32_t label = 1;
+  // for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
+  // {
+  //   // 找认定label类为最大概率的检测框
+  //   uint8_t flag = 0;
+  //   for(int j = 0; j < STAI_NETWORK_OUT_1_HEIGHT; j++)
+  //   {
+  //     if(j != label && ai_i8_To_ai_float(outData->object[label][i]) <= ai_i8_To_ai_float(outData->object[j][i]))
+  //     {
+  //       flag = 1;
+  //       break;
+  //     }
+  //   }
+  //   if(flag || ai_i8_To_ai_float(outData->object[label][i]) <= 0.1f) continue;
+
+  //   // 存入归一化数据
+  //   faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
+
+  //   f->rect.x = (*outData.code)[i].x1;
+  //   f->rect.y = (*outData.code)[i].y1;
+  //   f->rect.width = (*outData.code)[i].x2 - (*outData.code)[i].x1;
+  //   f->rect.height = (*outData.code)[i].y2 - (*outData.code)[i].y1;
+  //   f->label = label;
+  //   f->prob = (*outData.score)[i].person;
+
+  //   array_push_back(faces, f);
+  // }
+  // get(faces, faceIDs);
+  int maxl = 0;
   for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
   {
-    // 找认定label类为最大概率的检测框
-    uint8_t flag = 0;
-    for(int j = 0; j < STAI_NETWORK_OUT_1_HEIGHT - 4; j++)
-    {
-      if(j != label && ai_i8_To_ai_float(outData->object[label][i]) <= ai_i8_To_ai_float(outData->object[j][i]))
-      {
-        flag = 1;
-        break;
-      }
-    }
-    if(flag || ai_i8_To_ai_float(outData->object[label][i]) <= 0.1f) continue;
-
-    // 存入归一化数据
-    faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
-
-    f->rect.x = (ai_i8_To_ai_float(outData->midx[i]) - ai_i8_To_ai_float(outData->w[i]) / 2);
-    f->rect.y = (ai_i8_To_ai_float(outData->midy[i]) - ai_i8_To_ai_float(outData->h[i]) / 2);
-    f->rect.width =  ai_i8_To_ai_float(outData->w[i]);
-    f->rect.height = ai_i8_To_ai_float(outData->h[i]);
-    f->label = label;
-    f->prob = ai_i8_To_ai_float(outData->object[label][i]);
-
-    array_push_back(faces, f);
+    if((*outData.score)[i].person > (*outData.score)[maxl].person) maxl = i;
   }
-  get(faces, faceIDs);
-
+  printf("%.2f, %.2f, %.2f, %.2f, %.2f\n",
+    (*outData.code)[maxl].x1,
+    (*outData.code)[maxl].y1,
+    (*outData.code)[maxl].x2,
+    (*outData.code)[maxl].y2,
+    (*outData.score)[maxl].person
+  );
   return 0;
 }
 
@@ -314,7 +326,7 @@ void main_loop() {
 void STM32CubeAI_Studio_AI_Init(void)
 {
     /* USER CODE BEGIN 5 */
-    memcpy(g_network_weights_array, _g_network_weights_array, sizeof(g_network_weights_array));
+    memcpy(g_network_weights_array, _g_network_weights_array, sizeof(_g_network_weights_array));
     aiInit();
     /* USER CODE END 5 */
 }
