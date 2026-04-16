@@ -214,10 +214,10 @@ void LCDRefreshTask(void *argument)
   uint16_t thickness = 2;		// Set the thickness of the rectangle (pixels).
 	bool fill = false;			// Avoid to fill the rectangle.
 
-  __attribute__((section(".ram_d3_bss"))) __IO static uint16_t adcval[3] = {0};
+  __attribute__((section(".ram_d3_bss"))) __IO static struct {uint16_t Vbat, Temp, Vref;} adcval = {0};
 
   HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED);
-  HAL_ADC_Start_DMA(&hadc3, (uint32_t*)adcval, 3);
+  HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&adcval, sizeof(adcval) / sizeof(uint16_t));
 
   float vrefint_cal_vref = (VREFINT_CAL_VREF / 1000.0f);
   float temperature_cal1_temp = TEMPSENSOR_CAL1_TEMP;
@@ -240,10 +240,10 @@ void LCDRefreshTask(void *argument)
 
     // sprintf(s, "ADC1: %d, ADC2: %d, ADC3: %d\n", adcval[0], adcval[1], adcval[2]);
     // CDC_Transmit_FS((uint8_t*)s, strlen(s));
-    float Vref = vrefint_cal_vref / vrefint_cal_addr * adcval[2];
-    float Vbat = adcval[0] * Vref / (float)(1 << 16) * 4.0f;
+    float Vref = vrefint_cal_vref / vrefint_cal_addr * adcval.Vref;
+    float Vbat = adcval.Vbat * Vref / (float)(1 << 16) * 4.0f;
     float Temp = temperature_cal1_temp
-                  + (adcval[1] * vrefint_cal_vref / Vref - tempsensor_cal1_addr)
+                  + (adcval.Temp * vrefint_cal_vref / Vref - tempsensor_cal1_addr)
                     * (temperature_cal2_temp - temperature_cal1_temp)
                     / (tempsensor_cal2_addr - tempsensor_cal1_addr);
 
@@ -272,11 +272,10 @@ void LCDRefreshTask(void *argument)
     // LCD_Clear();
     // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
-    // LCD_printf(15, 1,"%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
-    // LCD_printf(16, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
-    // LCD_printf(17, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
-    LCD_printf(18, 1, "Face: %d", array_length(faceIDs));
-    LCD_printf(19, 1,  "Screen: %.3f, Camera: %.3f, OD: %.3f", LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
+    // LCD_printf(16, 1,"%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
+    // LCD_printf(7, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
+    LCD_printf(18, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
+    LCD_printf(19, 1,  "Face: %d, Scr: %.3f, Cam: %.3f, OD: %.3f", array_length(faceIDs), LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
     LCD_SPI_Transmit();
 
     // uint32_t dstSize = JPEGEncode((uint8_t*)LCD_Buff, LCD_Height * LCD_Width * 2);
