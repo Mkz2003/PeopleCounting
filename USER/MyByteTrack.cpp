@@ -120,7 +120,7 @@ extern "C"
 {
 #endif  // __cplusplus
 
-BYTETracker tracker(1, 120);
+BYTETracker tracker(2, 120);
 
 void get(array_t* inArray, array_t* outArray) {
     std::vector<Object> raw_objects;
@@ -131,7 +131,7 @@ void get(array_t* inArray, array_t* outArray) {
         raw_objects.push_back({{f->rect.x, f->rect.y, f->rect.width, f->rect.height}, f->label, f->prob});
     }
 
-    std::vector<Object> objects = nms(raw_objects, 0.5f, true);
+    std::vector<Object> objects = nms(raw_objects, 0.3f, true);
     // std::vector<Object> objects = raw_objects;
     vector<STrack> output_stracks = tracker.update(objects);
     
