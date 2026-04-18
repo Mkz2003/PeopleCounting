@@ -37,18 +37,14 @@ void STM32CubeAI_Studio_AI_Process(void);
 
 typedef struct
 {
-    struct
-    {
-        ai_float background;
-        ai_float person;
-    } (*score)[STAI_NETWORK_OUT_1_CHANNEL];
+    ai_float (*score)[STAI_NETWORK_OUT_1_HEIGHT][STAI_NETWORK_OUT_1_CHANNEL];
     struct
     {
         ai_float x1;
         ai_float y1;
         ai_float x2;
         ai_float y2;
-    } (*code)[STAI_NETWORK_OUT_2_CHANNEL];
+    } (*code)[STAI_NETWORK_OUT_2_HEIGHT];
 }CHANNEL;
 
 /* USER CODE END includes */

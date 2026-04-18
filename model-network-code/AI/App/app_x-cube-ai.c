@@ -241,7 +241,7 @@ int acquire_and_process_data()
                         0, 
                         DMA2D_INPUT_RGB565, 
                         DMA2D_OUTPUT_RGB888,
-                        1
+                        0
                       );
 
   // 转换图像为int8
@@ -257,8 +257,8 @@ int acquire_and_process_data()
 int post_process()
 {
   extern array_t* faces,  * eyes, * faceIDs;
-  CHANNEL outData = {.code = (void*)stai_output[0],
-                      .score = (void*)stai_output[1]};
+  CHANNEL outData = {.score = (void*)stai_output[0],
+                      .code = (void*)stai_output[1]};
   array_clear(faces);
   // int32_t label = 1;
   // for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
@@ -288,17 +288,18 @@ int post_process()
   //   array_push_back(faces, f);
   // }
   // get(faces, faceIDs);
+  int label = 1;
   int maxl = 0;
   for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
   {
-    if((*outData.score)[i].person > (*outData.score)[maxl].person) maxl = i;
+    if((*outData.score)[i][label] > (*outData.score)[maxl][label]) maxl = i;
   }
   printf("%.2f, %.2f, %.2f, %.2f, %.2f\n",
     (*outData.code)[maxl].x1,
     (*outData.code)[maxl].y1,
     (*outData.code)[maxl].x2,
     (*outData.code)[maxl].y2,
-    (*outData.score)[maxl].person
+    (*outData.score)[maxl][label]
   );
   return 0;
 }
