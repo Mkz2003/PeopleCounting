@@ -60,6 +60,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/model-network-code/generated/network_data.c
     ${CMAKE_CURRENT_LIST_DIR}/model-network-code/generated/network.c
 
+    ${CMAKE_CURRENT_LIST_DIR}/USER/AreaTest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/USER/MyByteTrack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/BYTETracker.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ByteTrack/src/kalmanFilter.cpp

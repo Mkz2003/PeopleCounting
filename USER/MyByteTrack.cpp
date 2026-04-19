@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
+#include <set>
 
 #include "Eigen/Dense"
 #include "ByteTracker.h"
@@ -68,17 +69,17 @@ float compute_iou(const Object& a, const Object& b) {
 // 返回值：经过 NMS 过滤后的结果
 std::vector<Object> nms(const std::vector<Object>& objects, float iou_threshold, bool per_class = true) {
     std::vector<Object> result;
-    if (objects.empty()) return result;
+    if(objects.empty()) return result;
 
     // 如果按类别处理，则先按 label 分组，分别执行 NMS
-    if (per_class) {
+    if(per_class) {
         // 按 label 分组，每个 label 单独处理
         std::map<int, std::vector<Object>> class_objects;
-        for (const auto& obj : objects) {
+        for(const auto& obj : objects) {
             class_objects[obj.label].push_back(obj);
         }
 
-        for (auto& pair : class_objects) {
+        for(auto& pair : class_objects) {
             auto class_result = nms(pair.second, iou_threshold, false); // 递归调用，但关闭 per_class
             result.insert(result.end(), class_result.begin(), class_result.end());
         }
@@ -86,24 +87,25 @@ std::vector<Object> nms(const std::vector<Object>& objects, float iou_threshold,
     }
 
     // 全局 NMS（单个类别内或整体）
-    // 1. 按概率降序排序
     std::vector<Object> sorted = objects;
-    std::sort(sorted.begin(), sorted.end(),
-              [](const Object& a, const Object& b) { return a.prob > b.prob; });
 
-    std::vector<bool> suppressed(sorted.size(), false); // 标记是否被抑制
+    // 按概率降序排序
+    std::sort(sorted.begin(), sorted.end(), [](const Object& a, const Object& b) { return a.prob > b.prob; });
 
-    for (size_t i = 0; i < sorted.size(); ++i) {
-        if (suppressed[i]) continue;
+    // 标记是否被抑制
+    std::vector<bool> suppressed(sorted.size(), false);
+
+    for(size_t i = 0; i < sorted.size(); ++i) {
+        if(suppressed[i]) continue;
 
         // 保留当前框
         result.push_back(sorted[i]);
 
         // 抑制与当前框 IoU 过大的后续框
-        for (size_t j = i + 1; j < sorted.size(); ++j) {
-            if (suppressed[j]) continue;
+        for(size_t j = i + 1; j < sorted.size(); ++j) {
+            if(suppressed[j]) continue;
             float iou = compute_iou(sorted[i], sorted[j]);
-            if (iou > iou_threshold) {
+            if(iou > iou_threshold) {
                 suppressed[j] = true;
             }
         }
@@ -123,44 +125,84 @@ extern "C"
 BYTETracker tracker(2, 120);
 
 void get(array_t* inArray, array_t* outArray) {
-    std::vector<Object> raw_objects;
-    raw_objects.reserve(array_length(inArray));
 
+    // 多边形状态
+    extern std::set<int> basicPolySet;
+    extern Polygon poly;
+    std::set<int>& polySet = *static_cast<std::set<int>*>(poly.set);
+    int objectNum = poly.objectNum;
+
+    // 搬运原始目标数据
+    std::vector<Object> raw_objects;
     for(int i = 0; i < array_length(inArray); i++) {
         faceObject_t* f = static_cast<faceObject_t*>(array_at(inArray, i));
         raw_objects.push_back({{f->rect.x, f->rect.y, f->rect.width, f->rect.height}, f->label, f->prob});
     }
 
+    // 非极大值抑制（NonMaxSuppresion）
     std::vector<Object> objects = nms(raw_objects, 0.3f, true);
     // std::vector<Object> objects = raw_objects;
+    
+    // ByteTrack内容更新
     vector<STrack> output_stracks = tracker.update(objects);
     
     array_clear(outArray);
-    for (int i = 0; i < output_stracks.size(); i++)
-    {
-        vector<float> tlwh = output_stracks[i].tlwh;
+    for(int i = 0; i < output_stracks.size(); i++) {
+        vector<float> tlwh = output_stracks[i].tlwh;    //x, y, w, h
 
 
         bool vertical = tlwh[2] / tlwh[3] > 1.6f;
-        if((tlwh[2] * tlwh[3] > 20.0f && !vertical) || 1)
-        {
+        if((tlwh[2] * tlwh[3] > 20.0f && !vertical) || 1) {
             int id = output_stracks[i].track_id;
             uint32_t color = tracker.get_color(id);
             float score = output_stracks[i].score;
 
             faceIDObject_t* faceID = (faceIDObject_t*)xalloc(sizeof(faceIDObject_t));
 
-            faceID->r.x = (tlwh[0]);
-            faceID->r.y = (tlwh[1]);
-            faceID->r.width = (tlwh[2]);
-            faceID->r.height = (tlwh[3]);
+            faceID->r.x = tlwh[0];
+            faceID->r.y = tlwh[1];
+            faceID->r.width = tlwh[2];
+            faceID->r.height = tlwh[3];
+            faceID->point.x = tlwh[0] + tlwh[2] / 2.0f;
+            faceID->point.y = tlwh[1] + tlwh[3];
             faceID->id = id;
             faceID->color = color;
             faceID->score = score;
 
+            bool isInArea = PointInPolygon(faceID->point, &poly);
+            if(isInArea) {
+                faceID->zone = poly.id;
+            } else {
+                faceID->zone = 0;
+            }
+
+            // 先判断原先所有空间都不包含点id，把id添加到对应空间中
+            if(basicPolySet.find(id) == basicPolySet.end() && polySet.find(id) == polySet.end()) {
+                if(isInArea) {
+                    polySet.insert(id);
+                } else {
+                    basicPolySet.insert(id);
+                }   
+            }
+            // 再判断原先是否有区域包含点id且区域发生变化，全部赶到basic空间中
+            if(polySet.find(id) != polySet.end() && isInArea == false) {
+                polySet.erase(id);
+                basicPolySet.insert(id);
+                objectNum -= 1;
+            }
+            // 最后判断现在basic空间是否包含点id且区域发生变化，赶到对应空间中
+            if(basicPolySet.find(id) != basicPolySet.end() && isInArea == true) {
+                basicPolySet.erase(id);
+                polySet.insert(id);
+                objectNum += 1;
+            }
+
+            // 更新所有目标位置
             array_push_back(outArray, faceID);
         }
     }
+    // 更新区域内目标数
+    poly.objectNum = objectNum >= 0 ? objectNum : 0;
 }
 
 #ifdef __cplusplus

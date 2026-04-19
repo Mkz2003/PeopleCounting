@@ -52,6 +52,7 @@
 TickType_t DetectObject_Tick_Start = 0, DetectObject_Tick_End = 0;         	// 用于保存当前的时间计数值
 float DetectObject_FPS = 0.0f;
 array_t* faces = NULL,  * eyes = NULL, * faceIDs = NULL;
+Polygon poly = {0};
 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
@@ -211,8 +212,6 @@ void LCDRefreshTask(void *argument)
   extern uint16_t* pCamera_Image;
   extern __IO float OV5640_FPS ;      // 帧率
   extern uint16_t LCD_Buff[LCD_Height][LCD_Width];
-  uint16_t thickness = 2;		// Set the thickness of the rectangle (pixels).
-	bool fill = false;			// Avoid to fill the rectangle.
 
   __attribute__((section(".ram_d3_bss"))) __IO static struct {uint16_t Vbat, Temp, Vref;} adcval = {0};
 
@@ -250,7 +249,18 @@ void LCDRefreshTask(void *argument)
     image_t srcImg, dstImg;
     STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
     STM32Ipl_Init(&dstImg, LCD_Height, LCD_Width, IMAGE_BPP_RGB565, (uint8_t*)LCD_Buff);
-    STM32Ipl_Rotation270(&dstImg, &srcImg);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
+    STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
+    
+    for (int i = 0; i < poly.n; ++i)
+    {
+        int n = poly.n;
+        const Point* v = poly.vertices;
+        const Point* a = &v[i];
+        const Point* b = &v[(i + 1) % n];  // 边 a->b
+        point_t _a = {.x = (int16_t)(a->x * LCD_Height), .y = (int16_t)(a->y * LCD_Width)};
+        point_t _b = {.x = (int16_t)(b->x * LCD_Height), .y = (int16_t)(b->y * LCD_Width)};
+        STM32Ipl_DrawLine(&dstImg, &_a, &_b, STM32IPL_COLOR_GREEN, 1);
+    }
 
     for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
     {
@@ -260,21 +270,36 @@ void LCDRefreshTask(void *argument)
         // uint16_t y = f->r.y * LCD_Height;
         // uint16_t w = f->r.width * LCD_Height;
         // uint16_t h = f->r.height * LCD_Height;
-        uint16_t x = f->r.y * LCD_Height - (LCD_Height - LCD_Width) / 2;
-        uint16_t y = (1.0f - f->r.x - f->r.width) * LCD_Height;
-        uint16_t w = f->r.height * LCD_Height;
-        uint16_t h = f->r.width * LCD_Height;
+        uint16_t x = f->r.x * LCD_Height;
+        uint16_t y = f->r.y * LCD_Width;
+        uint16_t w = f->r.width * LCD_Height;
+        uint16_t h = f->r.height * LCD_Width;
         stm32ipl_color_t color = f->color;
-        STM32Ipl_DrawRectangle(&dstImg, x, y, w, h, color, thickness, fill);
-        LCD_printf(x / 12, (LCD_Height - (y + h)) / 6, "%d", f->id);
-        LCD_printf((x + w) / 12, (LCD_Height - (y + h)) / 6, "%.2f", f->score);
-    }   
+        STM32Ipl_DrawRectangle(&dstImg, x, y, w, h, color, 2, false);
+        STM32Ipl_DrawCircle(&dstImg, (uint16_t)(f->point.x * LCD_Height), (uint16_t)(f->point.y * LCD_Width), 4, f->color, 1, 1);
+    }
+
+    STM32Ipl_Rotation270(&dstImg, &dstImg);
+
+    for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
+    {
+        faceIDObject_t *f = array_at(faceIDs, i);
+        uint16_t x = f->r.x * LCD_Height;
+        uint16_t y = f->r.y * LCD_Width;
+        uint16_t w = f->r.width * LCD_Height;
+        uint16_t h = f->r.height * LCD_Width;
+        LCD_printf(y / 12, x / 6, "%d", f->id);
+        LCD_printf(y / 12, (x + w) / 6, "%.2f", f->score);
+        LCD_printf((y + h) / 12, (x + w) / 6, "%d", f->zone);
+    }
+
     // LCD_Clear();
     // LCD_ShowImage(0, 0, (uint16_t *)LCDBackImage);  // 将图像数据复制到屏幕
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
     // LCD_printf(16, 1,"%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
     // LCD_printf(7, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
-    LCD_printf(18, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
+    // LCD_printf(18, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
+    LCD_printf(18, 1, "In: %d", poly.objectNum);
     LCD_printf(19, 1,  "Face: %d, Scr: %.3f, Cam: %.3f, OD: %.3f", array_length(faceIDs), LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
     LCD_SPI_Transmit();
 
@@ -358,6 +383,8 @@ void ObjectDetectTask(void *argument)
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
   extern void xfree(void *mem);
 
+  PolygonInit(&poly);
+
   STM32IPL_MemInit();
   array_alloc(&faces, xfree);
   array_alloc(&eyes, xfree);
@@ -379,6 +406,7 @@ void ObjectDetectTask(void *argument)
 
       STM32CubeAI_Studio_AI_Process();
 
+      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, poly.objectNum > 0);
     }
     else
     {

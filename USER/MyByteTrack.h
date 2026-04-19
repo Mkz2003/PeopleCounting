@@ -8,6 +8,7 @@ extern "C"
 
 
 #include "stm32ipl_imlib.h"
+#include "AreaTest.h"
 
 void get(array_t* inArray, array_t* outArray);
 
@@ -25,9 +26,11 @@ typedef struct
     struct {
 		float x, y, width, height;
 	} r;
+    Point point;
     int id;
     uint32_t color;
     float score;
+    int zone;
 }faceIDObject_t;
 
 

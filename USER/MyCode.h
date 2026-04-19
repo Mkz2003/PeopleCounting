@@ -14,7 +14,6 @@
 #include "quadspi.h"
 #include "rtc.h"
 #include "spi.h"
-#include "tim.h"
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
@@ -36,6 +35,7 @@
 #include "array.h"
 #include "stm32ipl_imlib.h"
 #include "stm32ipl_mem_alloc.h"
+#include "AreaTest.h"
 
 void Setup(void);
 void CDC_printf(const char* fmt, ...);

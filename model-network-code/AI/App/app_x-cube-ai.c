@@ -277,10 +277,13 @@ int post_process()
     // 存入归一化数据
     faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));
 
-    f->rect.x = (outData->midx[i] - outData->w[i] / 2);
-    f->rect.y = (outData->midy[i] - outData->h[i] / 2);
+    const float y_offset = (1.0f - (float)Display_Height / (float)Display_Width) / 2.0f;
+    const float y_ratio = (float)Display_Height / (float)Display_Width;
+    
+    f->rect.x = (outData->midx[i] - outData->w[i] / 2.0f);
+    f->rect.y = ((outData->midy[i] - outData->h[i] / 2.0f) - y_offset) / y_ratio;
     f->rect.width =  outData->w[i];
-    f->rect.height = outData->h[i];
+    f->rect.height = outData->h[i] / y_ratio;
     f->label = label;
     f->prob = outData->object[label][i];
 
