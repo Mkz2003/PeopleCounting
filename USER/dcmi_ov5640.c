@@ -861,7 +861,7 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
 
         }  
 
-     copyInProgress = 0;
+    	copyInProgress = 0;
     }
 
 }

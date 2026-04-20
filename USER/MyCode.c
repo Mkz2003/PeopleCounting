@@ -4,8 +4,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-uint8_t PRINT_UART_LOCKED = 0;
-
 void Setup(void)
 {
     QSPI_W25Qxx_Init();
@@ -43,7 +41,7 @@ int fputc(int ch, FILE *f)
     return ch;
 }
 
-void CDC_printf(const char* fmt, ...)
+int8_t CDC_printf(const char* fmt, ...)
 {
     static char BUF[128] = {0};
     static va_list ap;
@@ -55,7 +53,8 @@ void CDC_printf(const char* fmt, ...)
 
     BUF[127] = '\0';
 
-    CDC_Transmit_FS((uint8_t*)BUF, strlen(BUF));
+    int8_t status = CDC_Transmit_FS((uint8_t*)BUF, strlen(BUF));
+    return status;
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
@@ -74,9 +73,14 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
     }
 }
 
+CDC_Receive_t CDC_Receive;
+
 int8_t CDC_Receive_Callback(uint8_t* Buf, uint32_t Len)
 {
-    CDC_Transmit_FS(Buf, Len);
-
+    CDC_Receive.received = 0;
+    CDC_Receive.Buf = Buf;
+    CDC_Receive.Len = Len;
+    CDC_Receive.received = 1;
+    
     return (USBD_OK);
 }
