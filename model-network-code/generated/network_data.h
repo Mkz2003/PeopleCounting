@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    network_data.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-04-13T19:59:33+0800
+  * @date    2026-04-20T16:10:04+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * Copyright (c) 2026 STMicroelectronics.
@@ -18,8 +18,8 @@
 #define STAI_NETWORK_DATA_H
 #include "stai.h"
 STAI_ALIGNED(8)
-extern const uint64_t _g_network_weights_array[305667];
+extern const uint64_t _g_network_weights_array[301287];
 STAI_ALIGNED(8)
-extern typeof(_g_network_weights_array) g_network_weights_array;
+extern uint64_t g_network_weights_array[301287];
 #endif  /* STAI_NETWORK_DATA_H */
 

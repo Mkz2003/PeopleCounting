@@ -122,7 +122,7 @@ extern "C"
 {
 #endif  // __cplusplus
 
-BYTETracker tracker(2, 120);
+BYTETracker tracker(2, 60);
 
 void get(array_t* inArray, array_t* outArray) {
 

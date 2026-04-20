@@ -23,8 +23,8 @@ typedef struct {
     void* set;
 } Polygon;
 
-uint8_t PointInPolygon(Point p, const Polygon* poly);
-uint8_t PolygonInit(Polygon* poly);
+int8_t PointInPolygon(Point p, const Polygon* poly);
+int8_t PolygonInit(Polygon* poly);
 
 
 #ifdef __cplusplus

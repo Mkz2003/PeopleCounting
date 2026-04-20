@@ -37,12 +37,16 @@
 #include "stm32ipl_mem_alloc.h"
 #include "AreaTest.h"
 
-void Setup(void);
-void CDC_printf(const char* fmt, ...);
-
-static inline float fast_sigmoid(float x)
+typedef struct
 {
-    return 0.5f * (x / (1.0f + fabsf(x))) + 0.5f;
-}
+    __IO uint8_t* Buf;
+    __IO uint32_t Len;
+    __IO uint8_t received;
+} CDC_Receive_t;
+
+void Setup(void);
+int8_t CDC_printf(const char* fmt, ...);
+
+
 
 #endif /* __MYCODE_H */

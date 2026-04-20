@@ -17,7 +17,7 @@ static const float EPS = 1e-9f;
  * 使用经典的射线交叉算法（Even-Odd Rule）
  * 边界情况处理：认为点在边上也算在内部
  */
-uint8_t PointInPolygon(Point p, const Polygon* poly)
+int8_t PointInPolygon(Point p, const Polygon* poly)
 {
     int count = 0;
     int n = poly->n;
@@ -64,22 +64,22 @@ uint8_t PointInPolygon(Point p, const Polygon* poly)
     return (count % 2) == 1;
 }
 
-Point vertices[] = {{0.2f, 0.2f},
-                    {0.8f, 0.1f},
-                    {0.7f, 0.6f},
-                    {0.4f, 0.4f},
-                    {0.5f, 0.8f},
-                    {0.1f, 0.7f}
+Point vertices[] = {{1737./4032., 1821./3024.},
+                    {1737./4032., 2215./3024.},
+                    {1659./4032., 2303./3024.},
+                    {2491./4032., 2303./3024.},
+                    {2457./4032., 2215./3024.},
+                    {2457./4032., 1821./3024.}
 };
 
-uint8_t PolygonInit(Polygon* poly)
+int8_t PolygonInit(Polygon* poly)
 {
     if(poly == NULL) return -1;
 
     // 定义凹多边形顶点（逆时针）
 
     poly->vertices = vertices;
-    poly->n = 6;
+    poly->n = sizeof(vertices) / sizeof(Point);
     poly->id = 1;
     poly->objectNum = 0;
     poly->set = new std::set<int>{};

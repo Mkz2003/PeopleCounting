@@ -212,6 +212,7 @@ void LCDRefreshTask(void *argument)
   extern uint16_t* pCamera_Image;
   extern __IO float OV5640_FPS ;      // 帧率
   extern uint16_t LCD_Buff[LCD_Height][LCD_Width];
+  extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
 
   __attribute__((section(".ram_d3_bss"))) __IO static struct {uint16_t Vbat, Temp, Vref;} adcval = {0};
 
@@ -246,10 +247,12 @@ void LCDRefreshTask(void *argument)
                     * (temperature_cal2_temp - temperature_cal1_temp)
                     / (tempsensor_cal2_addr - tempsensor_cal1_addr);
 
-    image_t srcImg, dstImg;
+    image_t srcImg, midImg, dstImg;
     STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
+    STM32Ipl_Init(&midImg, LCD_Height, LCD_Width, IMAGE_BPP_RGB565, (uint8_t*)LCDBackImage);
     STM32Ipl_Init(&dstImg, LCD_Height, LCD_Width, IMAGE_BPP_RGB565, (uint8_t*)LCD_Buff);
-    STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
+    // STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
+    DMA2D_MemCopy(srcImg.data, midImg.data, midImg.w, midImg.h, 0, 0, DMA2D_INPUT_RGB565);
     
     for (int i = 0; i < poly.n; ++i)
     {
@@ -259,7 +262,7 @@ void LCDRefreshTask(void *argument)
         const Point* b = &v[(i + 1) % n];  // 边 a->b
         point_t _a = {.x = (int16_t)(a->x * LCD_Height), .y = (int16_t)(a->y * LCD_Width)};
         point_t _b = {.x = (int16_t)(b->x * LCD_Height), .y = (int16_t)(b->y * LCD_Width)};
-        STM32Ipl_DrawLine(&dstImg, &_a, &_b, STM32IPL_COLOR_GREEN, 1);
+        STM32Ipl_DrawLine(&midImg, &_a, &_b, STM32IPL_COLOR_GREEN, 1);
     }
 
     for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
@@ -275,11 +278,11 @@ void LCDRefreshTask(void *argument)
         uint16_t w = f->r.width * LCD_Height;
         uint16_t h = f->r.height * LCD_Width;
         stm32ipl_color_t color = f->color;
-        STM32Ipl_DrawRectangle(&dstImg, x, y, w, h, color, 2, false);
-        STM32Ipl_DrawCircle(&dstImg, (uint16_t)(f->point.x * LCD_Height), (uint16_t)(f->point.y * LCD_Width), 4, f->color, 1, 1);
+        STM32Ipl_DrawRectangle(&midImg, x, y, w, h, color, 2, false);
+        STM32Ipl_DrawCircle(&midImg, (uint16_t)(f->point.x * LCD_Height), (uint16_t)(f->point.y * LCD_Width), 4, f->color, 1, 1);
     }
 
-    STM32Ipl_Rotation270(&dstImg, &dstImg);
+    STM32Ipl_Rotation270(&dstImg, &midImg);
 
     for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
     {
@@ -341,8 +344,10 @@ void ImageProcessTask(void *argument)
 {
   /* USER CODE BEGIN ImageProcessTask */
 
-  extern OV5640_FrameState ov5640_FrameState;
+  extern CDC_Receive_t CDC_Receive;
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
+  extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
+  extern uint8_t LCD_SPI_LOCKED;
 
   JPEGEncodeInit();
 
@@ -354,12 +359,21 @@ void ImageProcessTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    if(ov5640_FrameState.imageProcessState)  // 等待一帧数据传输完成
+    // if(ov5640_FrameState.imageProcessState)  // 等待一帧数据传输完成
+    // {
+    //   ov5640_FrameState.imageProcessState = 0;
+    //   uint32_t dstSize = JPEGEncode((uint8_t*)pCamera_Image, Display_Height * Display_Width * 2);
+    //   while(CDC_Transmit_FS(jpeg_buffer, dstSize) != USBD_OK) osThreadYield();
+    // }
+
+    if(CDC_Receive.received)  // 等待一帧数据传输完成
     {
-      ov5640_FrameState.imageProcessState = 0;
-      uint32_t dstSize = JPEGEncode((uint8_t*)pCamera_Image, Display_Height * Display_Width * 2);
-      while(CDC_Transmit_FS(jpeg_buffer, dstSize) != USBD_OK) osThreadYield();
-    }
+      CDC_Receive.received = 0;
+      uint8_t* Buf = CDC_Receive.Buf;
+      uint32_t Len = CDC_Receive.Len;
+
+      while(CDC_Transmit_FS(Buf, Len) != USBD_OK) osThreadYield();
+    }    
     else
     {
       osThreadYield();
@@ -407,6 +421,16 @@ void ObjectDetectTask(void *argument)
       STM32CubeAI_Studio_AI_Process();
 
       HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, poly.objectNum > 0);
+
+      TickType_t tick = xTaskGetTickCount();
+
+      CDC_printf("[%d:%02d:%02d:%02d:%03d]\n"
+                "In: %d\n"
+                "Face: %d, OD: %.3f\n"
+                "\n",
+                tick / 86400000, tick / 3600000 % 24, tick / 60000 % 60, tick / 1000 % 60, tick % 1000,
+                poly.objectNum,
+                array_length(faceIDs), DetectObject_FPS);
     }
     else
     {
