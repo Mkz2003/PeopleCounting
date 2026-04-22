@@ -127,9 +127,9 @@ BYTETracker tracker(2, 60);
 void get(array_t* inArray, array_t* outArray) {
 
     // 多边形状态
-    extern std::map<int, int> basicPolySet;
+    extern std::map<int, int> basicPolyMap;
     extern Polygon poly;
-    std::map<int, int>& polySet = *static_cast<std::map<int, int>*>(poly.set);
+    std::map<int, int>& polyMap = *static_cast<std::map<int, int>*>(poly.map);
     int objectNum = poly.objectNum;
     const int maxLostTime = 5;
 
@@ -178,32 +178,32 @@ void get(array_t* inArray, array_t* outArray) {
             }
 
             // 先判断原先所有空间都不包含点id，把id添加到对应空间中
-            if(basicPolySet.find(id) == basicPolySet.end() && polySet.find(id) == polySet.end()) {
+            if(basicPolyMap.find(id) == basicPolyMap.end() && polyMap.find(id) == polyMap.end()) {
                 if(isInArea) {
-                    polySet[id] = 0;
+                    polyMap[id] = 0;
                 } else {
-                    basicPolySet[id] = 0;
+                    basicPolyMap[id] = 0;
                 }   
             }
 
             // 再判断原先是否有区域包含点id且区域发生变化，全部赶到basic空间中，点id就更新其Lost为0
-            if(polySet.find(id) != polySet.end()) {
+            if(polyMap.find(id) != polyMap.end()) {
                 if(isInArea) {
-                    polySet[id] = 0;
+                    polyMap[id] = 0;
                 } else {
-                    polySet.erase(id);
-                    basicPolySet[id] = 0;
+                    polyMap.erase(id);
+                    basicPolyMap[id] = 0;
                     objectNum -= 1;                    
                 }
             }
 
             // 最后判断现在basic空间是否包含点id且区域发生变化，赶到对应空间中，点id就更新其Lost为0
-            if(basicPolySet.find(id) != basicPolySet.end()) {
+            if(basicPolyMap.find(id) != basicPolyMap.end()) {
                 if(!isInArea) {
-                    basicPolySet[id] = 0;
+                    basicPolyMap[id] = 0;
                 } else {
-                    basicPolySet.erase(id);
-                    polySet[id] = 0;
+                    basicPolyMap.erase(id);
+                    polyMap[id] = 0;
                     objectNum += 1;                   
                 }
             }
@@ -214,19 +214,19 @@ void get(array_t* inArray, array_t* outArray) {
     }
 
     // 对未出现的点id进行Lost判断，达到阈值时删除点id
-    for(auto it = basicPolySet.begin(); it != basicPolySet.end(); ) {
+    for(auto it = basicPolyMap.begin(); it != basicPolyMap.end(); ) {
         it->second += 1;
         if(it->second > maxLostTime) {
-            it = basicPolySet.erase(it);
+            it = basicPolyMap.erase(it);
         } else {
             it++;
         }
     }
 
-    for(auto it = polySet.begin(); it != polySet.end(); ) {
+    for(auto it = polyMap.begin(); it != polyMap.end(); ) {
         it->second += 1;
         if(it->second > maxLostTime) {
-            it = polySet.erase(it);
+            it = polyMap.erase(it);
         } else {
             it++;
         }

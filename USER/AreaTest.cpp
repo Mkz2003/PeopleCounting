@@ -3,7 +3,7 @@
 #include <cmath>
 #include <map>
 
-std::map<int, int> basicPolySet{};
+std::map<int, int> basicPolyMap{};
 
 #ifdef __cplusplus
 extern "C"
@@ -83,7 +83,7 @@ int8_t PolygonInit(Polygon* poly)
     poly->n = sizeof(vertices) / sizeof(Point);
     poly->id = 1;
     poly->objectNum = 0;
-    poly->set = new std::map<int, int>{};
+    poly->map = new std::map<int, int>{};
     return 1;
 }
 

@@ -20,7 +20,7 @@ typedef struct {
     int n;            // 顶点个数
     int id;
     int objectNum;
-    void* set;
+    void* map;
 } Polygon;
 
 int8_t PointInPolygon(Point p, const Polygon* poly);
