@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
-#include <set>
+#include <map>
 
 #include "Eigen/Dense"
 #include "ByteTracker.h"
@@ -127,10 +127,11 @@ BYTETracker tracker(2, 60);
 void get(array_t* inArray, array_t* outArray) {
 
     // 多边形状态
-    extern std::set<int> basicPolySet;
+    extern std::map<int, int> basicPolySet;
     extern Polygon poly;
-    std::set<int>& polySet = *static_cast<std::set<int>*>(poly.set);
+    std::map<int, int>& polySet = *static_cast<std::map<int, int>*>(poly.set);
     int objectNum = poly.objectNum;
+    const int maxLostTime = 5;
 
     // 搬运原始目标数据
     std::vector<Object> raw_objects;
@@ -179,28 +180,58 @@ void get(array_t* inArray, array_t* outArray) {
             // 先判断原先所有空间都不包含点id，把id添加到对应空间中
             if(basicPolySet.find(id) == basicPolySet.end() && polySet.find(id) == polySet.end()) {
                 if(isInArea) {
-                    polySet.insert(id);
+                    polySet[id] = 0;
                 } else {
-                    basicPolySet.insert(id);
+                    basicPolySet[id] = 0;
                 }   
             }
-            // 再判断原先是否有区域包含点id且区域发生变化，全部赶到basic空间中
-            if(polySet.find(id) != polySet.end() && isInArea == false) {
-                polySet.erase(id);
-                basicPolySet.insert(id);
-                objectNum -= 1;
+
+            // 再判断原先是否有区域包含点id且区域发生变化，全部赶到basic空间中，点id就更新其Lost为0
+            if(polySet.find(id) != polySet.end()) {
+                if(isInArea) {
+                    polySet[id] = 0;
+                } else {
+                    polySet.erase(id);
+                    basicPolySet[id] = 0;
+                    objectNum -= 1;                    
+                }
             }
-            // 最后判断现在basic空间是否包含点id且区域发生变化，赶到对应空间中
-            if(basicPolySet.find(id) != basicPolySet.end() && isInArea == true) {
-                basicPolySet.erase(id);
-                polySet.insert(id);
-                objectNum += 1;
+
+            // 最后判断现在basic空间是否包含点id且区域发生变化，赶到对应空间中，点id就更新其Lost为0
+            if(basicPolySet.find(id) != basicPolySet.end()) {
+                if(!isInArea) {
+                    basicPolySet[id] = 0;
+                } else {
+                    basicPolySet.erase(id);
+                    polySet[id] = 0;
+                    objectNum += 1;                   
+                }
             }
 
             // 更新所有目标位置
             array_push_back(outArray, faceID);
         }
     }
+
+    // 对未出现的点id进行Lost判断，达到阈值时删除点id
+    for(auto it = basicPolySet.begin(); it != basicPolySet.end(); ) {
+        it->second += 1;
+        if(it->second > maxLostTime) {
+            it = basicPolySet.erase(it);
+        } else {
+            it++;
+        }
+    }
+
+    for(auto it = polySet.begin(); it != polySet.end(); ) {
+        it->second += 1;
+        if(it->second > maxLostTime) {
+            it = polySet.erase(it);
+        } else {
+            it++;
+        }
+    }   
+
     // 更新区域内目标数
     poly.objectNum = objectNum >= 0 ? objectNum : 0;
 }

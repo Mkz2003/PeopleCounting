@@ -1,8 +1,9 @@
 #include "AreaTest.h"
-#include <cmath>
-#include <set>
 
-std::set<int> basicPolySet{};
+#include <cmath>
+#include <map>
+
+std::map<int, int> basicPolySet{};
 
 #ifdef __cplusplus
 extern "C"
@@ -82,7 +83,7 @@ int8_t PolygonInit(Polygon* poly)
     poly->n = sizeof(vertices) / sizeof(Point);
     poly->id = 1;
     poly->objectNum = 0;
-    poly->set = new std::set<int>{};
+    poly->set = new std::map<int, int>{};
     return 1;
 }
 
