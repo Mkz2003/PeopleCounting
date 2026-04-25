@@ -65,12 +65,10 @@ int8_t PointInPolygon(Point p, const Polygon* poly)
     return (count % 2) == 1;
 }
 
-Point vertices[] = {{1737./4032., 1821./3024.},
-                    {1737./4032., 2215./3024.},
-                    {1659./4032., 2303./3024.},
-                    {2491./4032., 2303./3024.},
-                    {2457./4032., 2215./3024.},
-                    {2457./4032., 1821./3024.}
+Point vertices[] = {{0.5f, 0.f},
+                    {1.f, 0.f},
+                    {1.f, 1.f},
+                    {0.5f, 1.f},
 };
 
 int8_t PolygonInit(Polygon* poly)

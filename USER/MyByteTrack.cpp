@@ -114,6 +114,12 @@ std::vector<Object> nms(const std::vector<Object>& objects, float iou_threshold,
     return result;
 }
 
+BYTETracker tracker(2, 60);
+
+template<typename T>
+static void saturate(T& x) {
+    x = std::max(std::min(x, static_cast<T>(1.0f)), static_cast<T>(0.0f));
+}
 
 #endif  // __cplusplus
 
@@ -121,8 +127,6 @@ std::vector<Object> nms(const std::vector<Object>& objects, float iou_threshold,
 extern "C"
 {
 #endif  // __cplusplus
-
-BYTETracker tracker(2, 60);
 
 void get(array_t* inArray, array_t* outArray) {
 
@@ -151,7 +155,6 @@ void get(array_t* inArray, array_t* outArray) {
     for(int i = 0; i < output_stracks.size(); i++) {
         vector<float> tlwh = output_stracks[i].tlwh;    //x, y, w, h
 
-
         bool vertical = tlwh[2] / tlwh[3] > 1.6f;
         if((tlwh[2] * tlwh[3] > 20.0f && !vertical) || 1) {
             int id = output_stracks[i].track_id;
@@ -169,6 +172,13 @@ void get(array_t* inArray, array_t* outArray) {
             faceID->id = id;
             faceID->color = color;
             faceID->score = score;
+
+            saturate(faceID->r.x);
+            saturate(faceID->r.y);
+            saturate(faceID->r.width);
+            saturate(faceID->r.height);
+            saturate(faceID->point.x);
+            saturate(faceID->point.y);
 
             bool isInArea = PointInPolygon(faceID->point, &poly);
             if(isInArea) {

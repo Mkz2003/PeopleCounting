@@ -286,7 +286,7 @@ int post_process()
     f->rect.height = outData->h[i] / y_ratio;
     f->label = label;
     f->prob = outData->object[label][i];
-
+    
     array_push_back(faces, f);
   }
   get(faces, faceIDs);

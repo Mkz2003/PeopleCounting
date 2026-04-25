@@ -207,7 +207,7 @@ void StartDefaultTask(void *argument)
       osDelay(20);
     }while(res != USBD_OK);
 
-    osDelayUntil(tick + 1000 / 2); // ~2fps
+    osDelay(1000 / 2); // ~2fps
   }
   /* USER CODE END StartDefaultTask */
 }
