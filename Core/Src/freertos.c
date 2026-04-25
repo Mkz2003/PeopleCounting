@@ -19,15 +19,16 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
+#include "stm32h7xx_hal.h"
 #include "task.h"
 #include "main.h"
-#include "FreeRTOS.h"
 #include "cmsis_os2.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
 #include "MyCode.h"
+#include "usbd_def.h"
 
 /* USER CODE END Includes */
 
@@ -49,8 +50,9 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
+float Vref = 0.0f, Vbat = 0.0f, Temp = 0.0f; 
 TickType_t DetectObject_Tick_Start = 0, DetectObject_Tick_End = 0;         	// 用于保存当前的时间计数值
-float DetectObject_FPS = 0.0f;
+float DetectObject_FPS = 0.0f, LCD_Tick_FPS = 0.0f;
 array_t* faces = NULL,  * eyes = NULL, * faceIDs = NULL;
 Polygon poly = {0};
 
@@ -189,7 +191,23 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    TickType_t tick = xTaskGetTickCount();
+    int8_t res;
+    do
+    {
+      res = CDC_printf("[%d:%02d:%02d:%02d:%03d]\n"
+                        "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV\n"
+                        "In: %d\n"
+                        "Face: %d, OD: %.3f\n"
+                        "\n",
+                        tick / 86400000, tick / 3600000 % 24, tick / 60000 % 60, tick / 1000 % 60, tick % 1000,
+                        Vbat, Temp, Vref,
+                        poly.objectNum,
+                        array_length(faceIDs), DetectObject_FPS);
+      osDelay(20);
+    }while(res != USBD_OK);
+
+    osDelayUntil(tick + 1000 / 2); // ~2fps
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -233,16 +251,16 @@ void LCDRefreshTask(void *argument)
   {
     // 计算LCD刷新帧率
     static TickType_t LCD_Tick_Start = 0, LCD_Tick_End = 0;
-    float LCD_Tick_FPS; 
+
     LCD_Tick_End = xTaskGetTickCount();
     LCD_Tick_FPS = 1000.0f / (LCD_Tick_End - LCD_Tick_Start);
     LCD_Tick_Start = LCD_Tick_End;
 
     // sprintf(s, "ADC1: %d, ADC2: %d, ADC3: %d\n", adcval[0], adcval[1], adcval[2]);
     // CDC_Transmit_FS((uint8_t*)s, strlen(s));
-    float Vref = vrefint_cal_vref / vrefint_cal_addr * adcval.Vref;
-    float Vbat = adcval.Vbat * Vref / (float)(1 << 16) * 4.0f;
-    float Temp = temperature_cal1_temp
+    Vref = vrefint_cal_vref / vrefint_cal_addr * adcval.Vref;
+    Vbat = adcval.Vbat * Vref / (float)(1 << 16) * 4.0f;
+    Temp = temperature_cal1_temp
                   + (adcval.Temp * vrefint_cal_vref / Vref - tempsensor_cal1_addr)
                     * (temperature_cal2_temp - temperature_cal1_temp)
                     / (tempsensor_cal2_addr - tempsensor_cal1_addr);
@@ -252,7 +270,7 @@ void LCDRefreshTask(void *argument)
     STM32Ipl_Init(&midImg, LCD_Height, LCD_Width, IMAGE_BPP_RGB565, (uint8_t*)LCDBackImage);
     STM32Ipl_Init(&dstImg, LCD_Height, LCD_Width, IMAGE_BPP_RGB565, (uint8_t*)LCD_Buff);
     // STM32Ipl_Resize(&srcImg, &dstImg, RESIZE_NEAREST);  // 将图像缩放到LCD分辨率，等价于LCD_ShowImage
-    DMA2D_MemCopy(srcImg.data, midImg.data, midImg.w, midImg.h, 0, 0, DMA2D_INPUT_RGB565);
+    DMA2D_MemCopy_OS(srcImg.data, midImg.data, midImg.w, midImg.h, 0, 0, DMA2D_INPUT_RGB565);
     
     for (int i = 0; i < poly.n; ++i)
     {
@@ -346,33 +364,39 @@ void ImageProcessTask(void *argument)
 
   extern CDC_Receive_t CDC_Receive;
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
-  extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
+  extern uint16_t LCD_Buff[LCD_Height][LCD_Width];
   extern uint8_t LCD_SPI_LOCKED;
+  extern uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
   JPEGEncodeInit();
-
-	DCMI_OV5640_Init();   			 	// DCMI以及OV5640初始化
-	OV5640_AF_Download_Firmware();	// 写入自动对焦固件
-	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
-  OV5640_StartImageCapture();
 
   /* Infinite loop */
   for(;;)
   {
-    // if(ov5640_FrameState.imageProcessState)  // 等待一帧数据传输完成
-    // {
-    //   ov5640_FrameState.imageProcessState = 0;
-    //   uint32_t dstSize = JPEGEncode((uint8_t*)pCamera_Image, Display_Height * Display_Width * 2);
-    //   while(CDC_Transmit_FS(jpeg_buffer, dstSize) != USBD_OK) osThreadYield();
-    // }
-
     if(CDC_Receive.received)  // 等待一帧数据传输完成
     {
       CDC_Receive.received = 0;
       uint8_t* Buf = CDC_Receive.Buf;
       uint32_t Len = CDC_Receive.Len;
+      char* s_jpeg = "jpeg";
+      char* s_uid = "uid";
 
-      while(CDC_Transmit_FS(Buf, Len) != USBD_OK) osThreadYield();
+      if(strncmp(CDC_Receive.Buf, s_jpeg, strlen(s_jpeg)) == 0)
+      {
+        while(LCD_SPI_LOCKED != 1) osThreadYield(); // 等待一帧数据传输完成
+
+        uint32_t dstSize = JPEGEncode((uint8_t*)LCD_Buff, Display_Height * Display_Width * 2);
+        while(CDC_Transmit_FS(jpeg_buffer, dstSize) != USBD_OK) osThreadYield();
+      }
+      else if(strncmp(CDC_Receive.Buf, s_uid, strlen(s_uid)) == 0)
+      {
+        while(CDC_printf("uid: %08X %08X %08X\n", HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2()) != USBD_OK) osThreadYield();
+      }
+      else
+      {
+        memcpy(UserTxBufferFS, Buf, Len);
+        while(CDC_Transmit_FS(UserTxBufferFS, Len) != USBD_OK) osThreadYield();
+      }
     }    
     else
     {
@@ -397,9 +421,14 @@ void ObjectDetectTask(void *argument)
   extern uint16_t* pCamera_Image; // 摄像头数据缓冲区指针
   extern void xfree(void *mem);
 
+	DCMI_OV5640_Init();   			 	// DCMI以及OV5640初始化
+	OV5640_AF_Download_Firmware();	// 写入自动对焦固件
+	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
+  OV5640_StartImageCapture();
+  
   PolygonInit(&poly);
 
-  STM32IPL_MemInit();
+
   array_alloc(&faces, xfree);
   array_alloc(&eyes, xfree);
   array_alloc(&faceIDs, xfree);
@@ -422,15 +451,7 @@ void ObjectDetectTask(void *argument)
 
       HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, poly.objectNum > 0);
 
-      TickType_t tick = xTaskGetTickCount();
 
-      CDC_printf("[%d:%02d:%02d:%02d:%03d]\n"
-                "In: %d\n"
-                "Face: %d, OD: %.3f\n"
-                "\n",
-                tick / 86400000, tick / 3600000 % 24, tick / 60000 % 60, tick / 1000 % 60, tick % 1000,
-                poly.objectNum,
-                array_length(faceIDs), DetectObject_FPS);
     }
     else
     {

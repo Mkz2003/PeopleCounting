@@ -28,6 +28,7 @@
 #include "stm32ipl.h"
 #include "MySTM32IPL.h"
 #include "DMA2DProcess.h"
+#include "DMA2DProcess_OS.h"
 #include "qspi_w25q64.h"
 #include "JPEGEncode.h"
 #include "MyByteTrack.h"

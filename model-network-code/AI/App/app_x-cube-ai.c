@@ -226,14 +226,14 @@ int acquire_and_process_data()
 
   const size_t offset = (sizeof(STAI_FORMAT) * 3) * STAI_NETWORK_IN_1_WIDTH * (STAI_NETWORK_IN_1_HEIGHT - ResizeHeight) / 2;
   // const size_t offset = 0;
-  DMA2D_Fill((uint8_t*)stai_input[0], 
+  DMA2D_Fill_OS((uint8_t*)stai_input[0], 
               STAI_NETWORK_IN_1_WIDTH, 
               STAI_NETWORK_IN_1_HEIGHT, 
               0,
               DMA2D_OUTPUT_RGB888, 
               0x00111111
             );
-  DMA2D_FormatConvert(resizedImage, 
+  DMA2D_FormatConvert_OS(resizedImage, 
                         (uint8_t*)stai_input[0] + offset, 
                         resizedImg.w, 
                         resizedImg.h, 

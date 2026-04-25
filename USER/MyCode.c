@@ -5,7 +5,7 @@
 #include <stdarg.h>
 
 void Setup(void)
-{
+{ 
     QSPI_W25Qxx_Init();
     // QSPI_W25Qxx_ChipErase();
     int QSPI_Status = QSPI_W25Qxx_MemoryMappedMode(); // 配置QSPI为内存映射模式
@@ -19,6 +19,7 @@ void Setup(void)
 		while (1);
 	}
     // HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    STM32IPL_MemInit();
 }
 
 #ifdef __GNUC__

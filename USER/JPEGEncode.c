@@ -11,11 +11,11 @@
 
 #define CMYK_444_BLOCK_SIZE        256     /* CMYK MCU : 1 8x8 blocks of Cyan + 1 8x8 block Magenta + 1 8x8 block of Yellow and 1 8x8 block of BlacK */
 
-#define BLOCK_SIZE YCBCR_422_BLOCK_SIZE
+#define BLOCK_SIZE YCBCR_444_BLOCK_SIZE
 #define CHUNC_SINGLE_MCU_CONVERTION 16
 
-#define Encode_Width Display_Width
-#define Encode_Height Display_Height
+#define Encode_Width Display_Height
+#define Encode_Height Display_Width
 
 JPEG_ConfTypeDef jpegConf = {0};
 
@@ -28,17 +28,17 @@ __IO uint8_t Jpeg_HWEncodingEnd;
 
 extern JPEG_HandleTypeDef hjpeg;
 
-__attribute__((section(".sdram_bss"), aligned(32))) uint32_t MCU[Encode_Width * Encode_Height];
+__attribute__((section(".sdram_bss"), aligned(32))) uint32_t MCU[Encode_Width * Encode_Height * 2];
 __attribute__((section(".sdram_bss"), aligned(32))) uint8_t jpeg_buffer[64 * 1024 - 1];
 
 void JPEGEncodeInit()
 {
     // 初始化JPEG编码参数
     jpegConf.ColorSpace = JPEG_YCBCR_COLORSPACE;
-    jpegConf.ChromaSubsampling = JPEG_422_SUBSAMPLING;
+    jpegConf.ChromaSubsampling = JPEG_444_SUBSAMPLING;
     jpegConf.ImageWidth = Encode_Width;
     jpegConf.ImageHeight = Encode_Height;
-    jpegConf.ImageQuality = 50;
+    jpegConf.ImageQuality = 75;
     // 应用配置
     if (HAL_JPEG_ConfigEncoding(&hjpeg, &jpegConf) != HAL_OK)
     {
