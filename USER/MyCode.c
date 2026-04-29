@@ -44,7 +44,7 @@ int fputc(int ch, FILE *f)
 
 int8_t CDC_printf(const char* fmt, ...)
 {
-    static char BUF[128] = {0};
+    static char BUF[1024] = {0};
     static va_list ap;
     va_start(ap, fmt);
 
@@ -52,7 +52,7 @@ int8_t CDC_printf(const char* fmt, ...)
 
     va_end(ap);
 
-    BUF[127] = '\0';
+    BUF[sizeof(BUF) - 1] = '\0';
 
     int8_t status = CDC_Transmit_FS((uint8_t*)BUF, strlen(BUF));
     return status;

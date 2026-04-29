@@ -11,7 +11,7 @@ extern "C"
 #endif  // __cplusplus
 
 // 浮点数比较容差
-static const float EPS = 1e-9f;
+static const float EPS = 1e-6f;
 
 /**
  * 判断点 p 是否在多边形 poly 内部（含边界）
@@ -65,23 +65,26 @@ int8_t PointInPolygon(Point p, const Polygon* poly)
     return (count % 2) == 1;
 }
 
-Point vertices[] = {{0.5f, 0.f},
-                    {1.f, 0.f},
-                    {1.f, 1.f},
-                    {0.5f, 1.f},
-};
-
-int8_t PolygonInit(Polygon* poly)
+int8_t PolygonInit(Polygon* poly, Point* vertices, int n, int id)
 {
     if(poly == NULL) return -1;
 
     // 定义凹多边形顶点（逆时针）
 
     poly->vertices = vertices;
-    poly->n = sizeof(vertices) / sizeof(Point);
-    poly->id = 1;
+    poly->n = n;
+    poly->id = id;
     poly->objectNum = 0;
     poly->map = new std::map<int, int>{};
+    return 1;
+}
+
+int8_t PolygonDelete(Polygon* poly)
+{
+    if(poly == NULL) return -1;
+
+    poly->n = 0;
+    delete static_cast<std::map<int, int>*>(poly->map);
     return 1;
 }
 

@@ -23,9 +23,9 @@ typedef struct {
     void* map;
 } Polygon;
 
+int8_t PolygonInit(Polygon* poly, Point* vertices, int n, int id);
 int8_t PointInPolygon(Point p, const Polygon* poly);
-int8_t PolygonInit(Polygon* poly);
-
+int8_t PolygonDelete(Polygon* poly);
 
 #ifdef __cplusplus
 }

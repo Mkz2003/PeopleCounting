@@ -117,8 +117,8 @@ std::vector<Object> nms(const std::vector<Object>& objects, float iou_threshold,
 BYTETracker tracker(2, 60);
 
 template<typename T>
-static void saturate(T& x) {
-    x = std::max(std::min(x, static_cast<T>(1.0f)), static_cast<T>(0.0f));
+static void saturate(T& x, const T& _min, const T& _max) {
+    x = std::min(std::max(x, static_cast<T>(_min)), static_cast<T>(_max));
 }
 
 #endif  // __cplusplus
@@ -144,8 +144,8 @@ void get(array_t* inArray, array_t* outArray) {
         raw_objects.push_back({{f->rect.x, f->rect.y, f->rect.width, f->rect.height}, f->label, f->prob});
     }
 
-    // 非极大值抑制（NonMaxSuppresion）
-    std::vector<Object> objects = nms(raw_objects, 0.3f, true);
+    // 非极大值抑制（Non-Maximum Suppression）
+    std::vector<Object> objects = nms(raw_objects, 0.6f, true);
     // std::vector<Object> objects = raw_objects;
     
     // ByteTrack内容更新
@@ -173,12 +173,13 @@ void get(array_t* inArray, array_t* outArray) {
             faceID->color = color;
             faceID->score = score;
 
-            saturate(faceID->r.x);
-            saturate(faceID->r.y);
-            saturate(faceID->r.width);
-            saturate(faceID->r.height);
-            saturate(faceID->point.x);
-            saturate(faceID->point.y);
+            saturate(faceID->r.x, 0.0f, 1.0f);
+            saturate(faceID->r.y, 0.0f, 1.0f);
+            saturate(faceID->r.width, 0.0f, 1.0f);
+            saturate(faceID->r.height, 0.0f, 1.0f);
+            saturate(faceID->point.x, 0.0f, 1.0f);
+            saturate(faceID->point.y, 0.0f, 1.0f);
+            saturate(faceID->score, 0.0f, 1.0f);
 
             bool isInArea = PointInPolygon(faceID->point, &poly);
             if(isInArea) {

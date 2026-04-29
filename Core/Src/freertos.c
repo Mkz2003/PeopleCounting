@@ -55,6 +55,11 @@ TickType_t DetectObject_Tick_Start = 0, DetectObject_Tick_End = 0;         	// �
 float DetectObject_FPS = 0.0f, LCD_Tick_FPS = 0.0f;
 array_t* faces = NULL,  * eyes = NULL, * faceIDs = NULL;
 Polygon poly = {0};
+struct
+{
+  int n;
+  Point* vertices;
+} polyMessage = {0};
 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
@@ -188,6 +193,12 @@ void StartDefaultTask(void *argument)
   /* init code for USB_DEVICE */
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN StartDefaultTask */
+
+  extern size_t umm_free_heap_size( void );
+  extern size_t umm_max_free_block_size( void );
+  extern int umm_usage_metric( void );
+  extern int umm_fragmentation_metric( void );
+
   /* Infinite loop */
   for(;;)
   {
@@ -196,11 +207,13 @@ void StartDefaultTask(void *argument)
     do
     {
       res = CDC_printf("[%d:%02d:%02d:%02d:%03d]\n"
+                        "%d, %d, %d, %d\n"
                         "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV\n"
                         "In: %d\n"
                         "Face: %d, OD: %.3f\n"
-                        "\n",
+                        "\n",  
                         tick / 86400000, tick / 3600000 % 24, tick / 60000 % 60, tick / 1000 % 60, tick % 1000,
+                        umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric(),
                         Vbat, Temp, Vref,
                         poly.objectNum,
                         array_length(faceIDs), DetectObject_FPS);
@@ -274,44 +287,44 @@ void LCDRefreshTask(void *argument)
     
     for (int i = 0; i < poly.n; ++i)
     {
-        int n = poly.n;
-        const Point* v = poly.vertices;
-        const Point* a = &v[i];
-        const Point* b = &v[(i + 1) % n];  // 边 a->b
-        point_t _a = {.x = (int16_t)(a->x * LCD_Height), .y = (int16_t)(a->y * LCD_Width)};
-        point_t _b = {.x = (int16_t)(b->x * LCD_Height), .y = (int16_t)(b->y * LCD_Width)};
-        STM32Ipl_DrawLine(&midImg, &_a, &_b, STM32IPL_COLOR_GREEN, 1);
+      int n = poly.n;
+      const Point* v = poly.vertices;
+      const Point* a = &v[i];
+      const Point* b = &v[(i + 1) % n];  // 边 a->b
+      point_t _a = {.x = (int16_t)(a->x * LCD_Height), .y = (int16_t)(a->y * LCD_Width)};
+      point_t _b = {.x = (int16_t)(b->x * LCD_Height), .y = (int16_t)(b->y * LCD_Width)};
+      STM32Ipl_DrawLine(&midImg, &_a, &_b, STM32IPL_COLOR_GREEN, 1);
     }
 
     for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
     {
-        faceIDObject_t *f = array_at(faceIDs, i);
-        // Draw the bounding box around each detected face.
-        // uint16_t x = f->r.x * LCD_Height - (LCD_Height - LCD_Width) / 2;
-        // uint16_t y = f->r.y * LCD_Height;
-        // uint16_t w = f->r.width * LCD_Height;
-        // uint16_t h = f->r.height * LCD_Height;
-        uint16_t x = f->r.x * LCD_Height;
-        uint16_t y = f->r.y * LCD_Width;
-        uint16_t w = f->r.width * LCD_Height;
-        uint16_t h = f->r.height * LCD_Width;
-        stm32ipl_color_t color = f->color;
-        STM32Ipl_DrawRectangle(&midImg, x, y, w, h, color, 2, false);
-        STM32Ipl_DrawCircle(&midImg, (uint16_t)(f->point.x * LCD_Height), (uint16_t)(f->point.y * LCD_Width), 4, f->color, 1, 1);
+      faceIDObject_t *f = array_at(faceIDs, i);
+      // Draw the bounding box around each detected face.
+      // uint16_t x = f->r.x * LCD_Height - (LCD_Height - LCD_Width) / 2;
+      // uint16_t y = f->r.y * LCD_Height;
+      // uint16_t w = f->r.width * LCD_Height;
+      // uint16_t h = f->r.height * LCD_Height;
+      uint16_t x = f->r.x * LCD_Height;
+      uint16_t y = f->r.y * LCD_Width;
+      uint16_t w = f->r.width * LCD_Height;
+      uint16_t h = f->r.height * LCD_Width;
+      stm32ipl_color_t color = f->color;
+      STM32Ipl_DrawRectangle(&midImg, x, y, w, h, color, 2, false);
+      STM32Ipl_DrawCircle(&midImg, (uint16_t)(f->point.x * LCD_Height), (uint16_t)(f->point.y * LCD_Width), 4, f->color, 1, 1);
     }
 
     STM32Ipl_Rotation270(&dstImg, &midImg);
 
     for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
     {
-        faceIDObject_t *f = array_at(faceIDs, i);
-        uint16_t x = f->r.x * LCD_Height;
-        uint16_t y = f->r.y * LCD_Width;
-        uint16_t w = f->r.width * LCD_Height;
-        uint16_t h = f->r.height * LCD_Width;
-        LCD_printf(y / 12, x / 6, "%d", f->id);
-        LCD_printf(y / 12, (x + w) / 6, "%.2f", f->score);
-        LCD_printf((y + h) / 12, (x + w) / 6, "%d", f->zone);
+      faceIDObject_t *f = array_at(faceIDs, i);
+      uint16_t x = f->r.x * LCD_Height;
+      uint16_t y = f->r.y * LCD_Width;
+      uint16_t w = f->r.width * LCD_Height;
+      uint16_t h = f->r.height * LCD_Width;
+      LCD_printf(y / 12, x / 6, "%d", f->id);
+      LCD_printf(y / 12, (x + w) / 6, "%.2f", f->score);
+      LCD_printf((y + h) / 12, (x + w) / 6, "%d", f->zone);
     }
 
     // LCD_Clear();
@@ -380,17 +393,43 @@ void ImageProcessTask(void *argument)
       uint32_t Len = CDC_Receive.Len;
       char* s_jpeg = "jpeg";
       char* s_uid = "uid";
+      char* s_area = "area";
 
-      if(strncmp(CDC_Receive.Buf, s_jpeg, strlen(s_jpeg)) == 0)
+      if(strncmp(Buf, s_jpeg, strlen(s_jpeg)) == 0)
       {
         while(LCD_SPI_LOCKED != 1) osThreadYield(); // 等待一帧数据传输完成
 
         uint32_t dstSize = JPEGEncode((uint8_t*)LCD_Buff, Display_Height * Display_Width * 2);
         while(CDC_Transmit_FS(jpeg_buffer, dstSize) != USBD_OK) osThreadYield();
       }
-      else if(strncmp(CDC_Receive.Buf, s_uid, strlen(s_uid)) == 0)
+      else if(strncmp(Buf, s_uid, strlen(s_uid)) == 0)
       {
         while(CDC_printf("uid: %08X %08X %08X\n", HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2()) != USBD_OK) osThreadYield();
+      }
+      else if(strncmp(Buf, s_area, strlen(s_area)) == 0)
+      {
+        int n = *(int*)(Buf + 4);
+        // float* pf = (float*)(Buf + 8);
+        // float sum = 0.0f;
+        // for(int i = 0; i < n * 2; i++)
+        // {
+        //   sum += *pf++;
+        // }
+        // if(fabsf(sum - *pf) <= 1e-6)
+        if(Len == sizeof(Point) * n + 8)
+        {
+          // send to poly
+          if(polyMessage.n == 0 && polyMessage.vertices == NULL) // 判断消息是否被其它任务接收
+          {
+            Point* vertices = (Point*)xalloc(sizeof(Point) * n);
+            if(vertices != NULL)
+            {
+              memcpy(vertices, Buf + 8, sizeof(Point) * n);
+              polyMessage.vertices = vertices;
+              polyMessage.n = n;
+            }
+          }
+        }
       }
       else
       {
@@ -425,9 +464,15 @@ void ObjectDetectTask(void *argument)
 	OV5640_AF_Download_Firmware();	// 写入自动对焦固件
 	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
   OV5640_StartImageCapture();
-  
-  PolygonInit(&poly);
 
+  static Point test_vertices[] = {{0.5f, 0.0f},
+                      {0.996875f, 0.f},
+                      {0.996875f, 0.995833333f},
+                      {0.5f, 0.995833333f},
+  };
+  
+  PolygonInit(&poly, test_vertices, sizeof(test_vertices) / sizeof(Point), 1);
+  Point* vertices = test_vertices; // 存取现在导入Poly的vertices
 
   array_alloc(&faces, xfree);
   array_alloc(&eyes, xfree);
@@ -451,7 +496,22 @@ void ObjectDetectTask(void *argument)
 
       HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, poly.objectNum > 0);
 
+      if(polyMessage.n > 0 && polyMessage.vertices != NULL)
+      {
+        PolygonDelete(&poly);
+        if(vertices != test_vertices)
+        {
+          xfree(vertices);
+          poly.vertices = NULL;
+        }
+        PolygonInit(&poly, polyMessage.vertices, polyMessage.n, 1);
+        // 对polyMessage消息清零，通知消息已接收
+        polyMessage.n = 0;
+        polyMessage.vertices = NULL;
 
+        vertices = polyMessage.vertices;
+      }
+      
     }
     else
     {

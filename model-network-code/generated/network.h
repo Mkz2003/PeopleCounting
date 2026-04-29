@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    network.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-04-20T16:10:04+0800
+  * @date    2026-04-26T19:54:13+0800
   * @brief   ST.AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -24,11 +24,11 @@
 /*****************************************************************************/
 /*  Original model name and signature  */
 #define STAI_NETWORK_ORIGIN_MODEL_NAME         "best_full_integer_quant"
-#define STAI_NETWORK_ORIGIN_MODEL_SIGNATURE    "0x2ae95df68ac4e2c3b1f163bc72792a96"
+#define STAI_NETWORK_ORIGIN_MODEL_SIGNATURE    "0x0aabc238fefcffe395422fa8a15fdd37"
 
 /*  Generated model name and signature  */
 #define STAI_NETWORK_MODEL_NAME                "network"
-#define STAI_NETWORK_MODEL_SIGNATURE           (0xbfa21951a2952673)
+#define STAI_NETWORK_MODEL_SIGNATURE           (0x18e94bccae6d431e)
 
 
 /*****************************************************************************/
@@ -40,7 +40,7 @@
 #define STAI_NETWORK_FLAGS               (STAI_FLAG_INPUTS|STAI_FLAG_OUTPUTS|STAI_FLAG_WEIGHTS)
 
 /*  Macro to declare number of network C nodes generated  */
-#define STAI_NETWORK_NODES_NUM           (445)
+#define STAI_NETWORK_NODES_NUM           (439)
 
 /*  Macro to declare number macc for generated network model  */
 #define STAI_NETWORK_MACC_NUM            (196560612)
@@ -104,31 +104,31 @@
 
 /*****************************************************************************/
 /*  Macros to declare activations buffers characteristics  */
-#define STAI_NETWORK_ACTIVATIONS_SIZE              (257216)
-#define STAI_NETWORK_ACTIVATIONS_SIZE_BYTES        (257216)
+#define STAI_NETWORK_ACTIVATIONS_SIZE              (255916)
+#define STAI_NETWORK_ACTIVATIONS_SIZE_BYTES        (255916)
 #define STAI_NETWORK_ACTIVATIONS_ALIGNMENTS \
   { 4}
 #define STAI_NETWORK_ACTIVATIONS_SIZES \
-  { 257216}
+  { 255916}
 #define STAI_NETWORK_ACTIVATIONS_NUM               (1)
 
 #define STAI_NETWORK_ACTIVATION_1_FLAGS      (STAI_FLAG_ACTIVATIONS)
-#define STAI_NETWORK_ACTIVATION_1_SIZE       (257216)
-#define STAI_NETWORK_ACTIVATION_1_SIZE_BYTES (257216)
+#define STAI_NETWORK_ACTIVATION_1_SIZE       (255916)
+#define STAI_NETWORK_ACTIVATION_1_SIZE_BYTES (255916)
 #define STAI_NETWORK_ACTIVATION_1_ALIGNMENT  4
 /*  Macros to declare weights buffers characteristics  */
 
 #define STAI_NETWORK_WEIGHTS_NUM                  (1)
-#define STAI_NETWORK_WEIGHTS_SIZE                  (2410292)
-#define STAI_NETWORK_WEIGHTS_SIZE_BYTES            (2410292)
+#define STAI_NETWORK_WEIGHTS_SIZE                  (2410296)
+#define STAI_NETWORK_WEIGHTS_SIZE_BYTES            (2410296)
 #define STAI_NETWORK_WEIGHTS_ALIGNMENTS \
   { 4}
 #define STAI_NETWORK_WEIGHTS_SIZES \
-  { 2410292}
+  { 2410296}
 #define STAI_NETWORK_WEIGHTS_NUM        (1)
 #define STAI_NETWORK_WEIGHT_1_FLAGS       ((STAI_FLAG_PREALLOCATED))
-#define STAI_NETWORK_WEIGHT_1_SIZE        (2410292)
-#define STAI_NETWORK_WEIGHT_1_SIZE_BYTES  (2410292)
+#define STAI_NETWORK_WEIGHT_1_SIZE        (2410296)
+#define STAI_NETWORK_WEIGHT_1_SIZE_BYTES  (2410296)
 
 
 /*****************************************************************************/
