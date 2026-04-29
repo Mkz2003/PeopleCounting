@@ -465,10 +465,10 @@ void ObjectDetectTask(void *argument)
 	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
   OV5640_StartImageCapture();
 
-  static Point test_vertices[] = {{0.5f, 0.0f},
-                      {0.996875f, 0.f},
-                      {0.996875f, 0.995833333f},
-                      {0.5f, 0.995833333f},
+  static Point test_vertices[] = {{0.5f, 0.f},
+                      {1.f, 0.f},
+                      {1.f, 1.f},
+                      {0.5f, 1.f},
   };
   
   PolygonInit(&poly, test_vertices, sizeof(test_vertices) / sizeof(Point), 1);
