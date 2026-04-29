@@ -416,7 +416,7 @@ void ImageProcessTask(void *argument)
         //   sum += *pf++;
         // }
         // if(fabsf(sum - *pf) <= 1e-6)
-        if(Len == sizeof(Point) * n + 8)
+        if(n < 256)
         {
           // send to poly
           if(polyMessage.n == 0 && polyMessage.vertices == NULL) // 判断消息是否被其它任务接收
