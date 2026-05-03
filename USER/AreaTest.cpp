@@ -4,6 +4,7 @@
 #include <map>
 
 std::map<int, int> basicPolyMap{};
+int basicPolyObjectNum = 0;
 
 #ifdef __cplusplus
 extern "C"
@@ -69,8 +70,10 @@ int8_t PolygonInit(Polygon* poly, Point* vertices, int n, int id)
 {
     if(poly == NULL) return -1;
 
-    // 定义凹多边形顶点（逆时针）
+    // 初始化basic空间目标数
+    basicPolyObjectNum = 0;
 
+    // 定义凹多边形顶点
     poly->vertices = vertices;
     poly->n = n;
     poly->id = id;

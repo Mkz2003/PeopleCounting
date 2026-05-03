@@ -199,6 +199,8 @@ void StartDefaultTask(void *argument)
   extern int umm_usage_metric( void );
   extern int umm_fragmentation_metric( void );
 
+  extern int basicPolyObjectNum;
+
   /* Infinite loop */
   for(;;)
   {
@@ -209,13 +211,13 @@ void StartDefaultTask(void *argument)
       res = CDC_printf("[%d:%02d:%02d:%02d:%03d]\n"
                         "%d, %d, %d, %d\n"
                         "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV\n"
-                        "In: %d\n"
+                        "In: %d, Out: %d\n"
                         "Face: %d, OD: %.3f\n"
                         "\n",  
                         tick / 86400000, tick / 3600000 % 24, tick / 60000 % 60, tick / 1000 % 60, tick % 1000,
                         umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric(),
                         Vbat, Temp, Vref,
-                        poly.objectNum,
+                        poly.objectNum, basicPolyObjectNum,
                         array_length(faceIDs), DetectObject_FPS);
       osDelay(20);
     }while(res != USBD_OK);
@@ -244,6 +246,8 @@ void LCDRefreshTask(void *argument)
   extern __IO float OV5640_FPS ;      // 帧率
   extern uint16_t LCD_Buff[LCD_Height][LCD_Width];
   extern uint16_t LCDBackImage[LCD_Height][LCD_Width];
+
+  extern int basicPolyObjectNum;
 
   __attribute__((section(".ram_d3_bss"))) __IO static struct {uint16_t Vbat, Temp, Vref;} adcval = {0};
 
@@ -333,7 +337,7 @@ void LCDRefreshTask(void *argument)
     // LCD_printf(16, 1,"%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
     // LCD_printf(7, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
     // LCD_printf(18, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
-    LCD_printf(18, 1, "In: %d", poly.objectNum);
+    LCD_printf(18, 1, "In: %d, Out: %d", poly.objectNum, basicPolyObjectNum);
     LCD_printf(19, 1,  "Face: %d, Scr: %.3f, Cam: %.3f, OD: %.3f", array_length(faceIDs), LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
     LCD_SPI_Transmit();
 
@@ -470,6 +474,7 @@ void ObjectDetectTask(void *argument)
                       {1.f, 1.f},
                       {0.5f, 1.f},
   };
+  extern int basicPolyObjectNum;
   
   PolygonInit(&poly, test_vertices, sizeof(test_vertices) / sizeof(Point), 1);
   Point* vertices = test_vertices; // 存取现在导入Poly的vertices
@@ -494,7 +499,7 @@ void ObjectDetectTask(void *argument)
 
       STM32CubeAI_Studio_AI_Process();
 
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, poly.objectNum > 0);
+      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, basicPolyObjectNum > 0);
 
       if(polyMessage.n > 0 && polyMessage.vertices != NULL)
       {

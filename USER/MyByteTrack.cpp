@@ -132,9 +132,11 @@ void get(array_t* inArray, array_t* outArray) {
 
     // 多边形状态
     extern std::map<int, int> basicPolyMap;
+    extern int basicPolyObjectNum;
     extern Polygon poly;
     std::map<int, int>& polyMap = *static_cast<std::map<int, int>*>(poly.map);
-    int objectNum = poly.objectNum;
+    int _polyObjectNum = poly.objectNum;
+    int _basicPolyObjectNum = basicPolyObjectNum;
     const int maxLostTime = 5;
 
     // 搬运原始目标数据
@@ -204,7 +206,8 @@ void get(array_t* inArray, array_t* outArray) {
                 } else {
                     polyMap.erase(id);
                     basicPolyMap[id] = 0;
-                    objectNum -= 1;                    
+                    _polyObjectNum -= 1;
+                    _basicPolyObjectNum += 1;
                 }
             }
 
@@ -215,7 +218,8 @@ void get(array_t* inArray, array_t* outArray) {
                 } else {
                     basicPolyMap.erase(id);
                     polyMap[id] = 0;
-                    objectNum += 1;                   
+                    _polyObjectNum += 1;
+                    _basicPolyObjectNum -= 1;
                 }
             }
 
@@ -244,7 +248,9 @@ void get(array_t* inArray, array_t* outArray) {
     }   
 
     // 更新区域内目标数
-    poly.objectNum = objectNum >= 0 ? objectNum : 0;
+    poly.objectNum = _polyObjectNum >= 0 ? _polyObjectNum : 0;
+    basicPolyObjectNum = _basicPolyObjectNum >= 0 ? _basicPolyObjectNum : 0;
+
 }
 
 #ifdef __cplusplus
