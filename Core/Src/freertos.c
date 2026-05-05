@@ -300,6 +300,22 @@ void LCDRefreshTask(void *argument)
       STM32Ipl_DrawLine(&midImg, &_a, &_b, STM32IPL_COLOR_GREEN, 1);
     }
 
+    // for (int i = 0; i < array_length(faces); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
+    // {
+    //   faceObject_t *f = array_at(faces, i);
+    //   // Draw the bounding box around each detected face.
+    //   // uint16_t x = f->r.x * LCD_Height - (LCD_Height - LCD_Width) / 2;
+    //   // uint16_t y = f->r.y * LCD_Height;
+    //   // uint16_t w = f->r.width * LCD_Height;
+    //   // uint16_t h = f->r.height * LCD_Height;
+    //   uint16_t x = f->rect.x * LCD_Height;
+    //   uint16_t y = f->rect.y * LCD_Width;
+    //   uint16_t w = f->rect.width * LCD_Height;
+    //   uint16_t h = f->rect.height * LCD_Width;
+    //   STM32Ipl_DrawRectangle(&midImg, x, y, w, h, STM32IPL_COLOR_GREEN, 2, false);
+    //   // STM32Ipl_DrawCircle(&midImg, (uint16_t)(f->point.x * LCD_Height), (uint16_t)(f->point.y * LCD_Width), 4, f->color, 1, 1);
+    // }
+
     for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
     {
       faceIDObject_t *f = array_at(faceIDs, i);
@@ -318,6 +334,16 @@ void LCDRefreshTask(void *argument)
     }
 
     STM32Ipl_Rotation270(&dstImg, &midImg);
+
+    // for (int i = 0; i < array_length(faces); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
+    // {
+    //   faceObject_t *f = array_at(faces, i);
+    //   uint16_t x = f->rect.x * LCD_Height;
+    //   uint16_t y = f->rect.y * LCD_Width;
+    //   uint16_t w = f->rect.width * LCD_Height;
+    //   uint16_t h = f->rect.height * LCD_Width;
+    //   LCD_printf(y / 12, (x + w) / 6, "%.2f", f->prob);
+    // }
 
     for (int i = 0; i < array_length(faceIDs); i++) // 一定要实时读faceIDs的状态，防止其他任务更改faceIDs的状态导致未定义行为
     {

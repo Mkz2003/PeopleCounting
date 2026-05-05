@@ -4,7 +4,7 @@
 BYTETracker::BYTETracker(int frame_rate, int track_buffer)
 {
 	track_thresh = 0.2f;	// 高/低置信度检测框阈值
-	high_thresh = 0.3f;		// 初始化轨迹阈值
+	high_thresh = 0.2f;	// 初始化轨迹阈值
 	match_thresh = 0.6f;	// 匹配IoU阈值
 
 	frame_id = 0;
