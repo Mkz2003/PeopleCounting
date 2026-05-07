@@ -147,7 +147,7 @@ void get(array_t* inArray, array_t* outArray) {
     }
 
     // 非极大值抑制（Non-Maximum Suppression）
-    std::vector<Object> objects = nms(raw_objects, 0.6f, true);
+    std::vector<Object> objects = nms(raw_objects, 0.45f, true);
     // std::vector<Object> objects = raw_objects;
     
     // ByteTrack内容更新

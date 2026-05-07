@@ -257,9 +257,13 @@ int acquire_and_process_data()
 int post_process()
 {
   extern array_t* faces,  * eyes, * faceIDs;
-  CHANNEL* outData = (CHANNEL*)stai_output[0];
   array_clear(faces);
-  int32_t label = 0;
+
+  CHANNEL* outData = (CHANNEL*)stai_output[0];
+
+  const int32_t label = 0;
+  const float low_thresh = 0.10469357f;
+
   for(int i = 0; i < STAI_NETWORK_OUT_1_CHANNEL; i++)
   {
     // 找认定label类为最大概率的检测框
@@ -272,7 +276,7 @@ int post_process()
         break;
       }
     }
-    if(flag || outData->object[label][i] <= 0.1f) continue;
+    if(flag || outData->object[label][i] <= low_thresh) continue;
 
     // 存入归一化数据
     faceObject_t* f = (faceObject_t*)xalloc(sizeof(faceObject_t));

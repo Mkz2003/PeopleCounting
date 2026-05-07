@@ -3,9 +3,9 @@
 
 BYTETracker::BYTETracker(int frame_rate, int track_buffer)
 {
-	track_thresh = 0.2f;	// 高/低置信度检测框阈值
-	high_thresh = 0.2f;	// 初始化轨迹阈值
-	match_thresh = 0.6f;	// 匹配IoU阈值
+	track_thresh = 0.19019019f;	// 高/低置信度检测框阈值
+	high_thresh = 0.26339884f;	// 初始化轨迹阈值
+	match_thresh = 0.7f;	// 匹配IoU阈值
 
 	frame_id = 0;
 	max_time_lost = int(frame_rate / 30.0f * track_buffer);
