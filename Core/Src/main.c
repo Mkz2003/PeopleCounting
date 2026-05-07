@@ -25,7 +25,6 @@
 #include "dcmi.h"
 #include "dma.h"
 #include "dma2d.h"
-#include "fatfs.h"
 #include "jpeg.h"
 #include "mdma.h"
 #include "quadspi.h"
@@ -128,7 +127,6 @@ int main(void)
   MX_SPI5_Init();
   MX_DMA2D_Init();
   MX_JPEG_Init();
-  MX_FATFS_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 

@@ -8,7 +8,6 @@
 #include "dcmi.h"
 #include "dma.h"
 #include "dma2d.h"
-#include "fatfs.h"
 #include "jpeg.h"
 #include "mdma.h"
 #include "quadspi.h"

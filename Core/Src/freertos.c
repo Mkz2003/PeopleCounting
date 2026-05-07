@@ -19,9 +19,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
-#include "stm32h7xx_hal.h"
 #include "task.h"
 #include "main.h"
+#include "FreeRTOS.h"
 #include "cmsis_os2.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -97,6 +97,13 @@ const osThreadAttr_t ObjectDetect_attributes = {
   .stack_size = 2048 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for ADCSampling */
+osThreadId_t ADCSamplingHandle;
+const osThreadAttr_t ADCSampling_attributes = {
+  .name = "ADCSampling",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -108,6 +115,7 @@ void LCDRefreshTask(void *argument);
 void LEDToggleTask(void *argument);
 void ImageProcessTask(void *argument);
 void ObjectDetectTask(void *argument);
+void ADCSamplingTask(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -170,6 +178,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of ObjectDetect */
   ObjectDetectHandle = osThreadNew(ObjectDetectTask, NULL, &ObjectDetect_attributes);
+
+  /* creation of ADCSampling */
+  ADCSamplingHandle = osThreadNew(ADCSamplingTask, NULL, &ADCSampling_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -249,18 +260,6 @@ void LCDRefreshTask(void *argument)
 
   extern int basicPolyObjectNum;
 
-  __attribute__((section(".ram_d3_bss"))) __IO static struct {uint16_t Vbat, Temp, Vref;} adcval = {0};
-
-  HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED);
-  HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&adcval, sizeof(adcval) / sizeof(uint16_t));
-
-  float vrefint_cal_vref = (VREFINT_CAL_VREF / 1000.0f);
-  float temperature_cal1_temp = TEMPSENSOR_CAL1_TEMP;
-  float temperature_cal2_temp = TEMPSENSOR_CAL2_TEMP;
-  float vrefint_cal_addr = (*VREFINT_CAL_ADDR);
-  float tempsensor_cal1_addr = (*TEMPSENSOR_CAL1_ADDR);
-  float tempsensor_cal2_addr = (*TEMPSENSOR_CAL2_ADDR);
-
   SPI_LCD_Init();
 
   /* Infinite loop */
@@ -272,15 +271,6 @@ void LCDRefreshTask(void *argument)
     LCD_Tick_End = xTaskGetTickCount();
     LCD_Tick_FPS = 1000.0f / (LCD_Tick_End - LCD_Tick_Start);
     LCD_Tick_Start = LCD_Tick_End;
-
-    // sprintf(s, "ADC1: %d, ADC2: %d, ADC3: %d\n", adcval[0], adcval[1], adcval[2]);
-    // CDC_Transmit_FS((uint8_t*)s, strlen(s));
-    Vref = vrefint_cal_vref / vrefint_cal_addr * adcval.Vref;
-    Vbat = adcval.Vbat * Vref / (float)(1 << 16) * 4.0f;
-    Temp = temperature_cal1_temp
-                  + (adcval.Temp * vrefint_cal_vref / Vref - tempsensor_cal1_addr)
-                    * (temperature_cal2_temp - temperature_cal1_temp)
-                    / (tempsensor_cal2_addr - tempsensor_cal1_addr);
 
     image_t srcImg, midImg, dstImg;
     STM32Ipl_Init(&srcImg, Display_Width, Display_Height, IMAGE_BPP_RGB565, (uint8_t*)pCamera_Image);
@@ -550,6 +540,46 @@ void ObjectDetectTask(void *argument)
     }
   }
   /* USER CODE END ObjectDetectTask */
+}
+
+/* USER CODE BEGIN Header_ADCSamplingTask */
+/**
+* @brief Function implementing the ADCSampling thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_ADCSamplingTask */
+void ADCSamplingTask(void *argument)
+{
+  /* USER CODE BEGIN ADCSamplingTask */
+
+  __attribute__((section(".ram_d3_bss"))) __IO static struct {uint16_t Vbat, Temp, Vref;} adcval = {0};
+
+  HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED);
+  HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&adcval, sizeof(adcval) / sizeof(uint16_t));
+
+  float vrefint_cal_vref = (VREFINT_CAL_VREF / 1000.0f);
+  float temperature_cal1_temp = TEMPSENSOR_CAL1_TEMP;
+  float temperature_cal2_temp = TEMPSENSOR_CAL2_TEMP;
+  float vrefint_cal_addr = (*VREFINT_CAL_ADDR);
+  float tempsensor_cal1_addr = (*TEMPSENSOR_CAL1_ADDR);
+  float tempsensor_cal2_addr = (*TEMPSENSOR_CAL2_ADDR);  
+
+  /* Infinite loop */
+  for(;;)
+  {
+    TickType_t tick = xTaskGetTickCount();
+
+    Vref = vrefint_cal_vref / vrefint_cal_addr * adcval.Vref;
+    Vbat = adcval.Vbat * Vref / (float)(1 << 16) * 4.0f;
+    Temp = temperature_cal1_temp
+                  + (adcval.Temp * vrefint_cal_vref / Vref - tempsensor_cal1_addr)
+                    * (temperature_cal2_temp - temperature_cal1_temp)
+                    / (tempsensor_cal2_addr - tempsensor_cal1_addr);
+    
+    osDelayUntil(tick + 1000/10);
+  }
+  /* USER CODE END ADCSamplingTask */
 }
 
 /* Private application code --------------------------------------------------*/
