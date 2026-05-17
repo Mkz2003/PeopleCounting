@@ -485,10 +485,12 @@ void ObjectDetectTask(void *argument)
 	OV5640_AF_Trigger_Constant();		// 自动对焦 ，持续 触发，当OV5640检测到当前画面不在焦点时，会一直触发对焦
   OV5640_StartImageCapture();
 
-  static Point test_vertices[] = {{0.5f, 0.f},
-                      {1.f, 0.f},
-                      {1.f, 1.f},
-                      {0.5f, 1.f},
+  static Point test_vertices[] = {{0.440625f, 0.2791666666666667f},
+                      {0.440625f, 0.8333333333333334f},
+                      {0.41875f, 0.9041666666666667f},
+                      {0.659375f, 0.9f},
+                      {0.609375f, 0.8416666666666667f},
+                      {0.6f, 0.2791666666666667f},
   };
   extern int basicPolyObjectNum;
   
