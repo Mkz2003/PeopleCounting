@@ -50,7 +50,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
-float Vref = 0.0f, Vbat = 0.0f, Temp = 0.0f; 
+float Vdda = 0.0f, Vbat = 0.0f, Temp = 0.0f; 
 TickType_t DetectObject_Tick_Start = 0, DetectObject_Tick_End = 0;         	// 用于保存当前的时间计数值
 float DetectObject_FPS = 0.0f, LCD_Tick_FPS = 0.0f;
 array_t* faces = NULL,  * eyes = NULL, * faceIDs = NULL;
@@ -221,13 +221,13 @@ void StartDefaultTask(void *argument)
     {
       res = CDC_printf("[%d:%02d:%02d:%02d:%03d]\n"
                         "%d, %d, %d, %d\n"
-                        "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV\n"
+                        "Vbat: %.3fV, Temp: %.3f^C, Vdda: %.3fV\n"
                         "In: %d, Out: %d\n"
                         "Face: %d, OD: %.3f\n"
                         "\n",  
                         tick / 86400000, tick / 3600000 % 24, tick / 60000 % 60, tick / 1000 % 60, tick % 1000,
                         umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric(),
-                        Vbat, Temp, Vref,
+                        Vbat, Temp, Vdda,
                         poly.objectNum, basicPolyObjectNum,
                         array_length(faceIDs), DetectObject_FPS);
       osDelay(20);
@@ -352,7 +352,7 @@ void LCDRefreshTask(void *argument)
     // LCD_ShowImage(0, 0, (uint16_t *)pCamera_Image);  // 将图像数据复制到屏幕
     // LCD_printf(16, 1,"%d, %d, %d, %d", umm_free_heap_size(), umm_max_free_block_size(), umm_usage_metric(), umm_fragmentation_metric());
     // LCD_printf(7, 1, "Time: %d:%02d:%02d:%02d:%03d", LCD_Tick_End / 86400000, LCD_Tick_End / 3600000 % 24, LCD_Tick_End / 60000 % 60, LCD_Tick_End / 1000 % 60, LCD_Tick_End % 1000);
-    // LCD_printf(18, 1, "Vbat: %.3fV, Temp: %.3f^C, Vref: %.3fV", Vbat, Temp, Vref);
+    // LCD_printf(18, 1, "Vbat: %.3fV, Temp: %.3f^C, Vdda: %.3fV", Vbat, Temp, Vdda);
     LCD_printf(18, 1, "In: %d, Out: %d", poly.objectNum, basicPolyObjectNum);
     LCD_printf(19, 1,  "Face: %d, Scr: %.3f, Cam: %.3f, OD: %.3f", array_length(faceIDs), LCD_Tick_FPS, OV5640_FPS, DetectObject_FPS);
     LCD_SPI_Transmit();
@@ -572,12 +572,12 @@ void ADCSamplingTask(void *argument)
   {
     TickType_t tick = xTaskGetTickCount();
 
-    Vref = vrefint_cal_vref / vrefint_cal_addr * adcval.Vref;
-    Vbat = adcval.Vbat * Vref / (float)(1 << 16) * 4.0f;
+    Vdda = vrefint_cal_vref * vrefint_cal_addr / adcval.Vref;
+    Vbat = adcval.Vbat * Vdda / (float)(1 << 16) * 4.0f;
     Temp = temperature_cal1_temp
-                  + (adcval.Temp * vrefint_cal_vref / Vref - tempsensor_cal1_addr)
-                    * (temperature_cal2_temp - temperature_cal1_temp)
-                    / (tempsensor_cal2_addr - tempsensor_cal1_addr);
+                        + (adcval.Temp / vrefint_cal_vref * Vdda - tempsensor_cal1_addr)
+                            * (temperature_cal2_temp - temperature_cal1_temp)
+                            / (tempsensor_cal2_addr - tempsensor_cal1_addr);
     
     osDelayUntil(tick + 1000/10);
   }
